@@ -1,12 +1,12 @@
 <!doctype html><html lang="en">
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  <title>Anonymous iframe</title>
+  <title>Cross-Origin-Opener-Policy: restrict-properties</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version b0de3432c, updated Thu Oct 13 09:16:59 2022 -0700" name="generator">
-  <link href="https://wicg.github.io/anonymous-iframe/" rel="canonical">
-  <meta content="98b0b3216db41c9cbed3147e29c38dd8991f9da1" name="document-revision">
+  <meta content="Bikeshed version 82ce88815, updated Thu Sep 7 16:33:55 2023 -0700" name="generator">
+  <link href="https://github.com/WICG/coop-restrict-properties" rel="canonical">
+  <meta content="a22d4a1d171c5c0755d949828492924ebc6f6db1" name="document-revision">
 <style>
 .monkey-patch {
     padding: .5em;
@@ -30,8 +30,7 @@
 }
 
 </style>
-<style>/* style-autolinks */
-
+<style>/* Boilerplate: style-autolinks */
 .css.css, .property.property, .descriptor.descriptor {
     color: var(--a-normal-text);
     font-size: inherit;
@@ -91,8 +90,17 @@ pre .property::before, pre .property::after {
 
 [data-link-type=biblio] {
     white-space: pre;
-}</style>
-<style>/* style-colors */
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+</style>
+<style>/* Boilerplate: style-colors */
 
 /* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
 :root {
@@ -200,9 +208,121 @@ pre .property::before, pre .property::after {
     --outdated-shadow: red;
 
     --editedrec-bg: darkorange;
-}</style>
-<style>/* style-counters */
+}
 
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: black;
+
+        --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --amendment-border: #330099;
+        --amendment-bg: #080010;
+        --amendment-text: var(--text);
+        --amendmentheading-text: #cc00ff;
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+    /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+    img { background: white; }
+}
+</style>
+<style>/* Boilerplate: style-counters */
 body {
     counter-reset: example figure issue;
 }
@@ -229,20 +349,25 @@ figcaption {
 }
 figcaption:not(.no-marker)::before {
     content: "Figure " counter(figure) " ";
-}</style>
-<style>/* style-dfn-panel */
-
+}
+</style>
+<style>/* Boilerplate: style-dfn-panel */
 :root {
     --dfnpanel-bg: #ddd;
     --dfnpanel-text: var(--text);
 }
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
 .dfn-panel {
     position: absolute;
     z-index: 35;
+    width: 20em;
+    width: 300px;
     height: auto;
-    width: -webkit-fit-content;
-    width: fit-content;
-    max-width: 300px;
     max-height: 500px;
     overflow: auto;
     padding: 0.5em 0.75em;
@@ -250,6 +375,7 @@ figcaption:not(.no-marker)::before {
     background: var(--dfnpanel-bg);
     color: var(--dfnpanel-text);
     border: outset 0.2em;
+    white-space: normal; /* in case it's moved into a pre */
 }
 .dfn-panel:not(.on) { display: none; }
 .dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
@@ -257,8 +383,15 @@ figcaption:not(.no-marker)::before {
 .dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
 .dfn-panel > b + b { margin-top: 0.25em; }
-.dfn-panel ul { padding: 0; }
-.dfn-panel li { list-style: inside; }
+.dfn-panel ul { padding: 0 0 0 1em; list-style: none; }
+.dfn-panel li a {
+    white-space: pre;
+    display: inline-block;
+    max-width: calc(300px - 1.5em - 1em);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .dfn-panel.activated {
     display: inline-block;
     position: fixed;
@@ -269,10 +402,9 @@ figcaption:not(.no-marker)::before {
     max-height: 30vh;
 }
 
-.dfn-paneled { cursor: pointer; }
+.dfn-paneled[role="button"] { cursor: pointer; }
 </style>
-<style>/* style-issues */
-
+<style>/* Boilerplate: style-issues */
 a[href].issue-return {
     float: right;
     float: inline-end;
@@ -281,8 +413,7 @@ a[href].issue-return {
     text-decoration: none;
 }
 </style>
-<style>/* style-md-lists */
-
+<style>/* Boilerplate: style-md-lists */
 /* This is a weird hack for me not yet following the commonmark spec
    regarding paragraph and lists. */
 [data-md] > :first-child {
@@ -290,8 +421,9 @@ a[href].issue-return {
 }
 [data-md] > :last-child {
     margin-bottom: 0;
-}</style>
-<style>/* style-selflinks */
+}
+</style>
+<style>/* Boilerplate: style-selflinks */
 
 :root {
     --selflink-text: white;
@@ -318,6 +450,14 @@ a.self-link:hover {
 .heading > a.self-link {
     font-size: 83%;
 }
+.example > a.self-link,
+.note > a.self-link,
+.issue > a.self-link {
+    /* These blocks are overflow:auto, so positioning outside
+       doesn't work. */
+    left: auto;
+    right: 0;
+}
 li > a.self-link {
     left: calc(-1 * (3.5rem - 26px) - 2em);
 }
@@ -343,8 +483,7 @@ a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
 dfn > a.self-link::before      { content: "#"; }
 </style>
-<style>/* style-wpt */
-
+<style>/* Boilerplate: style-wpt */
 :root {
     --wpt-border: hsl(0, 0%, 60%);
     --wpt-bg: hsl(0, 0%, 95%);
@@ -481,161 +620,31 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
     position: relative;
 }
 </style>
-<style>/* style-darkmode */
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --text: #ddd;
-        --bg: black;
-
-        --unofficial-watermark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='%23100808' transform='translate(200 200) rotate(-45) translate(-200 -200)' stroke='%23100808' stroke-width='3'%3E%3Ctext x='50%25' y='220' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EUNOFFICIAL%3C/text%3E%3Ctext x='50%25' y='305' style='font: bold 70px sans-serif; text-anchor: middle; letter-spacing: 6px;'%3EDRAFT%3C/text%3E%3C/g%3E%3C/svg%3E");
-
-        --logo-bg: #1a5e9a;
-        --logo-active-bg: #c00;
-        --logo-text: white;
-
-        --tocnav-normal-text: #999;
-        --tocnav-normal-bg: var(--bg);
-        --tocnav-hover-text: var(--tocnav-normal-text);
-        --tocnav-hover-bg: #080808;
-        --tocnav-active-text: #f44;
-        --tocnav-active-bg: var(--tocnav-normal-bg);
-
-        --tocsidebar-text: var(--text);
-        --tocsidebar-bg: #080808;
-        --tocsidebar-shadow: rgba(255,255,255,.1);
-        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
-
-        --toclink-text: var(--text);
-        --toclink-underline: #6af;
-        --toclink-visited-text: var(--toclink-text);
-        --toclink-visited-underline: #054572;
-
-        --heading-text: #8af;
-
-        --hr-text: var(--text);
-
-        --algo-border: #456;
-
-        --del-text: #f44;
-        --del-bg: transparent;
-        --ins-text: #4a4;
-        --ins-bg: transparent;
-
-        --a-normal-text: #6af;
-        --a-normal-underline: #555;
-        --a-visited-text: var(--a-normal-text);
-        --a-visited-underline: var(--a-normal-underline);
-        --a-hover-bg: rgba(25%, 25%, 25%, .2);
-        --a-active-text: #f44;
-        --a-active-underline: var(--a-active-text);
-
-        --borderedblock-bg: rgba(255, 255, 255, .05);
-
-        --blockquote-border: silver;
-        --blockquote-bg: var(--borderedblock-bg);
-        --blockquote-text: currentcolor;
-
-        --issue-border: #e05252;
-        --issue-bg: var(--borderedblock-bg);
-        --issue-text: var(--text);
-        --issueheading-text: hsl(0deg, 70%, 70%);
-
-        --example-border: hsl(50deg, 90%, 60%);
-        --example-bg: var(--borderedblock-bg);
-        --example-text: var(--text);
-        --exampleheading-text: hsl(50deg, 70%, 70%);
-
-        --note-border: hsl(120deg, 100%, 35%);
-        --note-bg: var(--borderedblock-bg);
-        --note-text: var(--text);
-        --noteheading-text: hsl(120, 70%, 70%);
-        --notesummary-underline: silver;
-
-        --assertion-border: #444;
-        --assertion-bg: var(--borderedblock-bg);
-        --assertion-text: var(--text);
-
-        --advisement-border: orange;
-        --advisement-bg: #222218;
-        --advisement-text: var(--text);
-        --advisementheading-text: #f84;
-
-        --warning-border: red;
-        --warning-bg: hsla(40,100%,20%,0.95);
-        --warning-text: var(--text);
-
-        --amendment-border: #330099;
-        --amendment-bg: #080010;
-        --amendment-text: var(--text);
-        --amendmentheading-text: #cc00ff;
-
-        --def-border: #8ccbf2;
-        --def-bg: #080818;
-        --def-text: var(--text);
-        --defrow-border: #136;
-
-        --datacell-border: silver;
-
-        --indexinfo-text: #aaa;
-
-        --indextable-hover-text: var(--text);
-        --indextable-hover-bg: #181818;
-
-        --outdatedspec-bg: rgba(255, 255, 255, .5);
-        --outdatedspec-text: black;
-        --outdated-bg: maroon;
-        --outdated-text: white;
-        --outdated-shadow: red;
-
-        --editedrec-bg: darkorange;
-    }
-    /* In case a transparent-bg image doesn't expect to be on a dark bg,
-       which is quite common in practice... */
-    img { background: white; }
-}
-@media (prefers-color-scheme: dark) {
-    :root {
-        --selflink-text: black;
-        --selflink-bg: silver;
-        --selflink-hover-text: white;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --dfnpanel-bg: #222;
-        --dfnpanel-text: var(--text);
-    }
-}</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
-   <h1 class="p-name no-ref" id="title">Anonymous iframe</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-10-20">20 October 2022</time></p>
+   <h1 class="p-name no-ref" id="title">Cross-Origin-Opener-Policy: restrict-properties</h1>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-10-06">6 October 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
-     <dd><a class="u-url" href="https://wicg.github.io/anonymous-iframe/">https://wicg.github.io/anonymous-iframe/</a>
+     <dd><a class="u-url" href="https://github.com/WICG/coop-restrict-properties">https://github.com/WICG/coop-restrict-properties</a>
      <dt>Issue Tracking:
-     <dd><a href="https://github.com/WICG/anonymous-iframe/issues/">GitHub</a>
-     <dt class="editor">Editors:
-     <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:arthursonzogni@google.com">Arthur Sonzogni</a> (<span class="p-org org">Google</span>)
+     <dd><a href="https://github.com/WICG/coop-restrict-properties/issues/">GitHub</a>
+     <dt class="editor">Editor:
      <dd class="editor p-author h-card vcard"><a class="p-name fn u-email email" href="mailto:clamy@google.com">Camille Lamy</a> (<span class="p-org org">Google</span>)
-     <dt>Tests:
-     <dd><a href="https://github.com/w3c/web-platform-tests/tree/master/html/anonymous-iframe">web-platform-tests html/anonymous-iframe/</a> (<a href="https://github.com/w3c/web-platform-tests/labels/html/anonymous-iframe">ongoing work</a>)
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright">©2022, Google, Inc. All rights reserved.</p>
+   <p class="copyright" data-fill-with="copyright">©2023, Google, Inc. All rights reserved.</p>
    <hr title="Separator for header">
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>Anonymous iframe give developers a way to load documents in third party iframe
+   <p>This proposal explores a new Cross-Origin-Opener-Policy value, "restrict-properties",
 
-  using new and ephemeral context. In return, the <a href="https://wicg.github.io/cross-origin-embedder-policy/">Cross-Origin-Embedder-Policy</a> (COEP) embedding rules can be lifted.</p>
-   <p>This way, developers using COEP can now embed third party iframes that do not.</p>
+  that would enable crossOriginIsolated while preserving cross-origin popup
+  access to a subset of WindowProxy methods.</p>
   </div>
   <div data-fill-with="at-risk"></div>
   <h2 class="no-num no-toc no-ref heading settled" id="status"><span class="content">Status of this document</span></h2>
@@ -657,9 +666,49 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
      <ol class="toc">
       <li><a href="#recommended-readings"><span class="secno">1.1</span> <span class="content">Recommended readings</span></a>
      </ol>
+    <li><a href="#problem"><span class="secno">2</span> <span class="content">A problem</span></a>
+    <li>
+     <a href="#explainer"><span class="secno">3</span> <span class="content">Explainer</span></a>
+     <ol class="toc">
+      <li><a href="#coop-restrict-properties-proposal"><span class="secno">3.1</span> <span class="content">The COOP: restrict-properties proposal</span></a>
+      <li><a href="#coop-rp-current-algo"><span class="secno">3.2</span> <span class="content">Fitting COOP: restrict-properties into current algorithm</span></a>
+      <li><a href="#extra-requirements"><span class="secno">3.3</span> <span class="content">Extra requirements for common use cases</span></a>
+     </ol>
+    <li>
+     <a href="#alternatives"><span class="secno">4</span> <span class="content">Alternatives considered</span></a>
+     <ol class="toc">
+      <li><a href="#extra-keying"><span class="secno">4.1</span> <span class="content">Extra-keying on Agent Clusters</span></a>
+      <li><a href="#same-origin-allow-popups-plus-coep"><span class="secno">4.2</span> <span class="content">COOP same-origin-allow-popups-plus-coep</span></a>
+     </ol>
+    <li><a href="#tests"><span class="secno">5</span> <span class="content">Tests</span></a>
+    <li>
+     <a href="#specification"><span class="secno">6</span> <span class="content">Specification</span></a>
+     <ol class="toc">
+      <li><a href="#cross-origin-opener-policies"><span class="secno">6.1</span> <span class="content">Cross-origin-opener-policies</span></a>
+     </ol>
+    <li>
+     <a href="#security"><span class="secno">7</span> <span class="content">Security considerations</span></a>
+     <ol class="toc">
+      <li><a href="#same-origin-policy"><span class="secno">7.1</span> <span class="content">Same-origin policy</span></a>
+      <li>
+       <a href="#cross-origin-subframes-popup"><span class="secno">7.2</span> <span class="content">Cross-origin subframes opening popup</span></a>
+       <ol class="toc">
+        <li><a href="#requirements"><span class="secno">7.2.1</span> <span class="content">Requirements</span></a>
+        <li><a href="#solution"><span class="secno">7.2.2</span> <span class="content">Solution</span></a>
+        <li><a href="#origin-and-csp"><span class="secno">7.2.3</span> <span class="content">Origin and CSP</span></a>
+       </ol>
+      <li>
+       <a href="#window-name-leakage"><span class="secno">7.3</span> <span class="content">Window.name leakage</span></a>
+       <ol class="toc">
+        <li><a href="#window-name-leak"><span class="secno">7.3.1</span> <span class="content">Window name leak</span></a>
+        <li><a href="#short-term-mitigation"><span class="secno">7.3.2</span> <span class="content">Short term mitigation</span></a>
+        <li><a href="#long-term-mitigation"><span class="secno">7.3.3</span> <span class="content">Long term mitigation</span></a>
+       </ol>
+     </ol>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
+      <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
       <li><a href="#index-defined-elsewhere"><span class="secno"></span> <span class="content">Terms defined by reference</span></a>
      </ol>
     <li>
@@ -676,48 +725,390 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
    <h3 class="heading settled" data-level="1.1" id="recommended-readings"><span class="secno">1.1. </span><span class="content">Recommended readings</span><a class="self-link" href="#recommended-readings"></a></h3>
    <ul>
     <li data-md>
-     <p>The <a data-link-type="biblio" href="#biblio-spectre">[Spectre]</a> vulnerability.</p>
+     <p>The <a data-link-type="biblio" href="#biblio-spectre" title="Spectre Attacks: Exploiting Speculative Execution">[Spectre]</a> vulnerability.</p>
     <li data-md>
-     <p>The <a data-link-type="biblio" href="#biblio-coep-require-corp">[COEP-require-corp]</a> and <a data-link-type="biblio" href="#biblio-coep-credentialless">[COEP-credentialless]</a> headers.</p>
+     <p>The <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies">Cross-Origin-Opener-Policy</a> (<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies①">COOP</a>) section of the HTML spec.</p>
     <li data-md>
-     <p>How and why <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies">Cross-Origin-Opener-Policy</a> (<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies①">COOP</a>) and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coep" id="ref-for-coep">Cross-Origin-Embedder-Policy</a> (<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coep" id="ref-for-coep①">COEP</a>) are granting the <a href="concept-settings-object-cross-origin-isolated-capability">crossOriginIsolated</a> capability. See <a data-link-type="biblio" href="#biblio-whycoopcoep">[WhyCoopCoep]</a>.</p>
+     <p>How and why <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies②">Cross-Origin-Opener-Policy</a> (<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies③">COOP</a>) and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coep" id="ref-for-coep">Cross-Origin-Embedder-Policy</a> (<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coep" id="ref-for-coep①">COEP</a>) are granting the <a href="concept-settings-object-cross-origin-isolated-capability">crossOriginIsolated</a> capability. See <a data-link-type="biblio" href="#biblio-whycoopcoep" title="Why you need &quot;cross-origin isolated&quot; for powerful features">[WhyCoopCoep]</a>.</p>
    </ul>
+   <h2 class="heading settled" data-level="2" id="problem"><span class="secno">2. </span><span class="content">A problem</span><a class="self-link" href="#problem"></a></h2>
+   <p><em>This section is not normative.</em></p>
+   <p>For pages to get <a href="concept-settings-object-cross-origin-isolated-capability">crossOriginIsolated</a> today, we require that <a data-link-type="dfn">COOP: same-origin</a>(<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin">coop-same-origin</a> be set. This
+effectively prevents any interaction with third-party popups. This is
+problematic for an important variety of use cases, below are a few real world
+examples:</p>
+   <ul>
+    <li data-md>
+     <p>gmail.com wants to do memory measurement to diagnose performance. Some emails
+contain meet.com iframes which open a meeting when interacted with.</p>
+    <li data-md>
+     <p>zoom.com wants to use sharedArrayBuffers to reduce the copying of media data.
+It needs to support being opened from third-party apps, via an SDK.</p>
+    <li data-md>
+     <p>perfetto.dev, a trace visualization app, would like to use a more accurate
+performance.now() to improve performance. They use third-party popups to
+display traces without having them sent to their server.</p>
+    <li data-md>
+     <p>construct.com, an online game engine needs javascript threading for
+performance, but uses another domain for renderer game-preview popups.</p>
+   </ul>
+   <p>All of the aforementioned APIs are gated behind the <a href="concept-settings-object-cross-origin-isolated-capability">crossOriginIsolated</a> capability. This means that all of these websites cannot access them without
+breaking their cross-origin popup flows.</p>
+   <p>These restrictions are due to the <a data-link-type="biblio" href="#biblio-spectre" title="Spectre Attacks: Exploiting Speculative Execution">[Spectre]</a> vulnerability. Because of
+Spectre, OS processes are now the only strong security boundary a browser can
+enforce. <a href="concept-settings-object-cross-origin-isolated-capability">crossOriginIsolated</a> unlocks powerful APIs that make Spectre vulnerabilities easier to exploit. So
+the browser need to be able to put crossOriginIsolated pages in their own
+process based on top-level origin. To be able to honor that, <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies④">Cross-Origin-Opener-Policy</a> (<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies⑤">COOP</a>) relies on <a data-link-type="dfn">BrowsingContext group</a> (<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group">browsing-context-group</a>)
+switches.</p>
+   <p>A BrowsingContext (roughly a frame) belongs to a BrowsingContext group. All
+documents presented in a BrowsingContext can communicate with other documents
+presented in BrowsingContexts in the same BrowsingContext group via javascript.
+Additionally, the BrowsingContext group holds a map of origins to Agent
+Clusters. All same-origin documents in the same BrowsingContext group are in
+the same Agent Cluster. They have synchronous scripting access to each other.
+They need to be in the same process.</p>
+   <p>If a browser does not support SiteIsolation, then all iframes have to be in the
+process of the top-level frame. When any frame on the page opens a popup, the
+popup also has to be put in the same process. This is because it could contain
+frames that same-origin with frames on its opener page. These frames belong to
+the same-agent cluster, and must be located in the same process to guarantee
+synchronous DOM interactions. In practice, without SiteIsolation, all pages in
+a Browsing context group resides in the same process, like in the example
+below:</p>
+   <p><img alt="payment flow" height="482" src="./resources/payment_flow.jpg" width="724"></p>
+   <p>With COOP same-origin, we put the popup in a different BrowsingContext group.
+Putting two documents in BrowsingContexts not belonging to the same
+BrowsingContext group ensures they are not in the same Agent Cluster, therefore
+that they do not need to be in the same process. This allows one of the
+documents to safely enable crossOriginIsolation, since the browser is using two
+different processes to isolate them.</p>
+   <p><img alt="coop solution" height="325" src="./resources/coop_solution.jpg" width="1025"></p>
+   <p>However, documents in different browsing context groups cannot communicate with
+one other. So the payment flow in this example is broken. COOP
+restrict-properties aims to preserve some of the communication while ensuring
+that documents can be properly process isolated, even without SiteIsolation.</p>
+   <h2 class="heading settled" data-level="3" id="explainer"><span class="secno">3. </span><span class="content">Explainer</span><a class="self-link" href="#explainer"></a></h2>
+   <p><em>This section is not normative.</em></p>
+   <h3 class="heading settled" data-level="3.1" id="coop-restrict-properties-proposal"><span class="secno">3.1. </span><span class="content">The COOP: restrict-properties proposal</span><a class="self-link" href="#coop-restrict-properties-proposal"></a></h3>
+   <p>Instead of completely removing scripting capabilities between two pages, we
+would like to only restrict synchronous access. This is what requires pages to
+be in the same process. Making sure that two pages can never script each other
+synchronously ensures that they can safely be put in different processes.</p>
+   <p>The basic COOP: restrict-properties idea would be to use a single
+BrowsingContext group, but to increase the keying of Agent Cluster. We would
+have multiple same-origin documents not be able to synchronously script each
+other, despite being able to reach each other’s Window object.</p>
+   <p>Instead of increasing Agent Cluster keying, we introduce a new superset of
+BrowsingContext group, the CrossOriginOpenerPolicy group. Within this new
+group, pages have asynchronous access to each other. This gives us the
+following multi-layer structure.</p>
+   <p><img alt="coop group" height="715" src="./resources/coop_group.jpg" width="1047"></p>
+   <p>Putting pages in a different BrowsingContext group but same COOP
+BrowsingContext group would be done via a new COOP value, restrict-properties
+that would only allow access to asynchronous properties. This makes it possible
+to put the two pages in different processes, and to enable crossOriginIsolated
+on the first page, as long as it also sets COEP.</p>
+   <p>To reduce XS-leaks as much as possible, we reduce asynchronous
+across-BrowsingContext groups to a very limited set of properties:
+{window.closed and window.postMessage()}. This is based on metrics research
+that shows that the overwhelming majority of sites only uses these two
+properties when interacting with cross-origin popups. This prevents almost all
+WindowProxy XS-Leaks.</p>
+   <h3 class="heading settled" data-level="3.2" id="coop-rp-current-algo"><span class="secno">3.2. </span><span class="content">Fitting COOP: restrict-properties into current algorithm</span><a class="self-link" href="#coop-rp-current-algo"></a></h3>
+   <p>The COOP algorithm works by comparing header values and origins to say compute
+whether or not we should use a new BrowsingContext group. This needs to be
+opened to an enum return value, containing the following possible outcomes:</p>
+   <ol>
+    <li data-md>
+     <p>Stay in the same BrowsingContext group.</p>
+    <li data-md>
+     <p>Stay in the same COOP group, but change BrowsingContext group.</p>
+    <li data-md>
+     <p>Change COOP BrowsingContext group.</p>
+   </ol>
+   <p>Current COOP algorithm returns either 1. or 3. Using COOP: restrict-properties
+would yield 2., iff:</p>
+   <ul>
+    <li data-md>
+     <p>We are navigating between a page setting COOP: unsafe-none from/to a page
+setting COOP: restrict-properties.</p>
+    <li data-md>
+     <p>We are navigating between two pages setting COOP: restrict-properties, but
+that have different origins.</p>
+    <li data-md>
+     <p>We have a opened a fresh popup from a page that set COOP:
+same-origin-allow-popups to a page that sets COOP: restrict-properties.</p>
+   </ul>
+   <h3 class="heading settled" data-level="3.3" id="extra-requirements"><span class="secno">3.3. </span><span class="content">Extra requirements for common use cases</span><a class="self-link" href="#extra-requirements"></a></h3>
+   <p>We want COOP: restrict-properties to be as little intrusive as possible while
+providing strong guarantees. Imagine the following use case: an authentication
+provider uses a navigation flow to provide login with many different providers.
+We do not want one of them setting COOP: restrict-properties limiting the
+interactions between my-website.com and the provider.</p>
+   <p><img alt="auth provider flow" height="374" src="./resources/auth_provider_flow.png" width="1090"></p>
+   <p>In the above case, the navigation from auth-provider.com to google.auth.com
+triggers a BrowsingContext group swap, within the same COOP group. We want to
+make sure that the subsequent navigation from google.auth.com to
+auth-provider.com reuses the same BrowsingContext group as the initial
+auth-provider.com page, to reduce the impact of deploying COOP:
+restrict-properties. We call that the reversibility requirement of COOP:
+restrict-properties.</p>
+   <p>To be able to do that, the COOP group needs to hold a map of BrowsingContext
+groups, that they can reuse. This map is keyed by: {isCrossOriginIsolated,
+hasCoopRestrictProperties, top-level origin or null}. This makes sure that:</p>
+   <ul>
+    <li data-md>
+     <p>A crossOriginIsolated BrowsingContext group is never reused for another
+origin, nor for a page that does not set COEP.</p>
+    <li data-md>
+     <p>A BrowsingContext group containing pages with COOP: restrict-properties is
+not reused for another origin.</p>
+    <li data-md>
+     <p>All pages without COOP, within a COOP group, live in the same BrowsingContext
+group.</p>
+   </ul>
+   <h2 class="heading settled" data-level="4" id="alternatives"><span class="secno">4. </span><span class="content">Alternatives considered</span><a class="self-link" href="#alternatives"></a></h2>
+   <p><em>This section is not normative.</em></p>
+   <h3 class="heading settled" data-level="4.1" id="extra-keying"><span class="secno">4.1. </span><span class="content">Extra-keying on Agent Clusters</span><a class="self-link" href="#extra-keying"></a></h3>
+   <p>Instead of introducing the context of COOP groups to the spec, we could have
+extended the Agent Cluster key in the following way - the agent cluster key is
+either:</p>
+   <ul>
+    <li data-md>
+     <p>a site</p>
+    <li data-md>
+     <p>a tuple origin</p>
+    <li data-md>
+     <p>a tuple containing an origin, a boolean (crossOriginIsolated) and another
+origin (top-level origin)</p>
+   </ul>
+   <p>There is no web-observable behavior difference between this solution and the
+one proposed in this spec. We do believe that having the COOP group notion
+makes the spec easier to follow, which is why we’ve opted for it. It also
+matches the underlying implementation better.</p>
+   <h3 class="heading settled" data-level="4.2" id="same-origin-allow-popups-plus-coep"><span class="secno">4.2. </span><span class="content">COOP same-origin-allow-popups-plus-coep</span><a class="self-link" href="#same-origin-allow-popups-plus-coep"></a></h3>
+   <p>It would be possible to extend Cross-Origin-Opener-Policy:
+same-origin-allow-popups to provide the same guarantees as
+Cross-Origin-Opener-Policy: restrict-properties in order to support
+crossOrignIsolation. However, this has a few drawbacks. First, this can only be
+done when a page also sets COEP. Otherwise, the compatibility risk on pages
+already deploying COOP same-origin-allow-popups is too high. Second, it would
+only allow openers of popups to be crossOriginIsolated, and not popups
+themselves. Finally, COOP restrict-properties provides an easy to deploy
+mitigation against most WindowProxy based XS-Leaks, that is valuable in itself
+even outside the crossOriginIsolation paradigm.</p>
+   <h2 class="heading settled" data-level="5" id="tests"><span class="secno">5. </span><span class="content">Tests</span><a class="self-link" href="#tests"></a></h2>
+   <p>Status: <a href="https://wpt.fyi/results/html/cross-origin-opener-policy/tentative/restrict-properties">https://wpt.fyi/results/html/cross-origin-opener-policy/tentative/restrict-properties</a></p>
+   <h2 class="heading settled" data-level="6" id="specification"><span class="secno">6. </span><span class="content">Specification</span><a class="self-link" href="#specification"></a></h2>
+   <p>This section defines a monkey-patch over <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>.</p>
+   <h3 class="heading settled" data-level="6.1" id="cross-origin-opener-policies"><span class="secno">6.1. </span><span class="content">Cross-origin-opener-policies</span><a class="self-link" href="#cross-origin-opener-policies"></a></h3>
+   <p>In the <a href="https://html.spec.whatwg.org/#cross-origin-opener-policies">cross-origin opener
+policies</a> section,
+extend the possible <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value">cross-origin opener polic values</a>:</p>
+   <div class="monkey-patch">
+     <dfn data-dfn-type="dfn" data-lt="coop-restrict-properties" data-noexport id="coop-restrict-properties">restrict-properties<a class="self-link" href="#coop-restrict-properties"></a></dfn> 
+    <p>This forces the creation of a new <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing context</a> for the document,
+unless its predecessor specified the same <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies⑥">cross-origin opener policy</a> and they
+are <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#same-origin" id="ref-for-same-origin">same origin</a>. Unlike <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin①">same-origin</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups" id="ref-for-coop-same-origin-allow-popups">same-origin-allow-popups</a>, the newly created <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc">browsing context</a> and its <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①">browsing context group</a> will stay in the same <a data-link-type="dfn">coop group</a>.</p>
+   </div>
+   <h2 class="heading settled" data-level="7" id="security"><span class="secno">7. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h2>
+   <h3 class="heading settled" data-level="7.1" id="same-origin-policy"><span class="secno">7.1. </span><span class="content">Same-origin policy</span><a class="self-link" href="#same-origin-policy"></a></h3>
+   <p>Our proposal creates an unprecedented possibility: that two same-origin
+documents can reach one another but not have full access to each other. We
+audited the spec to produce a list of all places with same-origin checks
+relying on the assumption of full access. Some points worthy of attention:</p>
+   <ul>
+    <li data-md>
+     <p>The location object is quite sensitive and many of its methods/members are
+same-origin only. It is purposefully excluded from the list of allowed
+attributes by restrict-properties. We do not think we should allow a normal
+page to navigate a crossOriginIsolated page.</p>
+    <li data-md>
+     <p>For similar reasons name targeting does not work across pages with COOP:
+restrict-properties.</p>
+    <li data-md>
+     <p>Javascript navigations are a big NO. They mean executing arbitrary javascript
+within the target frame. There should be no way to navigate a frame across
+the COOP: restrict-properties boundary given the restrictions above are put in
+place.</p>
+   </ul>
+   <h3 class="heading settled" data-level="7.2" id="cross-origin-subframes-popup"><span class="secno">7.2. </span><span class="content">Cross-origin subframes opening popup</span><a class="self-link" href="#cross-origin-subframes-popup"></a></h3>
+   <p>What happens when an iframe in a <code>COOP</code> page opens a popup? The initial empty
+document created always inherits the origin of the iframe, while we would like <code>COOP</code> to be inherited from the top-level document. This can create dangerous
+discrepencies where we end up with a <code>crossOriginIsolated</code> initial empty
+document of an arbitrary origin.</p>
+   <p>For <code>COOP: same-origin</code> we solved this problem by setting no-opener on any
+popup opened from an iframe that is cross-origin to its top-level document.</p>
+   <h4 class="heading settled" data-level="7.2.1" id="requirements"><span class="secno">7.2.1. </span><span class="content">Requirements</span><a class="self-link" href="#requirements"></a></h4>
+   <p>For COOP: restrict-properties to work, we need:</p>
+   <ul>
+    <li data-md>
+     <p>To be able to work with cross-origin iframes opening popups. These are common
+in the flow we’re trying to address.</p>
+    <li data-md>
+     <p>To use the standard COOP comparison rules for freshly opened popups on their
+first navigation. Currently we do not inherit COOP for fresh popups opened by
+cross-origin iframes. So it is always <code>unsafe-none</code> to X. This works for
+current COOP values:</p>
+     <ul>
+      <li data-md>
+       <p><code>same-origin-allow-popups</code> behaves like <code>unsafe-none</code> with freshly opened popups.</p>
+      <li data-md>
+       <p><code>same-origin</code> opens such popups with no-opener.</p>
+      <li data-md>
+       <p>It does not work with COOP: <code>restrict-properties</code> because we need to swap
+against <code>unsafe-none</code>.</p>
+     </ul>
+   </ul>
+   <p>We do not currently inherit COOP because it would mix the origin, inherited
+from the iframe, with the COOP value, inherited from the top-level document.</p>
+   <p>!<a href="../resources/coop_inheritance_issue.jpg">image</a> <em>By simply inheriting, we break COOP. In this example, everything lives in the
+same process, which should never be allowed.</em></p>
+   <p>We use noopener because an initial empty documents from a different origin in
+the same browsing context group, if crossOriginIsolated, could read the
+top-level origin, bypassing the PermissionsPolicy that might have been set on
+the iframe.</p>
+   <p><img alt="coop inheritance permission bypass" height="489" src="./resources/coop_inheritance_permission_bypass.jpg" width="947"></p>
+   <p><em>By not using noopener, we’ve allowed the iframe to exploit crossOriginIsolated
+APIs, bypassing the PermissionsPolicy set by the embedder.</em></p>
+   <h4 class="heading settled" data-level="7.2.2" id="solution"><span class="secno">7.2.2. </span><span class="content">Solution</span><a class="self-link" href="#solution"></a></h4>
+   <p>Our solution is to supplement the COOP structure with the origin that initially
+set it. This way we prevent the mix-up of origins and COOP value. The COOP
+origin is used exclusively by the COOP algorithm. Initial empty documents that
+do not have matching origin and COOP origin cannot use crossOriginIsolated
+APIs.</p>
+   <p><img alt="coop inheritance proposal" height="742" src="./resources/coop_inheritance_proposal.jpg" width="947"></p>
+   <p><em>By supplementing COOP with the setting origin, we are able to correctly
+separate the two end pages in two distinct browsing context groups. The initial
+empty document still lives in the opener browsing context group but might not
+use CrossOriginIsolated APIs.</em></p>
+   <p>We also wanted to add some details about the crossOriginIsolated APIs
+restriction for pages with mismatched COOP origin and origin. Below are all the
+different inherited pieces of the puzzle:</p>
+   <p><img alt="coop inheritance coep1" height="488" src="./resources/coop_inheritance_coep_1.jpg" width="947"></p>
+   <p><em>COOP is inherited from the top-level opener browsing context. COEP gets passed
+to the initial empty document because the iframe set it. crossOriginIsolated
+permission is none because COOP origin and origin do not match.</em></p>
+   <p>In this example, we have documents with different top-level origins in a
+BrowsingContext group that is crossOriginIsolated. This was not initially
+possible, but we believe this is fine:</p>
+   <ul>
+    <li data-md>
+     <p>Anything that the iframe does is readable by a.com. This is fine because
+b.com agreed to that by setting COEP. The fresh popup is required to be
+in-process, and anything done in there can be read by a.com. A.com cannot get
+any extra information, because the top-level frame behaves like the iframe. It
+has COEP so it cannot do new embedding, it has the same origin so it cannot do
+extra fetches, etc.</p>
+    <li data-md>
+     <p>In the other direction, b.com can read a.com if the Permissions-Policy is
+delegated to the iframe. Permissions-Policy is not inherited. For this reason
+we explicitely disable crossOriginIsolated permission on all freshly opened
+popups, as it would otherwise default to <code>allow</code>.</p>
+    <li data-md>
+     <p>COOP invariants about top-level origins become invariants about top-level
+COOP origins. The only case where a page can have a COOP origin not equal to
+its actual origin is the initial empty document.</p>
+   </ul>
+   <p>Finally, a note about the following situation:</p>
+   <p><img alt="coop inheritance coep2" height="747" src="./resources/coop_inheritance_coep_2.jpg" width="948"></p>
+   <p><em>COEP gets inherited to the popup although only the iframe set it and its
+top-level document did not. The iframe is NOT crossOriginIsolated.</em></p>
+   <p>We’ve simplified the COOP value in the drawings. In reality it is augmented
+with COEP when it is received from the network, and used alone in the COOP
+algorithm. In the above picture it still works as intended, because we’re
+inheriting COOP: "restrict-properties" and not "restrict-properties+COEP".</p>
+   <h4 class="heading settled" data-level="7.2.3" id="origin-and-csp"><span class="secno">7.2.3. </span><span class="content">Origin and CSP</span><a class="self-link" href="#origin-and-csp"></a></h4>
+    Because we’re recording the origin along the COOP value, we need to decide what
+to do with sandboxing, which can make the origin opaque. The current spec
+mentions that we first compute the sandboxing flags, both inherited and set via
+CSP, and then if COOP is also set we go to an error page. However, COOP
+is enforced but CSP is not, creating a discrepency. 
+   <p>For COOP restrict-properties, we believe we should compute sandbox flags at
+each redirect step, and use the potentially opaque origin to make COOP switch
+decisions. Unlike regular COOP, having both sandbox flags and COOP
+restrict-properties should not result in an error page. Instead, both sandbox
+flags and COOP restrict-properties will apply.</p>
+   <h3 class="heading settled" data-level="7.3" id="window-name-leakage"><span class="secno">7.3. </span><span class="content">Window.name leakage</span><a class="self-link" href="#window-name-leakage"></a></h3>
+   <p>When we navigate to a COOP: restrict-properties page and then to a COOP:
+unsafe-none page, we need to make sure no state remains from the previous
+context, to limit XS-Leaks. Window.name can be set by a crossOriginIsolated
+page and it could expose information to the next site.</p>
+   <p><img alt="auth provider flow" height="352" src="./resources/name.jpg" width="800"></p>
+   <p><em>In this example all the documents with origin A.com can set and target the
+window.name property. It is in a different context from the B.com’s page, so we
+stash the name when navigating. B.com free to set its own name and use it in
+its context. When we navigate back to A.com we reuse the stashed name.</em></p>
+   <h4 class="heading settled" data-level="7.3.1" id="window-name-leak"><span class="secno">7.3.1. </span><span class="content">Window name leak</span><a class="self-link" href="#window-name-leak"></a></h4>
+   <p><code>name</code> is a same-origin property of the Window object. While it cannot ever be
+set or read directly by windows in other browsing context groups, it has the
+particularity of being sticky, even during cross-browsing context group
+navigations.</p>
+   <p><img alt="window name leak" height="272" src="./resources/window_name_leak.jpg" width="744"></p>
+   <p><em>Because the property is linked to the window and not the document, this can be
+a cross-site leak vector. In this example, the original A.com page, a
+potentially crossOriginIsolated page was able to read the window’s name.</em></p>
+   <p>It is commonly used for named targetting, which is specifying a string as the
+"target" of an anchor tag, a <code>window.open()</code> parameter, etc. to navigate that
+target, or retrieve a window handle to it. This also has its own problems,
+because we do not want a regular page to be able to navigate a
+crossOriginIsolated page ever. Named targeting resulting in navigations are
+therefore completely prohibited between browsing context groups. Window
+retrieval is similarly not permitted because it would be an XS Leak vector, and
+many queries could be used to guess a window’s name.</p>
+   <p><img alt="named targeting" height="457" src="./resources/named_targeting.jpg" width="800"></p>
+   <p><em>After a same-origin navigation of the opener, it tries to retrieve a handle to
+the popup previously opened.</em></p>
+   <h4 class="heading settled" data-level="7.3.2" id="short-term-mitigation"><span class="secno">7.3.2. </span><span class="content">Short term mitigation</span><a class="self-link" href="#short-term-mitigation"></a></h4>
+   <p>A simple solution to this problem is to clear the window’s name during a
+navigation to a different browsing context group in the same COOP group.</p>
+   <p><img alt="window name clear" height="284" src="./resources/window_name_clear.jpg" width="748"></p>
+   <p><em>In that case, the popup name is cleared when navigating to B.com. When it
+navigates back to A.com, the name is cleared again.</em></p>
+   <p>This interacts with named targetting, as the name is cleared, targetting cannot
+resolve between the main page and the popup after it is navigated. The popup
+has to manually update its name to something known by the main page.</p>
+   <h4 class="heading settled" data-level="7.3.3" id="long-term-mitigation"><span class="secno">7.3.3. </span><span class="content">Long term mitigation</span><a class="self-link" href="#long-term-mitigation"></a></h4>
+   <p>We would prefer a solution that does not interact with named targetting, and
+makes it easier and more robust for web developers to use named targeting with
+multiple browsing context groups. An option would be to move from a single name
+model to a multiple name model. In that case, each browsing context would have
+a name per browsing context group that wants to refer to it.</p>
+   <p><img alt="name per bcg" height="326" src="./resources/name_per_bcg.jpg" width="747"></p>
+   <p><em>Instead of clearing window.name, we link it to the browsing context group that
+set it. Named targeting resolves if a page from A.com’s browsing context group
+targets the popup using 'myname'. B.com’s browsing context group on the other
+hand still sees the name as empty. After it sets a name of its own, it can be
+used in B.com’s browsing context without overriding A.com’s set name.</em></p>
+   <p>With this solution, we preserve legitimate use cases. We still need to block
+named targetting which result in a navigation in a window in another browsing
+context group. Note that this mechanism could also be used for browsing context
+groups swaps to another COOP group, and to help restore names on back
+navigation for example.</p>
   </main>
 <script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
-  <aside class="dfn-panel" data-for="term-for-coep">
-   <a href="https://html.spec.whatwg.org/C/#coep">https://html.spec.whatwg.org/C/#coep</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-coep">1.1. Recommended readings</a> <a href="#ref-for-coep①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-cross-origin-opener-policies">
-   <a href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies">https://html.spec.whatwg.org/C/#cross-origin-opener-policies</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-cross-origin-opener-policies">1.1. Recommended readings</a> <a href="#ref-for-cross-origin-opener-policies①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-coep">
-   <a href="https://html.spec.whatwg.org/C/#coep">https://html.spec.whatwg.org/C/#coep</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-coep">1.1. Recommended readings</a> <a href="#ref-for-coep①">(2)</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-cross-origin-opener-policies">
-   <a href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies">https://html.spec.whatwg.org/C/#cross-origin-opener-policies</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-cross-origin-opener-policies">1.1. Recommended readings</a> <a href="#ref-for-cross-origin-opener-policies①">(2)</a>
-   </ul>
-  </aside>
+  <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <ul class="index">
+   <li><a href="#coop-restrict-properties">coop-restrict-properties</a><span>, in § 6.1</span>
+  </ul>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-coep">coep</span>
-     <li><span class="dfn-paneled" id="term-for-cross-origin-opener-policies">coop</span>
-     <li><span class="dfn-paneled" id="term-for-coep①">cross-origin-embedder-policy</span>
-     <li><span class="dfn-paneled" id="term-for-cross-origin-opener-policies①">cross-origin-opener-policy</span>
+     <li><span class="dfn-paneled" id="6d88ab2e">browsing context</span>
+     <li><span class="dfn-paneled" id="64e8248c">browsing-context-group</span>
+     <li><span class="dfn-paneled" id="d8813cef">coep</span>
+     <li><span class="dfn-paneled" id="e3892898">coop</span>
+     <li><span class="dfn-paneled" id="006fd69c">coop-same-origin</span>
+     <li><span class="dfn-paneled" id="b4f743f7">coop-same-origin-allow-popups</span>
+     <li><span class="dfn-paneled" id="788ad1e5">cross-origin opener policy</span>
+     <li><span class="dfn-paneled" id="047398fc">cross-origin-embedder-policy</span>
+     <li><span class="dfn-paneled" id="20d23287">cross-origin-opener-policy</span>
+     <li><span class="dfn-paneled" id="9e0e363c">cross-origin-opener-policy-value</span>
+     <li><span class="dfn-paneled" id="f26905b5">same origin</span>
+     <li><span class="dfn-paneled" id="c2fcb960">top-level browsing context</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -728,68 +1119,372 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   </dl>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
-   <dt id="biblio-coep-credentialless">[COEP-credentialless]
-   <dd>Arthur Sonzogni; et al. <a href="https://wicg.github.io/cross-origin-embedder-policy/"><cite>COEP: credentialless</cite></a>. URL: <a href="https://wicg.github.io/cross-origin-embedder-policy/">https://wicg.github.io/cross-origin-embedder-policy/</a>
-   <dt id="biblio-coep-require-corp">[COEP-require-corp]
-   <dd>Mike West. <a href="https://wicg.github.io/cross-origin-embedder-policy/"><cite>COEP</cite></a>. URL: <a href="https://wicg.github.io/cross-origin-embedder-policy/">https://wicg.github.io/cross-origin-embedder-policy/</a>
    <dt id="biblio-spectre">[Spectre]
    <dd>Paul Kocher; et al. <a href="https://spectreattack.com/spectre.pdf"><cite>Spectre Attacks: Exploiting Speculative Execution</cite></a>. URL: <a href="https://spectreattack.com/spectre.pdf">https://spectreattack.com/spectre.pdf</a>
    <dt id="biblio-whycoopcoep">[WhyCoopCoep]
    <dd>Eiji Kitamura; Demenic Denicola. <a href="https://web.dev/why-coop-coep/"><cite>Why you need "cross-origin isolated" for powerful features</cite></a>. URL: <a href="https://web.dev/why-coop-coep/">https://web.dev/why-coop-coep/</a>
   </dl>
-<script>/* script-dfn-panel */
+<script>/* Boilerplate: script-dfn-panel */
+"use strict";
+{
+    const dfnsJson = window.dfnsJson || {};
 
-document.body.addEventListener("click", function(e) {
-    var queryAll = function(sel) { return [].slice.call(document.querySelectorAll(sel)); }
-    // Find the dfn element or panel, if any, that was clicked on.
-    var el = e.target;
-    var target;
-    var hitALink = false;
-    while(el.parentElement) {
-        if(el.tagName == "A") {
-            // Clicking on a link in a <dfn> shouldn't summon the panel
-            hitALink = true;
-        }
-        if(el.classList.contains("dfn-paneled")) {
-            target = "dfn";
-            break;
-        }
-        if(el.classList.contains("dfn-panel")) {
-            target = "dfn-panel";
-            break;
-        }
-        el = el.parentElement;
+    function genDfnPanel({dfnID, url, dfnText, refSections, external}) {
+        return mk.aside({
+            class: "dfn-panel",
+            id: `infopanel-for-${dfnID}`,
+            "data-for": dfnID,
+            "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
+            },
+            mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
+                `Info about the '${dfnText}' ${external?"external":""} reference.`),
+            mk.a({href:url}, url),
+            mk.b({}, "Referenced in:"),
+            mk.ul({},
+                ...refSections.map(section=>
+                    mk.li({},
+                        ...section.refs.map((ref, refI)=>
+                            [
+                                mk.a({
+                                    href: `#${ref.id}`
+                                    },
+                                    (refI == 0) ? section.title : `(${refI + 1})`
+                                ),
+                                " ",
+                            ]
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
-    if(target != "dfn-panel") {
-        // Turn off any currently "on" or "activated" panels.
-        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(function(el){
-            el.classList.remove("on");
-            el.classList.remove("activated");
-        });
-    }
-    if(target == "dfn" && !hitALink) {
-        // open the panel
-        var dfnPanel = document.querySelector(".dfn-panel[data-for='" + el.id + "']");
-        if(dfnPanel) {
-            dfnPanel.classList.add("on");
-            var rect = el.getBoundingClientRect();
-            dfnPanel.style.left = window.scrollX + rect.right + 5 + "px";
-            dfnPanel.style.top = window.scrollY + rect.top + "px";
-            var panelRect = dfnPanel.getBoundingClientRect();
-            var panelWidth = panelRect.right - panelRect.left;
-            if(panelRect.right > document.body.scrollWidth && (rect.left - (panelWidth + 5)) > 0) {
-                // Reposition, because the panel is overflowing
-                dfnPanel.style.left = window.scrollX + rect.left - (panelWidth + 5) + "px";
+
+    function genAllDfnPanels() {
+        for(const panelData of Object.values(window.dfnpanelData)) {
+            const dfnID = panelData.dfnID;
+            const dfn = document.getElementById(dfnID);
+            if(!dfn) {
+                console.log(`Can't find dfn#${dfnID}.`, panelData);
+            } else {
+                const panel = genDfnPanel(panelData);
+                append(document.body, panel);
+                insertDfnPopupAction(dfn, panel)
             }
-        } else {
-            console.log("Couldn't find .dfn-panel[data-for='" + el.id + "']");
         }
-    } else if(target == "dfn-panel") {
-        // Switch it to "activated" state, which pins it.
-        el.classList.add("activated");
-        el.style.left = null;
-        el.style.top = null;
     }
 
+    document.addEventListener("DOMContentLoaded", ()=>{
+        genAllDfnPanels();
+
+        // Add popup behavior to all dfns to show the corresponding dfn-panel.
+        var dfns = queryAll('.dfn-paneled');
+        for(let dfn of dfns) { ; }
+
+        document.body.addEventListener("click", (e) => {
+            // If not handled already, just hide all dfn panels.
+            hideAllDfnPanels();
+        });
+    })
+
+
+    function hideAllDfnPanels() {
+        // Turn off any currently "on" or "activated" panels.
+        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>hideDfnPanel(el));
+    }
+
+    function showDfnPanel(dfnPanel, dfn) {
+        hideAllDfnPanels(); // Only display one at this time.
+        dfn.setAttribute("aria-expanded", "true");
+        dfnPanel.classList.add("on");
+        dfnPanel.style.left = "5px";
+        dfnPanel.style.top = "0px";
+        const panelRect = dfnPanel.getBoundingClientRect();
+        const panelWidth = panelRect.right - panelRect.left;
+        if (panelRect.right > document.body.scrollWidth) {
+            // Panel's overflowing the screen.
+            // Just drop it below the dfn and flip it rightward instead.
+            // This still wont' fix things if the screen is *really* wide,
+            // but fixing that's a lot harder without 'anchor()'.
+            dfnPanel.style.top = "1.5em";
+            dfnPanel.style.left = "auto";
+            dfnPanel.style.right = "0px";
+        }
+    }
+
+    function pinDfnPanel(dfnPanel) {
+        // Switch it to "activated" state, which pins it.
+        dfnPanel.classList.add("activated");
+        dfnPanel.style.left = null;
+        dfnPanel.style.top = null;
+    }
+
+    function hideDfnPanel(dfnPanel, dfn) {
+        if(!dfn) {
+            dfn = document.getElementById(dfnPanel.getAttribute("data-for"));
+        }
+        dfn.setAttribute("aria-expanded", "false")
+        dfnPanel.classList.remove("on");
+        dfnPanel.classList.remove("activated");
+    }
+
+    function toggleDfnPanel(dfnPanel, dfn) {
+        if(dfnPanel.classList.contains("on")) {
+            hideDfnPanel(dfnPanel, dfn);
+        } else {
+            showDfnPanel(dfnPanel, dfn);
+        }
+    }
+
+    function insertDfnPopupAction(dfn, dfnPanel) {
+        // Find dfn panel
+        const panelWrapper = document.createElement('span');
+        panelWrapper.appendChild(dfnPanel);
+        panelWrapper.style.position = "relative";
+        panelWrapper.style.height = "0px";
+        dfn.insertAdjacentElement("afterend", panelWrapper);
+        dfn.setAttribute('role', 'button');
+        dfn.setAttribute('aria-expanded', 'false')
+        dfn.tabIndex = 0;
+        dfn.classList.add('has-dfn-panel');
+        dfn.addEventListener('click', (event) => {
+            showDfnPanel(dfnPanel, dfn);
+            event.stopPropagation();
+        });
+        dfn.addEventListener('keypress', (event) => {
+            const kc = event.keyCode;
+            // 32->Space, 13->Enter
+            if(kc == 32 || kc == 13) {
+                toggleDfnPanel(dfnPanel, dfn);
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        });
+
+        dfnPanel.addEventListener('click', (event) => {
+            if (event.target.nodeName == 'A') {
+                pinDfnPanel(dfnPanel);
+            }
+            event.stopPropagation();
+        });
+
+        dfnPanel.addEventListener('keydown', (event) => {
+            if(event.keyCode == 27) { // Escape key
+                hideDfnPanel(dfnPanel, dfn);
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        })
+    }
+}
+</script>
+<script>/* Boilerplate: script-dfn-panel-json */
+window.dfnpanelData = {};
+window.dfnpanelData['6d88ab2e'] = {"dfnID": "6d88ab2e", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc", "dfnText": "browsing context", "refSections": [{"refs": [{"id": "ref-for-window-bc"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['64e8248c'] = {"dfnID": "64e8248c", "url": "https://html.spec.whatwg.org/C/#browsing-context-group", "dfnText": "browsing-context-group", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['d8813cef'] = {"dfnID": "d8813cef", "url": "https://html.spec.whatwg.org/C/#coep", "dfnText": "coep", "refSections": [{"refs": [{"id": "ref-for-coep"}, {"id": "ref-for-coep\u2460"}], "title": "1.1. Recommended readings"}], "external": true};
+window.dfnpanelData['e3892898'] = {"dfnID": "e3892898", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "coop", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['006fd69c'] = {"dfnID": "006fd69c", "url": "https://html.spec.whatwg.org/C/#coop-same-origin", "dfnText": "coop-same-origin", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-coop-same-origin\u2460"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['b4f743f7'] = {"dfnID": "b4f743f7", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups", "dfnText": "coop-same-origin-allow-popups", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-allow-popups"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['788ad1e5'] = {"dfnID": "788ad1e5", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['047398fc'] = {"dfnID": "047398fc", "url": "https://html.spec.whatwg.org/C/#coep", "dfnText": "cross-origin-embedder-policy", "refSections": [{"refs": [{"id": "ref-for-coep"}, {"id": "ref-for-coep\u2460"}], "title": "1.1. Recommended readings"}], "external": true};
+window.dfnpanelData['20d23287'] = {"dfnID": "20d23287", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "cross-origin-opener-policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['9e0e363c'] = {"dfnID": "9e0e363c", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value", "dfnText": "cross-origin-opener-policy-value", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policy-value"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['f26905b5'] = {"dfnID": "f26905b5", "url": "https://html.spec.whatwg.org/C/#same-origin", "dfnText": "same origin", "refSections": [{"refs": [{"id": "ref-for-same-origin"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['c2fcb960'] = {"dfnID": "c2fcb960", "url": "https://html.spec.whatwg.org/C/#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+</script>
+<script>/* Boilerplate: script-dom-helper */
+function query(sel) { return document.querySelector(sel); }
+
+function queryAll(sel) { return [...document.querySelectorAll(sel)]; }
+
+function iter(obj) {
+	if(!obj) return [];
+	var it = obj[Symbol.iterator];
+	if(it) return it;
+	return Object.entries(obj);
+}
+
+function mk(tagname, attrs, ...children) {
+	const el = document.createElement(tagname);
+	for(const [k,v] of iter(attrs)) {
+		if(k.slice(0,3) == "_on") {
+			const eventName = k.slice(3);
+			el.addEventListener(eventName, v);
+		} else if(k[0] == "_") {
+			// property, not attribute
+			el[k.slice(1)] = v;
+		} else {
+			if(v === false || v == null) {
+        continue;
+      } else if(v === true) {
+        el.setAttribute(k, "");
+        continue;
+      } else {
+  			el.setAttribute(k, v);
+      }
+		}
+	}
+	append(el, children);
+	return el;
+}
+
+/* Create shortcuts for every known HTML element */
+[
+  "a",
+  "abbr",
+  "acronym",
+  "address",
+  "applet",
+  "area",
+  "article",
+  "aside",
+  "audio",
+  "b",
+  "base",
+  "basefont",
+  "bdo",
+  "big",
+  "blockquote",
+  "body",
+  "br",
+  "button",
+  "canvas",
+  "caption",
+  "center",
+  "cite",
+  "code",
+  "col",
+  "colgroup",
+  "datalist",
+  "dd",
+  "del",
+  "details",
+  "dfn",
+  "dialog",
+  "div",
+  "dl",
+  "dt",
+  "em",
+  "embed",
+  "fieldset",
+  "figcaption",
+  "figure",
+  "font",
+  "footer",
+  "form",
+  "frame",
+  "frameset",
+  "head",
+  "header",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "hr",
+  "html",
+  "i",
+  "iframe",
+  "img",
+  "input",
+  "ins",
+  "kbd",
+  "label",
+  "legend",
+  "li",
+  "link",
+  "main",
+  "map",
+  "mark",
+  "meta",
+  "meter",
+  "nav",
+  "nobr",
+  "noscript",
+  "object",
+  "ol",
+  "optgroup",
+  "option",
+  "output",
+  "p",
+  "param",
+  "pre",
+  "progress",
+  "q",
+  "s",
+  "samp",
+  "script",
+  "section",
+  "select",
+  "small",
+  "source",
+  "span",
+  "strike",
+  "strong",
+  "style",
+  "sub",
+  "summary",
+  "sup",
+  "table",
+  "tbody",
+  "td",
+  "template",
+  "textarea",
+  "tfoot",
+  "th",
+  "thead",
+  "time",
+  "title",
+  "tr",
+  "u",
+  "ul",
+  "var",
+  "video",
+  "wbr",
+  "xmp",
+].forEach(tagname=>{
+	mk[tagname] = (...args) => mk(tagname, ...args);
 });
+
+function* nodesFromChildList(children) {
+	for(const child of children.flat(Infinity)) {
+		if(child instanceof Node) {
+			yield child;
+		} else {
+			yield new Text(child);
+		}
+	}
+}
+function append(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		if(el instanceof Node) el.appendChild(child);
+		else el.push(child);
+	}
+	return el;
+}
+
+function insertAfter(el, ...children) {
+	for(const child of nodesFromChildList(children)) {
+		el.parentNode.insertBefore(child, el.nextSibling);
+	}
+	return el;
+}
+
+function clearContents(el) {
+	el.innerHTML = "";
+	return el;
+}
+
+function parseHTML(markup) {
+	if(markup.toLowerCase().trim().indexOf('<!doctype') === 0) {
+		const doc = document.implementation.createHTMLDocument("");
+		doc.documentElement.innerHTML = markup;
+		return doc;
+	} else {
+		const el = mk.template({});
+		el.innerHTML = markup;
+		return el.content;
+	}
+}
 </script>
