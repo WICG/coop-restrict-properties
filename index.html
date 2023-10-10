@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 82ce88815, updated Thu Sep 7 16:33:55 2023 -0700" name="generator">
   <link href="https://github.com/WICG/coop-restrict-properties" rel="canonical">
-  <meta content="a22d4a1d171c5c0755d949828492924ebc6f6db1" name="document-revision">
+  <meta content="822e498f973462f539d72b293210596bc901cdff" name="document-revision">
 <style>
 .monkey-patch {
     padding: .5em;
@@ -404,6 +404,59 @@ figcaption:not(.no-marker)::before {
 
 .dfn-paneled[role="button"] { cursor: pointer; }
 </style>
+<style>/* Boilerplate: style-dfn-panel */
+:root {
+    --dfnpanel-bg: #ddd;
+    --dfnpanel-text: var(--text);
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+.dfn-panel {
+    position: absolute;
+    z-index: 35;
+    width: 20em;
+    width: 300px;
+    height: auto;
+    max-height: 500px;
+    overflow: auto;
+    padding: 0.5em 0.75em;
+    font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+    background: var(--dfnpanel-bg);
+    color: var(--dfnpanel-text);
+    border: outset 0.2em;
+    white-space: normal; /* in case it's moved into a pre */
+}
+.dfn-panel:not(.on) { display: none; }
+.dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
+.dfn-panel > b { display: block; }
+.dfn-panel a { color: var(--dfnpanel-text); }
+.dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
+.dfn-panel > b + b { margin-top: 0.25em; }
+.dfn-panel ul { padding: 0 0 0 1em; list-style: none; }
+.dfn-panel li a {
+    white-space: pre;
+    display: inline-block;
+    max-width: calc(300px - 1.5em - 1em);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dfn-panel.activated {
+    display: inline-block;
+    position: fixed;
+    left: .5em;
+    bottom: 2em;
+    margin: 0 auto;
+    max-width: calc(100vw - 1.5em - .4em - .5em);
+    max-height: 30vh;
+}
+
+.dfn-paneled[role="button"] { cursor: pointer; }
+</style>
 <style>/* Boilerplate: style-issues */
 a[href].issue-return {
     float: right;
@@ -624,7 +677,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Cross-Origin-Opener-Policy: restrict-properties</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-10-06">6 October 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-10-10">10 October 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -684,7 +737,13 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
     <li>
      <a href="#specification"><span class="secno">6</span> <span class="content">Specification</span></a>
      <ol class="toc">
-      <li><a href="#cross-origin-opener-policies"><span class="secno">6.1</span> <span class="content">Cross-origin-opener-policies</span></a>
+      <li>
+       <a href="#cross-origin-opener-policies"><span class="secno">6.1</span> <span class="content">Cross-origin-opener-policies</span></a>
+       <ol class="toc">
+        <li><a href="#coop-values"><span class="secno">6.1.1</span> <span class="content">Cross-origin opener policy values</span></a>
+        <li><a href="#obtain-coop"><span class="secno">6.1.2</span> <span class="content">Obtaining a cross-origin opener policy</span></a>
+        <li><a href="#coop-bcg-switch"><span class="secno">6.1.3</span> <span class="content">Browsing context group switches due to cross-origin opener policy</span></a>
+       </ol>
      </ol>
     <li>
      <a href="#security"><span class="secno">7</span> <span class="content">Security considerations</span></a>
@@ -902,15 +961,54 @@ even outside the crossOriginIsolation paradigm.</p>
    <h2 class="heading settled" data-level="6" id="specification"><span class="secno">6. </span><span class="content">Specification</span><a class="self-link" href="#specification"></a></h2>
    <p>This section defines a monkey-patch over <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">[HTML]</a>.</p>
    <h3 class="heading settled" data-level="6.1" id="cross-origin-opener-policies"><span class="secno">6.1. </span><span class="content">Cross-origin-opener-policies</span><a class="self-link" href="#cross-origin-opener-policies"></a></h3>
+   <h4 class="heading settled" data-level="6.1.1" id="coop-values"><span class="secno">6.1.1. </span><span class="content">Cross-origin opener policy values</span><a class="self-link" href="#coop-values"></a></h4>
    <p>In the <a href="https://html.spec.whatwg.org/#cross-origin-opener-policies">cross-origin opener
 policies</a> section,
 extend the possible <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value">cross-origin opener polic values</a>:</p>
    <div class="monkey-patch">
-     <dfn data-dfn-type="dfn" data-lt="coop-restrict-properties" data-noexport id="coop-restrict-properties">restrict-properties<a class="self-link" href="#coop-restrict-properties"></a></dfn> 
+     <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-restrict-properties" data-noexport id="coop-restrict-properties">restrict-properties</dfn> 
     <p>This forces the creation of a new <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing context</a> for the document,
-unless its predecessor specified the same <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies⑥">cross-origin opener policy</a> and they
-are <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#same-origin" id="ref-for-same-origin">same origin</a>. Unlike <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin①">same-origin</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups" id="ref-for-coop-same-origin-allow-popups">same-origin-allow-popups</a>, the newly created <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc">browsing context</a> and its <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①">browsing context group</a> will stay in the same <a data-link-type="dfn">coop group</a>.</p>
+unless its predecessor specified the same <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy">cross-origin opener policy</a> and they
+are <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#same-origin" id="ref-for-same-origin">same origin</a>. Unlike <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin①">same-origin</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups" id="ref-for-coop-same-origin-allow-popups">same-origin-allow-popups</a>, the newly created <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc">browsing context</a> and its <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①">browsing context group</a> will stay in the same <a data-link-type="dfn">coop group</a>. Any <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#auxilliary-browsing-context" id="ref-for-auxilliary-browsing-context">auxilliary browsing context</a> created needs to contain <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#same-origin" id="ref-for-same-origin①">same origin</a> documents with the same <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy①">cross-origin
+opener policy</a>, or it will be placed in a different <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group②">browsing context group</a> in the <a data-link-type="dfn">coop-group</a>.</p>
+    <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-restrict-properties-plus-coep" data-noexport id="coop-restrict-properties-plus-coep">restrict-properties-plus-coep</dfn></p>
+    <p>This behaves the same as "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties">coop-restrict-properties</a>", with the addition that
+it sets the (new) <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context①">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group③">group</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation" id="ref-for-bcg-cross-origin-isolation">cross-origin isolation mode</a> to one of
+"logical" or "concrete".</p>
    </div>
+   <p>Extend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy②">cross-origin opener policy</a> definition:</p>
+   <div class="monkey-patch">
+    <ul>
+     <li data-md>
+      <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-origin" data-noexport id="coop-origin">COOP origin</dfn>, which is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin">origin</a>, initially the empty <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin①">origin</a>.</p>
+    </ul>
+   </div>
+   <h4 class="heading settled" data-level="6.1.2" id="obtain-coop"><span class="secno">6.1.2. </span><span class="content">Obtaining a cross-origin opener policy</span><a class="self-link" href="#obtain-coop"></a></h4>
+   <p>Modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#obtain-coop" id="ref-for-obtain-coop">obtain a cross-origin opener policy</a>. First, add an origin parameter:</p>
+   <div class="monkey-patch"> To <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#obtain-coop" id="ref-for-obtain-coop①">obtain a cross-origin opener policy</a> given a <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-response" id="ref-for-concept-response">response</a> <em>response</em>, an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#environment" id="ref-for-environment">environment</a> <em>reservedEnvironment</em>, and an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin②">origin</a> <em>origin</em>: </div>
+   <p>Then, add a step after step 4.1:</p>
+   <div class="monkey-patch">
+     4.2. If <em>parsedItem</em>[0] is "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties①">restrict-properties</a>", then: 
+    <ol>
+     <li data-md>
+      <p>Let <em>coep</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#obtain-an-embedder-policy" id="ref-for-obtain-an-embedder-policy">obtaining a cross-origin embedder policy</a> from <em>response</em> and <em>reservedEnvironment</em>.</p>
+     <li data-md>
+      <p>If <em>coep</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#embedder-policy-value-2" id="ref-for-embedder-policy-value-2">value</a> is <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#compatible-with-cross-origin-isolation" id="ref-for-compatible-with-cross-origin-isolation">compatible with
+ cross-origin isolation</a>, then set <em>policy</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value①">value</a> to
+ "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep">restrict-properties-plus-coep</a>.</p>
+     <li data-md>
+      <p>Otherwise, set <em>policy</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value②">value</a> to
+ "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties②">restrict-properties</a>.</p>
+    </ol>
+   </div>
+   <p>Finally, add a step 5:</p>
+   <div class="monkey-patch">
+    <ol start="5">
+     <li data-md>
+      <p>Set <em>policy</em>'s <a data-link-type="dfn" href="#coop-origin" id="ref-for-coop-origin">COOP origin</a> to <em>origin</em>.</p>
+    </ol>
+   </div>
+   <h4 class="heading settled" data-level="6.1.3" id="coop-bcg-switch"><span class="secno">6.1.3. </span><span class="content">Browsing context group switches due to cross-origin opener policy</span><a class="self-link" href="#coop-bcg-switch"></a></h4>
    <h2 class="heading settled" data-level="7" id="security"><span class="secno">7. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="same-origin-policy"><span class="secno">7.1. </span><span class="content">Same-origin policy</span><a class="self-link" href="#same-origin-policy"></a></h3>
    <p>Our proposal creates an unprecedented possibility: that two same-origin
@@ -1090,23 +1188,38 @@ navigation for example.</p>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#coop-restrict-properties">coop-restrict-properties</a><span>, in § 6.1</span>
+   <li><a href="#coop-origin">coop-origin</a><span>, in § 6.1.1</span>
+   <li><a href="#coop-restrict-properties">coop-restrict-properties</a><span>, in § 6.1.1</span>
+   <li><a href="#coop-restrict-properties-plus-coep">coop-restrict-properties-plus-coep</a><span>, in § 6.1.1</span>
   </ul>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
    <li>
+    <a data-link-type="biblio">[FETCH]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="ee7bba09">response</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="5c7155e4">auxilliary browsing context</span>
      <li><span class="dfn-paneled" id="6d88ab2e">browsing context</span>
      <li><span class="dfn-paneled" id="64e8248c">browsing-context-group</span>
      <li><span class="dfn-paneled" id="d8813cef">coep</span>
+     <li><span class="dfn-paneled" id="bee39f64">compatible with cross-origin isolation</span>
      <li><span class="dfn-paneled" id="e3892898">coop</span>
      <li><span class="dfn-paneled" id="006fd69c">coop-same-origin</span>
      <li><span class="dfn-paneled" id="b4f743f7">coop-same-origin-allow-popups</span>
-     <li><span class="dfn-paneled" id="788ad1e5">cross-origin opener policy</span>
+     <li><span class="dfn-paneled" id="2a9c82c5">cross-origin isolation mode</span>
+     <li><span class="dfn-paneled" id="924e5259">cross-origin opener policy</span>
      <li><span class="dfn-paneled" id="047398fc">cross-origin-embedder-policy</span>
      <li><span class="dfn-paneled" id="20d23287">cross-origin-opener-policy</span>
      <li><span class="dfn-paneled" id="9e0e363c">cross-origin-opener-policy-value</span>
+     <li><span class="dfn-paneled" id="b998573a">embedder-policy-value-2</span>
+     <li><span class="dfn-paneled" id="77a2dc1b">environment</span>
+     <li><span class="dfn-paneled" id="e7c981a5">obtain a cross-origin opener policy</span>
+     <li><span class="dfn-paneled" id="50a80b1e">obtaining a cross-origin embedder policy</span>
+     <li><span class="dfn-paneled" id="3124aef9">origin</span>
      <li><span class="dfn-paneled" id="f26905b5">same origin</span>
      <li><span class="dfn-paneled" id="c2fcb960">top-level browsing context</span>
     </ul>
@@ -1114,6 +1227,8 @@ navigation for example.</p>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-fetch">[FETCH]
+   <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/"><cite>Fetch Standard</cite></a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/"><cite>HTML Standard</cite></a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
   </dl>
@@ -1277,20 +1392,185 @@ navigation for example.</p>
     }
 }
 </script>
+<script>/* Boilerplate: script-dfn-panel */
+"use strict";
+{
+    const dfnsJson = window.dfnsJson || {};
+
+    function genDfnPanel({dfnID, url, dfnText, refSections, external}) {
+        return mk.aside({
+            class: "dfn-panel",
+            id: `infopanel-for-${dfnID}`,
+            "data-for": dfnID,
+            "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
+            },
+            mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
+                `Info about the '${dfnText}' ${external?"external":""} reference.`),
+            mk.a({href:url}, url),
+            mk.b({}, "Referenced in:"),
+            mk.ul({},
+                ...refSections.map(section=>
+                    mk.li({},
+                        ...section.refs.map((ref, refI)=>
+                            [
+                                mk.a({
+                                    href: `#${ref.id}`
+                                    },
+                                    (refI == 0) ? section.title : `(${refI + 1})`
+                                ),
+                                " ",
+                            ]
+                        ),
+                    ),
+                ),
+            ),
+        );
+    }
+
+    function genAllDfnPanels() {
+        for(const panelData of Object.values(window.dfnpanelData)) {
+            const dfnID = panelData.dfnID;
+            const dfn = document.getElementById(dfnID);
+            if(!dfn) {
+                console.log(`Can't find dfn#${dfnID}.`, panelData);
+            } else {
+                const panel = genDfnPanel(panelData);
+                append(document.body, panel);
+                insertDfnPopupAction(dfn, panel)
+            }
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+        genAllDfnPanels();
+
+        // Add popup behavior to all dfns to show the corresponding dfn-panel.
+        var dfns = queryAll('.dfn-paneled');
+        for(let dfn of dfns) { ; }
+
+        document.body.addEventListener("click", (e) => {
+            // If not handled already, just hide all dfn panels.
+            hideAllDfnPanels();
+        });
+    })
+
+
+    function hideAllDfnPanels() {
+        // Turn off any currently "on" or "activated" panels.
+        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>hideDfnPanel(el));
+    }
+
+    function showDfnPanel(dfnPanel, dfn) {
+        hideAllDfnPanels(); // Only display one at this time.
+        dfn.setAttribute("aria-expanded", "true");
+        dfnPanel.classList.add("on");
+        dfnPanel.style.left = "5px";
+        dfnPanel.style.top = "0px";
+        const panelRect = dfnPanel.getBoundingClientRect();
+        const panelWidth = panelRect.right - panelRect.left;
+        if (panelRect.right > document.body.scrollWidth) {
+            // Panel's overflowing the screen.
+            // Just drop it below the dfn and flip it rightward instead.
+            // This still wont' fix things if the screen is *really* wide,
+            // but fixing that's a lot harder without 'anchor()'.
+            dfnPanel.style.top = "1.5em";
+            dfnPanel.style.left = "auto";
+            dfnPanel.style.right = "0px";
+        }
+    }
+
+    function pinDfnPanel(dfnPanel) {
+        // Switch it to "activated" state, which pins it.
+        dfnPanel.classList.add("activated");
+        dfnPanel.style.left = null;
+        dfnPanel.style.top = null;
+    }
+
+    function hideDfnPanel(dfnPanel, dfn) {
+        if(!dfn) {
+            dfn = document.getElementById(dfnPanel.getAttribute("data-for"));
+        }
+        dfn.setAttribute("aria-expanded", "false")
+        dfnPanel.classList.remove("on");
+        dfnPanel.classList.remove("activated");
+    }
+
+    function toggleDfnPanel(dfnPanel, dfn) {
+        if(dfnPanel.classList.contains("on")) {
+            hideDfnPanel(dfnPanel, dfn);
+        } else {
+            showDfnPanel(dfnPanel, dfn);
+        }
+    }
+
+    function insertDfnPopupAction(dfn, dfnPanel) {
+        // Find dfn panel
+        const panelWrapper = document.createElement('span');
+        panelWrapper.appendChild(dfnPanel);
+        panelWrapper.style.position = "relative";
+        panelWrapper.style.height = "0px";
+        dfn.insertAdjacentElement("afterend", panelWrapper);
+        dfn.setAttribute('role', 'button');
+        dfn.setAttribute('aria-expanded', 'false')
+        dfn.tabIndex = 0;
+        dfn.classList.add('has-dfn-panel');
+        dfn.addEventListener('click', (event) => {
+            showDfnPanel(dfnPanel, dfn);
+            event.stopPropagation();
+        });
+        dfn.addEventListener('keypress', (event) => {
+            const kc = event.keyCode;
+            // 32->Space, 13->Enter
+            if(kc == 32 || kc == 13) {
+                toggleDfnPanel(dfnPanel, dfn);
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        });
+
+        dfnPanel.addEventListener('click', (event) => {
+            if (event.target.nodeName == 'A') {
+                pinDfnPanel(dfnPanel);
+            }
+            event.stopPropagation();
+        });
+
+        dfnPanel.addEventListener('keydown', (event) => {
+            if(event.keyCode == 27) { // Escape key
+                hideDfnPanel(dfnPanel, dfn);
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        })
+    }
+}
+</script>
 <script>/* Boilerplate: script-dfn-panel-json */
 window.dfnpanelData = {};
-window.dfnpanelData['6d88ab2e'] = {"dfnID": "6d88ab2e", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc", "dfnText": "browsing context", "refSections": [{"refs": [{"id": "ref-for-window-bc"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
-window.dfnpanelData['64e8248c'] = {"dfnID": "64e8248c", "url": "https://html.spec.whatwg.org/C/#browsing-context-group", "dfnText": "browsing-context-group", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['ee7bba09'] = {"dfnID": "ee7bba09", "url": "https://fetch.spec.whatwg.org/#concept-response", "dfnText": "response", "refSections": [{"refs": [{"id": "ref-for-concept-response"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['5c7155e4'] = {"dfnID": "5c7155e4", "url": "https://html.spec.whatwg.org/C/#auxilliary-browsing-context", "dfnText": "auxilliary browsing context", "refSections": [{"refs": [{"id": "ref-for-auxilliary-browsing-context"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['6d88ab2e'] = {"dfnID": "6d88ab2e", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc", "dfnText": "browsing context", "refSections": [{"refs": [{"id": "ref-for-window-bc"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['64e8248c'] = {"dfnID": "64e8248c", "url": "https://html.spec.whatwg.org/C/#browsing-context-group", "dfnText": "browsing-context-group", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460"}, {"id": "ref-for-browsing-context-group\u2461"}, {"id": "ref-for-browsing-context-group\u2462"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
 window.dfnpanelData['d8813cef'] = {"dfnID": "d8813cef", "url": "https://html.spec.whatwg.org/C/#coep", "dfnText": "coep", "refSections": [{"refs": [{"id": "ref-for-coep"}, {"id": "ref-for-coep\u2460"}], "title": "1.1. Recommended readings"}], "external": true};
-window.dfnpanelData['e3892898'] = {"dfnID": "e3892898", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "coop", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
-window.dfnpanelData['006fd69c'] = {"dfnID": "006fd69c", "url": "https://html.spec.whatwg.org/C/#coop-same-origin", "dfnText": "coop-same-origin", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-coop-same-origin\u2460"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
-window.dfnpanelData['b4f743f7'] = {"dfnID": "b4f743f7", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups", "dfnText": "coop-same-origin-allow-popups", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-allow-popups"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
-window.dfnpanelData['788ad1e5'] = {"dfnID": "788ad1e5", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['bee39f64'] = {"dfnID": "bee39f64", "url": "https://html.spec.whatwg.org/C/#compatible-with-cross-origin-isolation", "dfnText": "compatible with cross-origin isolation", "refSections": [{"refs": [{"id": "ref-for-compatible-with-cross-origin-isolation"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['e3892898'] = {"dfnID": "e3892898", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "coop", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}], "external": true};
+window.dfnpanelData['006fd69c'] = {"dfnID": "006fd69c", "url": "https://html.spec.whatwg.org/C/#coop-same-origin", "dfnText": "coop-same-origin", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-coop-same-origin\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['b4f743f7'] = {"dfnID": "b4f743f7", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups", "dfnText": "coop-same-origin-allow-popups", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-allow-popups"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['2a9c82c5'] = {"dfnID": "2a9c82c5", "url": "https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation", "dfnText": "cross-origin isolation mode", "refSections": [{"refs": [{"id": "ref-for-bcg-cross-origin-isolation"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['924e5259'] = {"dfnID": "924e5259", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policy", "dfnText": "cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policy"}, {"id": "ref-for-cross-origin-opener-policy\u2460"}, {"id": "ref-for-cross-origin-opener-policy\u2461"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
 window.dfnpanelData['047398fc'] = {"dfnID": "047398fc", "url": "https://html.spec.whatwg.org/C/#coep", "dfnText": "cross-origin-embedder-policy", "refSections": [{"refs": [{"id": "ref-for-coep"}, {"id": "ref-for-coep\u2460"}], "title": "1.1. Recommended readings"}], "external": true};
-window.dfnpanelData['20d23287'] = {"dfnID": "20d23287", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "cross-origin-opener-policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
-window.dfnpanelData['9e0e363c'] = {"dfnID": "9e0e363c", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value", "dfnText": "cross-origin-opener-policy-value", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policy-value"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
-window.dfnpanelData['f26905b5'] = {"dfnID": "f26905b5", "url": "https://html.spec.whatwg.org/C/#same-origin", "dfnText": "same origin", "refSections": [{"refs": [{"id": "ref-for-same-origin"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
-window.dfnpanelData['c2fcb960'] = {"dfnID": "c2fcb960", "url": "https://html.spec.whatwg.org/C/#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}], "title": "6.1. Cross-origin-opener-policies"}], "external": true};
+window.dfnpanelData['20d23287'] = {"dfnID": "20d23287", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "cross-origin-opener-policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}], "external": true};
+window.dfnpanelData['9e0e363c'] = {"dfnID": "9e0e363c", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value", "dfnText": "cross-origin-opener-policy-value", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policy-value"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-cross-origin-opener-policy-value\u2460"}, {"id": "ref-for-cross-origin-opener-policy-value\u2461"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['b998573a'] = {"dfnID": "b998573a", "url": "https://html.spec.whatwg.org/C/#embedder-policy-value-2", "dfnText": "embedder-policy-value-2", "refSections": [{"refs": [{"id": "ref-for-embedder-policy-value-2"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['77a2dc1b'] = {"dfnID": "77a2dc1b", "url": "https://html.spec.whatwg.org/C/#environment", "dfnText": "environment", "refSections": [{"refs": [{"id": "ref-for-environment"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['e7c981a5'] = {"dfnID": "e7c981a5", "url": "https://html.spec.whatwg.org/C/#obtain-coop", "dfnText": "obtain a cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-obtain-coop"}, {"id": "ref-for-obtain-coop\u2460"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['50a80b1e'] = {"dfnID": "50a80b1e", "url": "https://html.spec.whatwg.org/C/#obtain-an-embedder-policy", "dfnText": "obtaining a cross-origin embedder policy", "refSections": [{"refs": [{"id": "ref-for-obtain-an-embedder-policy"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['3124aef9'] = {"dfnID": "3124aef9", "url": "https://html.spec.whatwg.org/C/#concept-origin", "dfnText": "origin", "refSections": [{"refs": [{"id": "ref-for-concept-origin"}, {"id": "ref-for-concept-origin\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-concept-origin\u2461"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
+window.dfnpanelData['f26905b5'] = {"dfnID": "f26905b5", "url": "https://html.spec.whatwg.org/C/#same-origin", "dfnText": "same origin", "refSections": [{"refs": [{"id": "ref-for-same-origin"}, {"id": "ref-for-same-origin\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['c2fcb960'] = {"dfnID": "c2fcb960", "url": "https://html.spec.whatwg.org/C/#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}, {"id": "ref-for-top-level-browsing-context\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['coop-restrict-properties'] = {"dfnID": "coop-restrict-properties", "url": "#coop-restrict-properties", "dfnText": "restrict-properties", "refSections": [{"refs": [{"id": "ref-for-coop-restrict-properties"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-coop-restrict-properties\u2460"}, {"id": "ref-for-coop-restrict-properties\u2461"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": false};
+window.dfnpanelData['coop-restrict-properties-plus-coep'] = {"dfnID": "coop-restrict-properties-plus-coep", "url": "#coop-restrict-properties-plus-coep", "dfnText": "restrict-properties-plus-coep", "refSections": [{"refs": [{"id": "ref-for-coop-restrict-properties-plus-coep"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": false};
+window.dfnpanelData['coop-origin'] = {"dfnID": "coop-origin", "url": "#coop-origin", "dfnText": "COOP origin", "refSections": [{"refs": [{"id": "ref-for-coop-origin"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": false};
 </script>
 <script>/* Boilerplate: script-dom-helper */
 function query(sel) { return document.querySelector(sel); }
