@@ -76,14 +76,24 @@ WPT Display: inline
 urlPrefix: https://tc39.es/ecma262/; spec: ECMAScript
   text: SharedArrayBuffer; type: interface; url: sec-sharedarraybuffer-objects
 
+urlPrefix: https://infra.spec.whatwg.org/; spec: Infra 
+  text: map-size; type:dfn; url:map-size
+  text: list-size; type:dfn; url:list-size
+
 urlPrefix: https://html.spec.whatwg.org/C/; spec: html
   text: auxilliary browsing context; type:dfn; url:auxilliary-browsing-context
   text: browsing context; type:dfn; url:browsing-context
   text: browsing-context-group; type:dfn; url:browsing-context-group
   text: Browsing context group switches due to cross-origin opener policy; type:dfn; url:browsing-context-group-switches-due-to-cross-origin-opener-policy
+  text: browsing context set; type:dfn; url:browsing context set
   text: check if COOP values require a browsing context group switch; type: dfn; url: check-browsing-context-group-switch-coop-value
+  text: checking if COOP values require a browsing context group switch; type: dfn; url: check-browsing-context-group-switch-coop-value
+  text: check if enforcing report-only COOP would require a browsing context group switch; type: dfn; url: check-bcg-switch-report-only
+  text: checking if enforcing report-only COOP would require a browsing context group switch; type: dfn; url: check-bcg-switch-report-only
   text: COEP; type: dfn; url: coep
   text: COOP; type: dfn; url: cross-origin-opener-policies
+  text: coop-enforcement-origin; type: dfn; url: coop-enforcement-origin
+  text: current context is navigation source; type: dfn; url: coop-enforcement-source
   text: coop-same-origin; type: dfn; url: coop-same-origin
   text: coop-same-origin-allow-popups; type: dfn; url: coop-same-origin-allow-popups
   text: compatible with cross-origin isolation; type: dfn; url:compatible-with-cross-origin-isolation
@@ -95,27 +105,38 @@ urlPrefix: https://html.spec.whatwg.org/C/; spec: html
   text: Cross-Origin-Opener-Policy; type: dfn; url: cross-origin-opener-policies
   text: cross-origin opener policy; type: dfn; url: cross-origin-opener-policy
   text: cross-origin-opener-policy-value; type: dfn; url: cross-origin-opener-policy-value
+  text: cross-origin opener policy enforcement result; type: dfn; url:coop-enforcement-result
   text: crossOriginIsolated; type:dfn; url:concept-settings-object-cross-origin-isolated-capability
   text: cross-origin isolation mode; type:dfn; url: bcg-cross-origin-isolation
   text: embedder-policy-report-only-value; type: dfn; url: embedder-policy-report-only-value
   text: embedder-policy-value; type:dfn; url:embedder-policy-value
   text: embedder-policy-value-2; type:dfn; url:embedder-policy-value-2
   text: environment; type:dfn; url:environment
+  text: enforce a response's cross-origin opener policy; type:dfn; url:coop-enforce
   text: matching-coop; type:dfn; url:matching-coop
+  text: needs a browsing context group switch; type:dfn; url: coop-enforcement-bcg-switch
   text: navigation params; type:dfn; url:navigation-params
   text: navigation-params-hh; type:dfn; url:navigation-params-hh
   text: navigation-params-origin; type:dfn; url:navigation-params-origin
+  text: coop-enforcement-bcg-switch; type:dfn; url:coop-enforcement-bcg-switch
   text: policy-container-embedder-policy; type: dfn; url: policy-container-embedder-policy
+  text: popup sandboxing flag set; type: dfn; url: popup-sandboxing-flag-set
+  text: queue a violation report for browsing context group switch when navigating to a COOP response; type:dfn; url:coop-violation-navigation-to
+  text: Queue a violation report for browsing context group switch when navigating away from a COOP response; type:dfn; url:coop-violation-navigation-from
   text: obtaining a cross-origin embedder policy; type:dfn; url:obtain-an-embedder-policy
   text: obtain a cross-origin opener policy; type:dfn; url:obtain-coop
+  text: obtain a browsing context to use for a navigation response; type:dfn; url:obtain-browsing-context-navigation
   text: origin; type:dfn; url:concept-origin
+  text: report-only value; type:dfn; url:coop-struct-report-only-value
   text: response; type:dfn; url:concept-response
   text: same-origin-allow-popups; type:dfn; url:coop-same-origin-allow-popups
   text: same-origin-plus-coep; type:dfn; url:coop-same-origin-plus-coep
   text: top-level browsing context; type:dfn; url:top-level-browsing-context
   text: same origin; type:dfn; url:same-origin
   text: unsafe-none; type:dfn; url:coop-unsafe-none
+  text: virtual browsing context group id; type:dfn; url:virtual-browsing-context-group-id
   text: window open steps; type:dfn; url:window-open-steps
+  text: would need a browsing context group switch due to report-only; type:dfn; url:coop-enforcement-bcg-switch-report-only
   <!--text: A; type:dfn; url:A-->
   <!--text: A; type:dfn; url:A-->
 
@@ -488,6 +509,191 @@ The algorithm to [=check if COOP values require a browsing context group switch=
    - *responseCOOPValue* is "[=same-origin-plus-coep=]";
    - then return "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]".
 4. Return "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]".
+
+</div>
+
+The algorithm to [=check if enforcing report-only COOP would require a browsing
+context group switch=] becomes:
+
+<div class="monkey-patch">
+
+1. If the result of [=checking if COOP values require a browsing context group
+   switch=] given *isInitialAboutBlank*, *responseOrigin*,
+   *activeDocumentNavigationOrigin*, *responseCOOP*'s [=report-only value=] and
+   *activeDocumentCOOPReportOnly*'s [=report-only value=] is
+   [=coop-enforcement-value-no-switch|no-switch=], then return
+   [=coop-enforcement-value-no-switch|no-switch=].
+2. Let *activeDocumentReportOnlyCOOPEnforcementValue* be the result of
+   [=checking if COOP values require a browsing context group switch=] given
+   *isInitialAboutBlank*, *responseOrigin*, *activeDocumentNavigationOrigin*,
+   *responseCOOP*'s [=cross-origin-opener-policy-value|value=] and
+   *activeDocumentCOOPReportOnly*'s [=report-only value=].
+3. Let *responseReportOnlyCOOPEnforcementValue* be the result of
+   [=checking if COOP values require a browsing context group switch=] given
+   *isInitialAboutBlank*, *responseOrigin*, *activeDocumentNavigationOrigin*,
+   *responseCOOP*'s [=report-only value=] and
+   *activeDocumentCOOPReportOnly*'s [=cross-origin-opener-policy-value|value=].
+4. If *activeDocumentReportOnlyCOOPEnforcementValue* is
+   [=coop-enforcement-value-coop-group-switch|coop-group-switch=] or
+   *responseReportOnlyCOOPEnforcementValue* is
+   [=coop-enforcement-value-coop-group-switch|coop-group-switch=], return
+   [=coop-enforcement-value-coop-group-switch|coop-group-switch=].
+5. If *activeDocumentReportOnlyCOOPEnforcementValue* is
+   [=coop-enforcement-value-bcg-switch|browsing-contex-group-switch=] or
+   *responseReportOnlyCOOPEnforcementValue* is
+   [=coop-enforcement-value-bcg-switch|browsing-group-switch=], return
+   [=coop-enforcement-value-bcg-switch|browsing-group-switch=].
+6. Return [=coop-enforcement-value-no-switch|no-switch=]. 
+
+</div>
+
+Change the two first members of the [=cross-origin opener policy enforcement result=]:
+
+<div class="monkey-patch">
+
+- A [=coop-enforcement-value|COOP enforcement value=] [=needs a browsing context
+  group switch=], initially [=coop-enforcement-value-no-switch|no-switch=].
+- A [=coop-enforcement-value|COOP enforcement value=] [=would need a browsing
+  context group switch due to report-only=], initially
+  [=coop-enforcement-value-no-switch|no-switch=].
+
+</div>
+
+Modify the [=enforce a response's cross-origin opener policy=] algorithm:
+
+<div class="monkey-patch">
+
+4. Let *newCOOPEnforcementResultValue*'s be the result of [=checking if COOP values
+   require a browsing context group switch=] given *isInitialAboutBlank*,
+   *currentCOOPEnforcementResult*'s [=cross-origin opener policy=]'s
+   [=cross-origin-opener-policy-value|value=], *currentCOOPEnforcementResult*'s
+   [=origin=], *responseCOOP*'s [=cross-origin-opener-policy-value|value=], and
+   *responseOrigin*.
+5. If *newCOOPEnforcementResultValue* is
+   "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", then:
+   1. Set *newCOOPEnforcementResult*'s [=needs a browsing context group
+      switch=] to "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]".
+   2. If *browsingContext*'s [=browsing-context-group|group=]'s [=browsing context
+      set=]'s [=list-size|size=] is greater than 1, or if *browsingContext*'s
+      [=browsing-context-group|group=]'s [=coop-group|COOP group=]'s
+      [=coop-group-bcg-map|browsing context group map=]'s [=map-size|size=] is
+      greater than 1, then:
+      1. [=Queue a violation report for browsing context group switch when
+         navigating to a COOP response=] with *responseCOOP*, "*enforce*", *responseURL*,
+         *currentCOOPEnforcementResult*'s [=url=], *currentCOOPEnforcementResult*'s [=origin=],
+         *responseOrigin*, and *referrer*.
+      2. [=Queue a violation report for browsing context group switch when
+         navigating away from a COOP response=] with
+         *currentCOOPEnforcementResult*'s [=cross-origin opener policy=]'s , "*enforce*",
+         *currentCOOPEnforcementResult*'s [=url=], *responseURL*, *currentCOOPEnforcementResult*'s
+         [=coop-enforcement-origin|origin=], *responseOrigin*, and
+         *currentCOOPEnforcementResult*'s [=current context is navigation source=].
+6. If *newCOOPEnforcementResultValue* is
+   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]", and 
+   *newCOOPEnforcementResult*'s [=needs a browsing context group switch=] is
+   "[=coop-enforcement-value-no-switch|no-switch=]", set *newCOOPEnforcementResult*'s
+   [=needs a browsing context group switch=] to
+   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]".
+7. Let *newCOOPEnforcementResultReportOnlyValue* be the result of [=checking if
+   enforcing report-only COOP would require a browsing context group switch=]
+   given *isInitialAboutBlank*, *responseOrigin*,
+   *currentCOOPEnforcementResult*'s [=origin=], *responseCOOP*, and
+   *currentCOOPEnforcementResult*'s [=cross-origin opener policy=].
+8. If *newCOOPEnforcementResultReportOnlyValue* is
+   "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", then:
+   1. Set *newCOOPEnforcementResult*'s [=would need a browsing context group
+      switch due to report-only=] to
+      "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]".
+   2. If *browsingContext*'s [=browsing-context-group|group=]'s [=browsing context
+      set=]'s [=list-size|size=] is greater than 1, or if *browsingContext*'s
+      [=browsing-context-group|group=]'s [=coop-group|COOP group=]'s
+      [=coop-group-bcg-map|browsing context group map=]'s [=map-size|size=] is
+      greater than 1, then:
+      1. [=Queue a violation report for browsing context group switch when
+         navigating to a COOP response=] with *responseCOOP*, "*reporting*", *responseURL*,
+         *currentCOOPEnforcementResult*'s [=url=], *currentCOOPEnforcementResult*'s [=origin=],
+         *responseOrigin*, and *referrer*.
+      2. [=Queue a violation report for browsing context group switch when
+         navigating away from a COOP response=] with
+         *currentCOOPEnforcementResult*'s [=cross-origin opener policy=]'s , "*reporting*",
+         *currentCOOPEnforcementResult*'s [=url=], *responseURL*, *currentCOOPEnforcementResult*'s
+         [=coop-enforcement-origin|origin=], *responseOrigin*, and
+         *currentCOOPEnforcementResult*'s [=current context is navigation source=].
+9. If *newCOOPEnforcementResultReportOnlyValue* is
+   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]", and 
+   *newCOOPEnforcementResult*'s [=would need a browsing context group
+   switch due to report-only=] is
+   "[=coop-enforcement-value-no-switch|no-switch=]", set *newCOOPEnforcementResult*'s
+   [=would need a browsing context group switch due to report-only=] to
+   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]".
+10. Return *newCOOPEnforcementResult*.
+
+</div>
+
+The [=obtain a browsing context to use for a navigation response=] becomes:
+
+<div class="monkey-patch">
+
+1. If *browsingContext* is not a [=top-level browsing context=], then return
+   *browsingContext*.
+2. If *coopEnforcementResult*'s [=needs a browsing context group switch=] is
+   "[=coop-enforcement-value-no-switch|no-switch=]", then:
+   1. If *coopEnforcementResult*'s [=would need a browsing context group switch due
+      to report-only=] is
+      "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", set
+      *browsingContext*'s [=virtual coop group ID=] to a new unique identifier.
+   2. Else if *coopEnforcementResult*'s [=would need a browsing context group switch due
+      to report-only=] is
+      "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]":
+      1. If *navigationCOOP*'s [=report-only value=] is
+         "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]", then:
+         1. If *browsingContext*'s [=browsing-context-group|browsing context
+            group=]'s [=coop group=]'s [=virtual crossOriginIsolated browsing
+            context group ID map=] does not contain an entry given the key
+            *coopEnforcementResult*'s [=coop-enforcement-origin|origin=], set
+            the value of *browsingContext*'s [=browsing-context-group|browsing context
+            group=]'s [=coop group=]'s [=virtual crossOriginIsolated browsing
+            context group ID map=] given the key *coopEnforcementResult*'s
+            [=coop-enforcement-origin|origin=] to a new unique identifier.
+         2. Set *browsingContext*'s [=virtual browsing context group id=] to
+            the value of *browsingContext*'s [=browsing-context-group|browsing context
+            group=]'s [=coop group=]'s [=virtual crossOriginIsolated browsing
+            context group ID map=] given the key *coopEnforcementResult*.
+      2. Else if *navigationCOOP*'s [=report-only value=] is
+         "[=coop-restrict-properties|restrict-properties=]", then:
+         1. If *browsingContext*'s [=browsing-context-group|browsing context
+            group=]'s [=coop group=]'s [=virtual browsing
+            context group ID map=] does not contain an entry given the key
+            *coopEnforcementResult*'s [=coop-enforcement-origin|origin=], set
+            the value of *browsingContext*'s [=browsing-context-group|browsing context
+            group=]'s [=coop group=]'s [=virtual browsing
+            context group ID map=] given the key *coopEnforcementResult*'s
+            [=coop-enforcement-origin|origin=] to a new unique identifier.
+         2. Set *browsingContext*'s [=virtual browsing context group id=] to
+            the value of *browsingContext*'s [=browsing-context-group|browsing context
+            group=]'s [=coop group=]'s [=virtual browsing
+            context group ID map=] given the key *coopEnforcementResult*.
+      3. Else set *browsingContext*'s [=virtual browsing context group id=] to
+         *browsingContext*'s [=browsing-context-group|browsing context
+         group=]'s [=coop group=]'s [=virtual browsing
+         context group default ID=].
+   3. Return *browsingContext*.
+3. Let *needsCrossOriginIsolation* be false.
+4. If *navigationCOOP*'s [=cross-origin-opener-policy-value|value=] is
+   "[=same-origin-plus-coep=]" or
+   "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]",
+   set *needsCrossOriginIsolation* to true.
+5. Let *newBrowsingContext* be the first return value of [=creating a new
+   top-level browsing context and document=] given *coopEnforcementResult*'s
+   [=needs a browsing context group switch=] and *needsCrossOriginIsolation*.
+6. If *sandboxFlags* is not empty, then:
+   1. Assert *navigationCOOP*'s [=cross-origin-opener-policy-value|value=] is
+      one of "[=unsafe-none=]", "[=coop-restrict-properties|restrict-properties]", or
+      "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]".
+   2. Assert *newBrowsingContext*'s [=popup sandboxing flag set=] is empty.
+   3. Set *newBrowsingContext*'s [=popup sandboxing flag set=] to a clone of
+      *sandboxFlags*.
+7. Return *newBrowsingContext*.
 
 </div>
 
