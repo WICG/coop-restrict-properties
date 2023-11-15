@@ -124,6 +124,10 @@ urlPrefix: https://html.spec.whatwg.org/C/; spec: html
   text: cross-origin-opener-policy-value; type: dfn; url: cross-origin-opener-policy-value
   text: cross-origin opener policy enforcement result; type: dfn; url:coop-enforcement-result
   text: crossOriginIsolated; type:dfn; url:concept-settings-object-cross-origin-isolated-capability
+  text: crossOriginGet; type:dfn; url:crossoriginget-(-o,-p,-receiver-)
+  text: crossOriginGetOwnPropertyHelper; type:dfn; url:crossorigingetownpropertyhelper-(-o,-p-)
+  text: crossOriginProperties; type:dfn; url:crossoriginproperties-(-o-)
+  text: crossOriginSet; type:dfn; url:crossoriginset-(-o,-p,-receiver-)
   text: cross-origin isolation mode; type:dfn; url: bcg-cross-origin-isolation
   text: embedder-policy-report-only-value; type: dfn; url: embedder-policy-report-only-value
   text: embedder-policy-value; type:dfn; url:embedder-policy-value
@@ -133,6 +137,7 @@ urlPrefix: https://html.spec.whatwg.org/C/; spec: html
   text: Grouping of browsing contexts; type:dfn; url:grouping-of-browsing-contexts
   text: Infrastructure for sequences of documents; type:dfn; url:infrastructure-for-sequences-of-documents
   text: logical; type:dfn; url:cross-origin-isolation-logical
+  text: location-getownproperty; type:dfn; url:location-getownproperty
   text: matching-coop; type:dfn; url:matching-coop
   text: needs a browsing context group switch; type:dfn; url: coop-enforcement-bcg-switch
   text: navigation params; type:dfn; url:navigation-params
@@ -152,10 +157,15 @@ urlPrefix: https://html.spec.whatwg.org/C/; spec: html
   text: response; type:dfn; url:concept-response
   text: same-origin-allow-popups; type:dfn; url:coop-same-origin-allow-popups
   text: same-origin-plus-coep; type:dfn; url:coop-same-origin-plus-coep
+  text: shared abstract operations; type:dfn; url:shared-abstract-operations
   text: top-level browsing context; type:dfn; url:top-level-browsing-context
   text: same origin; type:dfn; url:same-origin
   text: unsafe-none; type:dfn; url:coop-unsafe-none
   text: virtual browsing context group id; type:dfn; url:virtual-browsing-context-group-id
+  text: WindowProxy; type:dfn; url:the-window-proxy-exotic-object
+  text: windowproxy-get; type:dfn; url:windowproxy-get
+  text: windowproxy-getownproperty; type:dfn; url:windowproxy-getownproperty
+  text: windowproxy-set; type:dfn; url:windowproxy-set
   text: windows; type:dfn; url:windows
   text: window open steps; type:dfn; url:window-open-steps
   text: would need a browsing context group switch due to report-only; type:dfn; url:coop-enforcement-bcg-switch-report-only
@@ -163,7 +173,9 @@ urlPrefix: https://html.spec.whatwg.org/C/; spec: html
   <!--text: A; type:dfn; url:A-->
 
 urlPrefix: https://webidl.spec.whatwg.org/#LegacyUnenumerableNamedProperties
+  text: DOMException; type:dfn; url:dfn-DOMException
   text: LegacyUnenumerableNamedProperties; type:dfn; url:LegacyUnenumerableNamedProperties
+  text: SecurityError; type:dfn; url:securityerror
 
 urlPrefix: https://tc39.es/ecma262/#sec-execution-contexts
   text: javascript execution context; type:dfn; url:sec-execution-contexts
@@ -733,6 +745,101 @@ contexts should be reported=] algorithm:
 9. If *accessor*'s [=top-level browsing context=]'s
    [=virtual-coop-group-id|virtual COOP group ID=] is *accessed*'s [=top-level browsing context=]'s
    [=virtual-coop-group-id|virtual COOP group ID=] and *P* is "*closed*" or "*postMessage*", then return.
+
+</div>
+
+## APIs related to navigation and session history ## {#coop-navigation-apis}
+
+### Security infrastructure for Window, WindowProxy, and Location objects ### {#coop-security-infracstructure}
+
+Add one argument to the [=CrossOriginGetOwnPropertyHelper=] algorithm:
+
+<div class="monkey-patch">
+
+7.2.1.3.4 CrossOriginGetOWnPropertyHelper(O,P,isCrossBrowsingContext)
+
+</div>
+
+Replace step 1 and 2 of the [=CrossOriginGetOwnPropertyHelper=] algorithm:
+
+<div class="monkey-patch">
+
+1. Let *crossOriginKey* be a tuple consisting of the [=current settings object=],
+   O's [=relevant settings object=], P, and isCrossBrowsingContext.
+2. Let *propertyList* be null.
+3. If isCrossBrowsingContext is true, set *propertyLisy* to
+   [=cross-bcg-properties|CrossBrowsingContextGroupProperties=](O).
+4. Else, set *propertyList* to [=CrossOriginProperties=](O).
+5. For each *e* of *propertyList*:
+
+</div>
+
+### The WindowProxy exotic object ### {#coop-window-proxy}
+
+Add a step to the [=windowproxy-get|Get=] algorithm:
+
+<div class="monkey-patch">
+
+3. If [=is-windowproxy-same-bcg|IsWindowProxyInSameBrowsingContextGroup(W)=] is
+   false, then return ? [=CrossOriginGet=](this, P, V, receiver).
+
+</div>
+
+Add a step to the [=windowproxy-set|Set=] algorithm:
+
+<div class="monkey-patch">
+
+3. If [=is-windowproxy-same-bcg|IsWindowProxyInSameBrowsingContextGroup(W)=] is
+   false, then return ? [=CrossOriginSet=](this, P, V, receiver).
+
+</div>
+
+Add a step to the WindowProxy [=windowproxy-getownproperty|GetOwnProperty=]
+algorithm:
+
+<div class="monkey-patch">
+
+2. If [=is-windowproxy-same-bcg|IsWindowProxyInSameBrowsingContextGroup(W)=] is
+   false, then:
+   1. Let *property* be
+      [=CrossOriginGetOwnPropertyHelper=](W,P, true).
+   2. If *property* is not undefined, then return *property*.
+   3. Throw a "[=SecurityError=]" [=DOMException=].
+
+</div>
+
+Modify step 4 of the WindowProxy [=windowproxy-getownproperty|GetOwnProperty=]
+algorithm:
+
+<div class="monkey-patch">
+
+4. Let *property* be [=CrossOriginGetOwnPropertyHelper=](W,P, false).
+
+</div>
+
+Add the following to the [=WindowProxy=] section:
+
+<div class="monkey-patch">
+
+7.2.3.11 <dfn
+         lt="cross-bcg-properties">CrossBrowsingContextGroupProperties(W)</dfn>
+         1. Return { [Property]: "*closed*", [NeedsGet]: true, [NeedsSet]:
+            false }, { [Property]: "*postMessage*" } ».
+
+7.2.3.12 <dfn lt="is-windowproxy-same-bcg">IsWindowProxyInSameBrowsingContextGroup(W)</dfn>
+         1. Return true if the [=current global object=]'s [=browsing
+            context=]'s [=browsing context group=] is *W*'s [=browsing
+            context=]'s [=browsing context group=].
+
+</div>
+
+### The Location interface ### {#coop-location-interface}
+
+Modify step 2 of the [=location-getownproperty|GetOwnProperty=] algorithm:
+
+<div class="monkey-patch">
+
+2. Let *property* be [=CrossOriginGetOwnPropertyHelper=](this,P, false).
 
 </div>
 
