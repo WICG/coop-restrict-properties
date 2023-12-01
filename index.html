@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 82ce88815, updated Thu Sep 7 16:33:55 2023 -0700" name="generator">
   <link href="https://github.com/WICG/coop-restrict-properties" rel="canonical">
-  <meta content="229ced97355cdfe5eaed358e655449a6cc61bca3" name="document-revision">
+  <meta content="0aa8bc40d39a9e0eb39db6ef4e5c60aeb8fb169d" name="document-revision">
 <style>
 .monkey-patch {
     padding: .5em;
@@ -677,7 +677,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Cross-Origin-Opener-Policy: restrict-properties</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-11-14">14 November 2023</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-11-16">16 November 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -752,14 +752,12 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
         <li><a href="#coop-window-proxy"><span class="secno">6.2.2</span> <span class="content">The WindowProxy exotic object</span></a>
         <li><a href="#coop-location-interface"><span class="secno">6.2.3</span> <span class="content">The Location interface</span></a>
        </ol>
-      <li><a href="#coop-top-level-traversables"><span class="secno">6.3</span> <span class="content">Top-level traversables</span></a>
       <li>
-       <a href="#coop-browsing-contexts"><span class="secno">6.4</span> <span class="content">Browsing contexts</span></a>
+       <a href="#coop-browsing-contexts"><span class="secno">6.3</span> <span class="content">Browsing contexts</span></a>
        <ol class="toc">
-        <li><a href="#coop-creating-browsing-contexts"><span class="secno">6.4.1</span> <span class="content">Creating browsing contexts</span></a>
-        <li><a href="#coop-grouping-of-browsing-contexts"><span class="secno">6.4.2</span> <span class="content">Grouping of browsing contexts</span></a>
-        <li><a href="#coop-groups"><span class="secno">6.4.3</span> <span class="content">COOP groups</span></a>
+        <li><a href="#coop-grouping-of-browsing-contexts"><span class="secno">6.3.1</span> <span class="content">Grouping of browsing contexts</span></a>
        </ol>
+      <li><a href="#coop-agent-clusters"><span class="secno">6.4</span> <span class="content">Agents and agent clusters</span></a>
      </ol>
     <li>
      <a href="#security"><span class="secno">7</span> <span class="content">Security considerations</span></a>
@@ -983,16 +981,15 @@ policies</a> section,
 extend the possible <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value">cross-origin opener polic values</a>:</p>
    <div class="monkey-patch">
      <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-restrict-properties" data-noexport id="coop-restrict-properties">restrict-properties</dfn> 
-    <p>This forces the creation of a new <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing context</a> for the document,
-unless its predecessor specified the same <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy">cross-origin opener policy</a> and they
-are <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#same-origin" id="ref-for-same-origin">same origin</a>. Unlike <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin①">same-origin</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups" id="ref-for-coop-same-origin-allow-popups">same-origin-allow-popups</a>, the newly created <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc">browsing context</a> and its <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①">browsing context group</a> will stay in the same <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group">COOP group</a>. Any <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#auxilliary-browsing-context" id="ref-for-auxilliary-browsing-context">auxilliary browsing context</a> created needs to contain <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#same-origin" id="ref-for-same-origin①">same origin</a> documents with the same <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy①">cross-origin
-opener policy</a>, or it will be placed in a different <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group②">browsing context group</a> in the <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①">COOP group</a>.</p>
+    <p>This forces the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document">document</a> and its child <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#concept-document" id="ref-for-concept-document①">document</a> to use <a data-link-type="dfn" href="https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html#sec-agent-clusters" id="ref-for-sec-agent-clusters">agent
+clusters</a> keyed on top-level origin and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation" id="ref-for-bcg-cross-origin-isolation">cross-origin isolation mode</a>. It
+also restricts the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#the-window-proxy-exotic-object" id="ref-for-the-window-proxy-exotic-object">WindowProxy</a> methods available from <a data-link-type="dfn" href="https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html#sec-agent-clusters" id="ref-for-sec-agent-clusters①">agent clusters</a> with a different top-level origin and <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation" id="ref-for-bcg-cross-origin-isolation①">cross-origin isolation mode</a>.</p>
     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-restrict-properties-plus-coep" data-noexport id="coop-restrict-properties-plus-coep">restrict-properties-plus-coep</dfn></p>
     <p>This behaves the same as "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties">coop-restrict-properties</a>", with the addition that
-it sets the (new) <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context①">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group③">group</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation" id="ref-for-bcg-cross-origin-isolation">cross-origin isolation mode</a> to one of
+it sets the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①">group</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation" id="ref-for-bcg-cross-origin-isolation②">cross-origin isolation mode</a> to one of
 "logical" or "concrete".</p>
    </div>
-   <p>Extend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy②">cross-origin opener policy</a> definition:</p>
+   <p>Extend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy">cross-origin opener policy</a> definition:</p>
    <div class="monkey-patch">
     <ul>
      <li data-md>
@@ -1030,57 +1027,84 @@ opener policy</a> part of the spec:</p>
    <div class="monkey-patch">
     <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-enforcement-value" data-noexport id="coop-enforcement-value">cross-origin opener policy enforcement
 value</dfn> indicates whether the enforcement of a <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policies" id="ref-for-cross-origin-opener-policies⑥">COOP</a> requires a browsing
-context group switch. The possible values are:</p>
-    <ul>
-     <li data-md>
-      <p>"<dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-enforcement-value-no-switch" data-noexport id="coop-enforcement-value-no-switch">no-switch</dfn>", which indicates
-that no switch is required.</p>
-     <li data-md>
-      <p>"<dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-enforcement-value-bcg-switch" data-noexport id="coop-enforcement-value-bcg-switch">browsing-context-group-switch</dfn>", which indicates
-that a switch of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc①">browsing context</a> is required, but not of <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group②">COOP group</a>.</p>
-     <li data-md>
-      <p>"<dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-enforcement-value-coop-group-switch" data-noexport id="coop-enforcement-value-coop-group-switch">coop-group-switch</dfn>", which indicates
-that a switch of <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group③">COOP group</a> is required. This implies a switch
-of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc②">browsing context</a>.</p>
-    </ul>
+context group switch and/or to restrict access to the browsing context inside
+the browsing context group.</p>
+    <p>A <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value">cross-origin opener policy value</a> has a boolean <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-enforcement-value-switch" data-noexport id="coop-enforcement-value-switch">browsingContextGroupSwitchNeeded</dfn>,
+initially false.</p>
+    <p>A <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value①">cross-origin opener policy value</a> has an <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-enforcement-value-key" data-noexport id="coop-enforcement-value-key">agentClusterKey</dfn>, which is null or a <a data-link-type="dfn" href="#coop-agent-cluster-key" id="ref-for-coop-agent-cluster-key">COOP agent cluster key</a>, initially null.</p>
    </div>
    <p>The algorithm to <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value">check if COOP values require a browsing context group switch</a> becomes:</p>
    <div class="monkey-patch">
     <ol>
      <li data-md>
+      <p>let <em>coopEnforcementValue</em> be a new <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value②">cross-origin
+ opener policy enforcement value</a>.</p>
+     <li data-md>
+      <p>If any of the following is true:</p>
+      <ul>
+       <li data-md>
+        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties③">restrict-properties</a>";</p>
+       <li data-md>
+        <p><em>responseCOOPValue</em> is
+ "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep①">restrict-properties-plus-coep</a>";</p>
+       <li data-md>
+        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value③">value</a> is
+ "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin①">same-origin</a>";</p>
+       <li data-md>
+        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value④">value</a> is
+ "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep">same-origin-plus-coep</a>";</p>
+       <li data-md>
+        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin②">same-origin</a>";</p>
+       <li data-md>
+        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep①">same-origin-plus-coep</a>";</p>
+       <li data-md>
+        <p>then:</p>
+        <ol>
+         <li data-md>
+          <p>Let <em>needCrossOriginIsolation</em> be false.</p>
+         <li data-md>
+          <p>If <em>responseCOOPValue</em> is
+  "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep②">restrict-properties-plus-coep</a>"
+  or <em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep②">same-origin-plus-coep</a>", set <em>needCrossOriginIsolation</em> to true.</p>
+         <li data-md>
+          <p>Set <em>coopEnforcementValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-key" id="ref-for-coop-enforcement-value-key">agentClusterKey</a> to [<em>responseOrigin</em>, <em>needCrossOriginIsolation</em>].</p>
+        </ol>
+      </ul>
+     <li data-md>
       <p>If the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#matching-coop" id="ref-for-matching-coop">matching</a> <em>activeDocumentCOOPValue</em>, <em>activeDocumentNavigationOrigin</em>, <em>responseCOOPValue</em>, and <em>responseOrigin</em> is
- true, return "<a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch">no-switch</a>".</p>
+ true, return <em>coopEnforcementValue</em>.</p>
      <li data-md>
       <p>If all of the following are true:</p>
       <ul>
        <li data-md>
         <p><em>isInitialAboutBlank</em>;</p>
        <li data-md>
-        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value③">value</a> is
- "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups" id="ref-for-coop-same-origin-allow-popups①">same-origin-allow-popups</a>"; and</p>
+        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑤">value</a> is
+ "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups" id="ref-for-coop-same-origin-allow-popups">same-origin-allow-popups</a>"; and</p>
        <li data-md>
-        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-unsafe-none" id="ref-for-coop-unsafe-none">unsafe-none</a>",</p>
+        <p><em>responseCOOPValue</em> is not "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin③">same-origin</a>" or
+ "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep③">same-origin-plus-coep</a>",</p>
        <li data-md>
-        <p>then return "<a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch①">no-switch</a>".</p>
+        <p>then return <em>coopEnforcementValue</em>.</p>
       </ul>
      <li data-md>
-      <p>If any of the following are true:</p>
+      <p>If any of the following is true:</p>
       <ul>
        <li data-md>
-        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value④">value</a> is
- "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin②">same-origin</a>";</p>
+        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑥">value</a> is
+ "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin④">same-origin</a>";</p>
        <li data-md>
-        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑤">value</a> is
- "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep">same-origin-plus-coep</a>";</p>
+        <p><em>activeDocumentCOOPValue</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑦">value</a> is
+ "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep④">same-origin-plus-coep</a>";</p>
        <li data-md>
-        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin③">same-origin</a>";</p>
+        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin⑤">same-origin</a>";</p>
        <li data-md>
-        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep①">same-origin-plus-coep</a>";</p>
+        <p><em>responseCOOPValue</em> is "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep⑤">same-origin-plus-coep</a>";</p>
        <li data-md>
-        <p>then return "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch">coop-group-switch</a>".</p>
+        <p>then set <em>coopEnforcementValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch">browsingContextGroupSwitchNeeded</a> to true.</p>
       </ul>
      <li data-md>
-      <p>Return "<a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch">browsing-context-group-switch</a>".</p>
+      <p>Return <em>coopEnforcementValue</em>.</p>
     </ol>
    </div>
    <p>The algorithm to <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-bcg-switch-report-only" id="ref-for-check-bcg-switch-report-only">check if enforcing report-only COOP would require a browsing
@@ -1088,29 +1112,32 @@ context group switch</a> becomes:</p>
    <div class="monkey-patch">
     <ol>
      <li data-md>
-      <p>If the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value①">checking if COOP values require a browsing context group
- switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>activeDocumentNavigationOrigin</em>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value">report-only value</a> and <em>activeDocumentCOOPReportOnly</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value①">report-only value</a> is <a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch②">no-switch</a>, then return <a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch③">no-switch</a>.</p>
+      <p>Let <em>coopEnforcementValue</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value①">checking if COOP values
+ require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>activeDocumentNavigationOrigin</em>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value">report-only value</a> and <em>activeDocumentCOOPReportOnly</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value①">report-only
+ value</a>.</p>
      <li data-md>
-      <p>Let <em>activeDocumentReportOnlyCOOPEnforcementValue</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value②">checking if COOP values require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>activeDocumentNavigationOrigin</em>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑥">value</a> and <em>activeDocumentCOOPReportOnly</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value②">report-only value</a>.</p>
+      <p>If <em>coopEnforcementValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch①">browsingContextGroupSwitchNeeded</a> is false, then return <em>coopEnforcementValue</em>.</p>
      <li data-md>
-      <p>Let <em>responseReportOnlyCOOPEnforcementValue</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value③">checking if COOP values require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>activeDocumentNavigationOrigin</em>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value③">report-only value</a> and <em>activeDocumentCOOPReportOnly</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑦">value</a>.</p>
+      <p>Let <em>activeDocumentReportOnlyCOOPEnforcementValue</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value②">checking if COOP values require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>activeDocumentNavigationOrigin</em>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑧">value</a> and <em>activeDocumentCOOPReportOnly</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value②">report-only value</a>.</p>
      <li data-md>
-      <p>If <em>activeDocumentReportOnlyCOOPEnforcementValue</em> is <a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch①">coop-group-switch</a> or <em>responseReportOnlyCOOPEnforcementValue</em> is <a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch②">coop-group-switch</a>, return <a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch③">coop-group-switch</a>.</p>
+      <p>If <em>activeDocumentReportOnlyCOOPEnforcementValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch②">browsingContextGroupSwitchNeeded</a> is true, then set <em>coopEnforcementValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch③">browsingContextGroupSwitchNeeded</a> to true.</p>
      <li data-md>
-      <p>If <em>activeDocumentReportOnlyCOOPEnforcementValue</em> is <a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch①">browsing-contex-group-switch</a> or <em>responseReportOnlyCOOPEnforcementValue</em> is <a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch②">browsing-group-switch</a>, return <a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch③">browsing-group-switch</a>.</p>
+      <p>Let <em>responseReportOnlyCOOPEnforcementValue</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value③">checking if COOP values require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>activeDocumentNavigationOrigin</em>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value③">report-only value</a> and <em>activeDocumentCOOPReportOnly</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑨">value</a>.</p>
      <li data-md>
-      <p>Return <a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch④">no-switch</a>.</p>
+      <p>If <em>responseReportOnlyCOOPEnforcementValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch④">browsingContextGroupSwitchNeeded</a> is true, then set <em>coopEnforcementValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch⑤">browsingContextGroupSwitchNeeded</a> to true.</p>
+     <li data-md>
+      <p>Return <em>coopEnforcementValue</em>.</p>
     </ol>
    </div>
    <p>Change the two first members of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-result" id="ref-for-coop-enforcement-result">cross-origin opener policy enforcement result</a>:</p>
    <div class="monkey-patch">
     <ul>
      <li data-md>
-      <p>A <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value">COOP enforcement value</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch">needs a browsing context
-group switch</a>, initially <a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch⑤">no-switch</a>.</p>
+      <p>A <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value③">COOP enforcement value</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch">needs a browsing context
+group switch</a>.</p>
      <li data-md>
-      <p>A <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value①">COOP enforcement value</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only">would need a browsing
-context group switch due to report-only</a>, initially <a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch⑥">no-switch</a>.</p>
+      <p>A <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value④">COOP enforcement value</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only">would need a browsing
+context group switch due to report-only</a>.</p>
     </ul>
    </div>
    <p>Modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforce" id="ref-for-coop-enforce">enforce a response’s cross-origin opener policy</a> algorithm:</p>
@@ -1118,62 +1145,52 @@ context group switch due to report-only</a>, initially <a data-link-type="dfn" h
     <ol start="4">
      <li data-md>
       <p>Let <em>newCOOPEnforcementResultValue</em>'s be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value" id="ref-for-check-browsing-context-group-switch-coop-value④">checking if COOP values
- require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy③">cross-origin opener policy</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑧">value</a>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin③">origin</a>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value⑨">value</a>, and <em>responseOrigin</em>.</p>
+ require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy①">cross-origin opener policy</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value①⓪">value</a>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin③">origin</a>, <em>responseCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value①①">value</a>, and <em>responseOrigin</em>.</p>
      <li data-md>
-      <p>If <em>newCOOPEnforcementResultValue</em> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch④">coop-group-switch</a>", then:</p>
+      <p>Set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch①">needs a browsing context group
+ switch</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-key" id="ref-for-coop-enforcement-value-key①">agentClusterKey</a> to <em>newCOOPEnforcementResultValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-key" id="ref-for-coop-enforcement-value-key②">agentClusterKey</a>.</p>
+     <li data-md>
+      <p>If <em>newCOOPEnforcementResultValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch⑥">browsingContextGroupSwitchNeeded</a> is true, then:</p>
       <ol>
        <li data-md>
-        <p>Set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch①">needs a browsing context group
-  switch</a> to "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch⑤">coop-group-switch</a>".</p>
+        <p>Set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch②">needs a browsing context group
+  switch</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch⑦">browsingContextGroupSwitchNeeded</a> to true.</p>
        <li data-md>
-        <p>If <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group④">group</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing context set" id="ref-for-browsing context set">browsing context
-  set</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a> is greater than 1, or if <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group⑤">group</a>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group④">COOP group</a>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map">browsing context group map</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-size" id="ref-for-map-size">size</a> is
-  greater than 1, then:</p>
+        <p>If <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group②">group</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing context set" id="ref-for-browsing context set">browsing context
+  set</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size">size</a> is greater than 1, then:</p>
         <ol>
          <li data-md>
           <p><a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-violation-navigation-to" id="ref-for-coop-violation-navigation-to">Queue a violation report for browsing context group switch when
  navigating to a COOP response</a> with <em>responseCOOP</em>, "<em>enforce</em>", <em>responseURL</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url">url</a>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin④">origin</a>, <em>responseOrigin</em>, and <em>referrer</em>.</p>
          <li data-md>
           <p><a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-violation-navigation-from" id="ref-for-coop-violation-navigation-from">Queue a violation report for browsing context group switch when
- navigating away from a COOP response</a> with <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy④">cross-origin opener policy</a>'s , "<em>enforce</em>", <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">url</a>, <em>responseURL</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-origin" id="ref-for-coop-enforcement-origin">origin</a>, <em>responseOrigin</em>, and <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-source" id="ref-for-coop-enforcement-source">current context is navigation source</a>.</p>
+ navigating away from a COOP response</a> with <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy②">cross-origin opener policy</a>'s , "<em>enforce</em>", <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url①">url</a>, <em>responseURL</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-origin" id="ref-for-coop-enforcement-origin">origin</a>, <em>responseOrigin</em>, and <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-source" id="ref-for-coop-enforcement-source">current context is navigation source</a>.</p>
         </ol>
       </ol>
      <li data-md>
-      <p>If <em>newCOOPEnforcementResultValue</em> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch④">browsing-context-group-switch</a>", and <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch②">needs a browsing context group switch</a> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch⑦">no-switch</a>", set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch③">needs a browsing context group switch</a> to
- "<a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch⑤">browsing-context-group-switch</a>".</p>
-     <li data-md>
       <p>Let <em>newCOOPEnforcementResultReportOnlyValue</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#check-bcg-switch-report-only" id="ref-for-check-bcg-switch-report-only①">checking if
- enforcing report-only COOP would require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin⑤">origin</a>, <em>responseCOOP</em>, and <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy⑤">cross-origin opener policy</a>.</p>
+ enforcing report-only COOP would require a browsing context group switch</a> given <em>isInitialAboutBlank</em>, <em>responseOrigin</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin⑤">origin</a>, <em>responseCOOP</em>, and <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy③">cross-origin opener policy</a>.</p>
      <li data-md>
-      <p>If <em>newCOOPEnforcementResultReportOnlyValue</em> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch⑥">coop-group-switch</a>", then:</p>
+      <p>Set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only①">would need a browsing context group
+ switch due to report-only</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-key" id="ref-for-coop-enforcement-value-key③">agentClusterKey</a> to <em>newCOOPEnforcementResultReportOnlyValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-key" id="ref-for-coop-enforcement-value-key④">agentClusterKey</a>.</p>
+     <li data-md>
+      <p>If <em>newCOOPEnforcementResultReportOnlyValue</em>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch⑧">browsingContextGroupSwitchNeeded</a> is true, then:</p>
       <ol>
        <li data-md>
-        <p>Set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only①">would need a browsing context group
-  switch due to report-only</a> to
-  "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch⑦">coop-group-switch</a>".</p>
+        <p>Set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only②">would need a browsing context group
+  switch due to report-only</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch⑨">browsingContextGroupSwitchNeeded</a> to true.</p>
        <li data-md>
-        <p>If <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group⑥">group</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing context set" id="ref-for-browsing context set①">browsing context
-  set</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> is greater than 1, or if <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group⑦">group</a>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group⑤">COOP group</a>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map①">browsing context group map</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-size" id="ref-for-map-size①">size</a> is
-  greater than 1, then:</p>
+        <p>If <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group③">group</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing context set" id="ref-for-browsing context set①">browsing context
+  set</a>'s <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-size" id="ref-for-list-size①">size</a> is greater than 1, then:</p>
         <ol>
          <li data-md>
           <p><a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-violation-navigation-to" id="ref-for-coop-violation-navigation-to①">Queue a violation report for browsing context group switch when
  navigating to a COOP response</a> with <em>responseCOOP</em>, "<em>reporting</em>", <em>responseURL</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url②">url</a>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin⑥">origin</a>, <em>responseOrigin</em>, and <em>referrer</em>.</p>
          <li data-md>
           <p><a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-violation-navigation-from" id="ref-for-coop-violation-navigation-from①">Queue a violation report for browsing context group switch when
- navigating away from a COOP response</a> with <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy⑥">cross-origin opener policy</a>'s , "<em>reporting</em>", <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url③">url</a>, <em>responseURL</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-origin" id="ref-for-coop-enforcement-origin①">origin</a>, <em>responseOrigin</em>, and <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-source" id="ref-for-coop-enforcement-source①">current context is navigation source</a>.</p>
+ navigating away from a COOP response</a> with <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy" id="ref-for-cross-origin-opener-policy④">cross-origin opener policy</a>'s , "<em>reporting</em>", <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://url.spec.whatwg.org/#concept-url" id="ref-for-concept-url③">url</a>, <em>responseURL</em>, <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-origin" id="ref-for-coop-enforcement-origin①">origin</a>, <em>responseOrigin</em>, and <em>currentCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-source" id="ref-for-coop-enforcement-source①">current context is navigation source</a>.</p>
         </ol>
       </ol>
-     <li data-md>
-      <p>If <em>newCOOPEnforcementResultReportOnlyValue</em> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch⑥">browsing-context-group-switch</a>", and <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only②">would need a browsing context group
- switch due to report-only</a> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch⑧">no-switch</a>", set <em>newCOOPEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only③">would need a browsing context group switch due to report-only</a> to
- "<a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch⑦">browsing-context-group-switch</a>".</p>
      <li data-md>
       <p>Return <em>newCOOPEnforcementResult</em>.</p>
     </ol>
@@ -1182,81 +1199,47 @@ context group switch due to report-only</a>, initially <a data-link-type="dfn" h
    <div class="monkey-patch">
     <ol>
      <li data-md>
-      <p>If <em>browsingContext</em> is not a <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context②">top-level browsing context</a>, then return <em>browsingContext</em>.</p>
+      <p>If <em>browsingContext</em> is not a <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context①">top-level browsing context</a>, then return <em>browsingContext</em>.</p>
      <li data-md>
-      <p>If <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch④">needs a browsing context group switch</a> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-no-switch" id="ref-for-coop-enforcement-value-no-switch⑨">no-switch</a>", then:</p>
+      <p>Let <em>navigationBrowsingContext</em> be null.</p>
+     <li data-md>
+      <p>If <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch③">needs a browsing context group switch</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch①⓪">browsingContextGroupSwitchNeeded</a> is false, then:</p>
       <ol>
        <li data-md>
-        <p>If <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only④">would need a browsing context group switch due
-  to report-only</a> is
-  "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch⑧">coop-group-switch</a>", set <em>browsingContext</em>'s <a data-link-type="dfn" href="#virtual-coop-group-id" id="ref-for-virtual-coop-group-id">virtual COOP group ID</a> to a new unique identifier.</p>
+        <p>If <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only③">would need a browsing context group switch due
+  to report-only</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-switch" id="ref-for-coop-enforcement-value-switch①①">browsingContextGroupSwitchNeeded</a> is true, set <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#virtual-browsing-context-group-id" id="ref-for-virtual-browsing-context-group-id">virtual browsing context group ID</a> to a new unique identifier.</p>
        <li data-md>
-        <p>Else if <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only⑤">would need a browsing context group switch due
-  to report-only</a> is
-  "<a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch⑧">browsing-context-group-switch</a>":</p>
+        <p>Set <em>navigationBrowsingContext</em> to <em>browsingContext</em>.</p>
+      </ol>
+     <li data-md>
+      <p>Else:</p>
+      <ol>
+       <li data-md>
+        <p>Set <em>navigationBrowsingContext</em> to the first return value of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context" id="ref-for-creating-a-new-top-level-browsing-context">creating a new
+  top-level browsing context and document</a>.</p>
+       <li data-md>
+        <p>If <em>sandboxFlags</em> is not empty, then:</p>
         <ol>
          <li data-md>
-          <p>Assert <em>navigationCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value④">report-only value</a> is one of
- "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep①">restrict-properties-plus-coep</a>",
- "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties③">restrict-properties</a>" or "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-unsafe-none" id="ref-for-coop-unsafe-none①">unsafe-none</a>".</p>
+          <p>Assert <em>navigationCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value①②">value</a> is
+ one of "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-unsafe-none" id="ref-for-coop-unsafe-none">unsafe-none</a>", "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties④">restrict-properties</a>", or
+ "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep③">restrict-properties-plus-coep</a>".</p>
          <li data-md>
-          <p>Let <em>origin</em> be <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-origin" id="ref-for-coop-enforcement-origin②">origin</a>.</p>
+          <p>Assert <em>navigationBrowsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#popup-sandboxing-flag-set" id="ref-for-popup-sandboxing-flag-set">popup sandboxing flag set</a> is empty.</p>
          <li data-md>
-          <p>Let <em>browsingContextGroupKey</em> be a new <a data-link-type="dfn" href="#bcg-key" id="ref-for-bcg-key">browsing context
- group key</a> with value (null, false).</p>
-         <li data-md>
-          <p>If <em>navigationCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value⑤">report-only value</a> is
- "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep②">restrict-properties-plus-coep</a>", then set <em>browsingContextGroupKey</em> to (<em>origin</em>, true).</p>
-         <li data-md>
-          <p>Else if <em>navigationCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value⑥">report-only value</a> is
- "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties④">restrict-properties</a>", then set <em>browsingContextGroupKey</em> to (<em>origin</em>, false).</p>
-         <li data-md>
-          <p>If <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group⑧">browsing context
- group</a>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group⑥">COOP group</a>'s <a data-link-type="dfn" href="#bcg-virtual-id-map" id="ref-for-bcg-virtual-id-map">browsing context
- group virtual ID map</a> does not contain an entry given <em>browsingContextGroupKey</em>, set the value of <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group⑨">browsing context group</a>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group⑦">COOP group</a>'s <a data-link-type="dfn" href="#bcg-virtual-id-map" id="ref-for-bcg-virtual-id-map①">browsing context
- group virtual ID map</a> given <em>browsingContextGroupKey</em> to a new unique
- identifier.</p>
-         <li data-md>
-          <p>Set <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#virtual-browsing-context-group-id" id="ref-for-virtual-browsing-context-group-id">virtual browsing context group id</a> to
- the <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①⓪">browsing context
- group</a>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group⑧">COOP group</a>'s <a data-link-type="dfn" href="#bcg-virtual-id-map" id="ref-for-bcg-virtual-id-map②">browsing
- context group virtual ID map</a>[<em>browsingContextGroupKey</em>].</p>
+          <p>Set <em>navigationBrowsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#popup-sandboxing-flag-set" id="ref-for-popup-sandboxing-flag-set①">popup sandboxing flag set</a> to a clone of <em>sandboxFlags</em>.</p>
         </ol>
-       <li data-md>
-        <p>Return <em>browsingContext</em>.</p>
       </ol>
      <li data-md>
-      <p>Let <em>needsCrossOriginIsolation</em> be false.</p>
+      <p>Set <em>navigationBrowsingContext</em>'s <a data-link-type="dfn" href="#bcg-coop-agent-cluster-key" id="ref-for-bcg-coop-agent-cluster-key">COOP agent
+ cluster key</a> to <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch④">needs a browsing context group
+ switch</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-key" id="ref-for-coop-enforcement-value-key⑤">agentClusterKey</a>.</p>
      <li data-md>
-      <p>If <em>navigationCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value①⓪">value</a> is
- "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep②">same-origin-plus-coep</a>" or
- "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep③">restrict-properties-plus-coep</a>",
- set <em>needsCrossOriginIsolation</em> to true.</p>
+      <p>Set <em>navigationBrowsingContext</em>'s <a data-link-type="dfn" href="#virtual-coop-agent-cluster-key" id="ref-for-virtual-coop-agent-cluster-key">virtual
+ COOP agent cluster key</a> to <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only" id="ref-for-coop-enforcement-bcg-switch-report-only④">would need a browsing
+ context group switch due to report-only</a>'s <a data-link-type="dfn" href="#coop-enforcement-value-key" id="ref-for-coop-enforcement-value-key⑥">agentClusterKey</a>.</p>
      <li data-md>
-      <p>Let <em>originKey</em> be null.</p>
-     <li data-md>
-      <p>If <em>navigationCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value①①">value</a> is
- one of "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep" id="ref-for-coop-same-origin-plus-coep③">same-origin-plus-coep</a>", "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-same-origin" id="ref-for-coop-same-origin④">same-origin</a>",
- "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep④">restrict-properties-plus-coep</a>",
- or "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties⑤">restrict-properties</a>", set <em>originKey</em> to <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-origin" id="ref-for-coop-enforcement-origin③">origin</a>.</p>
-     <li data-md>
-      <p>Let <em>newBrowsingContext</em> be the first return value of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context" id="ref-for-creating-a-new-top-level-browsing-context">creating a new
- top-level browsing context and document</a> given <em>coopEnforcementResult</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch" id="ref-for-coop-enforcement-bcg-switch⑤">needs a browsing context group switch</a>, <em>originKey</em>, <em>needsCrossOriginIsolation</em>, and <em>browsingContext</em>.</p>
-     <li data-md>
-      <p>If <em>sandboxFlags</em> is not empty, then:</p>
-      <ol>
-       <li data-md>
-        <p>Assert <em>navigationCOOP</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-opener-policy-value" id="ref-for-cross-origin-opener-policy-value①②">value</a> is
-  one of "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-unsafe-none" id="ref-for-coop-unsafe-none②">unsafe-none</a>", "<a data-link-type="dfn" href="#coop-restrict-properties" id="ref-for-coop-restrict-properties⑥">restrict-properties</a>", or
-  "<a data-link-type="dfn" href="#coop-restrict-properties-plus-coep" id="ref-for-coop-restrict-properties-plus-coep⑤">restrict-properties-plus-coep</a>".</p>
-       <li data-md>
-        <p>Assert <em>newBrowsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#popup-sandboxing-flag-set" id="ref-for-popup-sandboxing-flag-set">popup sandboxing flag set</a> is empty.</p>
-       <li data-md>
-        <p>Set <em>newBrowsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#popup-sandboxing-flag-set" id="ref-for-popup-sandboxing-flag-set①">popup sandboxing flag set</a> to a clone of <em>sandboxFlags</em>.</p>
-      </ol>
-     <li data-md>
-      <p>Return <em>newBrowsingContext</em>.</p>
+      <p>Return <em>navigationBrowsingContext</em>.</p>
     </ol>
    </div>
    <h4 class="heading settled" data-level="6.1.4" id="coop-reporting"><span class="secno">6.1.4. </span><span class="content">Reporting</span><a class="self-link" href="#coop-reporting"></a></h4>
@@ -1265,18 +1248,24 @@ contexts should be reported</a> algorithm:</p>
    <div class="monkey-patch">
     <ol start="8">
      <li data-md>
-      <p>If <em>accessor</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context③">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#virtual-browsing-context-group-id" id="ref-for-virtual-browsing-context-group-id①">virtual browsing context
- group ID</a> is <em>accessed</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context④">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#virtual-browsing-context-group-id" id="ref-for-virtual-browsing-context-group-id②">virtual browsing
- context group ID</a> and <em>accessor</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context⑤">top-level browsing context</a>'s <a data-link-type="dfn" href="#virtual-coop-group-id" id="ref-for-virtual-coop-group-id①">virtual COOP group ID</a> is <em>accessed</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context⑥">top-level browsing context</a>'s <a data-link-type="dfn" href="#virtual-coop-group-id" id="ref-for-virtual-coop-group-id②">virtual COOP group ID</a>, then return.</p>
-     <li data-md>
-      <p>If <em>accessor</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context⑦">top-level browsing context</a>'s <a data-link-type="dfn" href="#virtual-coop-group-id" id="ref-for-virtual-coop-group-id③">virtual COOP group ID</a> is <em>accessed</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context⑧">top-level browsing context</a>'s <a data-link-type="dfn" href="#virtual-coop-group-id" id="ref-for-virtual-coop-group-id④">virtual COOP group ID</a> and <em>P</em> is "<em>closed</em>" or "<em>postMessage</em>", then return.</p>
+      <p>If <em>accessor</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context②">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#virtual-browsing-context-group-id" id="ref-for-virtual-browsing-context-group-id①">virtual browsing context
+ group ID</a> is <em>accessed</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context③">top-level browsing context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#virtual-browsing-context-group-id" id="ref-for-virtual-browsing-context-group-id②">virtual browsing
+ context group ID</a>, then:</p>
+      <ol>
+       <li data-md>
+        <p>If <em>accessor</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context④">top-level browsing context</a>'s <a data-link-type="dfn" href="#virtual-coop-agent-cluster-key" id="ref-for-virtual-coop-agent-cluster-key①">virtual COOP agent cluster key</a> is <em>accessed</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context⑤">top-level browsing context</a>'s <a data-link-type="dfn" href="#virtual-coop-agent-cluster-key" id="ref-for-virtual-coop-agent-cluster-key②">virtual COOP agent cluster key</a>, then
+  return.</p>
+       <li data-md>
+        <p>If P is an <a data-link-type="dfn" href="#unrestricted-cross-origin-property-name" id="ref-for-unrestricted-cross-origin-property-name">unrestricted
+  cross-origin accessible window property name</a>, then return.</p>
+      </ol>
     </ol>
    </div>
    <h3 class="heading settled" data-level="6.2" id="coop-navigation-apis"><span class="secno">6.2. </span><span class="content">APIs related to navigation and session history</span><a class="self-link" href="#coop-navigation-apis"></a></h3>
    <h4 class="heading settled" data-level="6.2.1" id="coop-security-infracstructure"><span class="secno">6.2.1. </span><span class="content">Security infrastructure for Window, WindowProxy, and Location objects</span><a class="self-link" href="#coop-security-infracstructure"></a></h4>
    <p>Add one argument to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)">CrossOriginGetOwnPropertyHelper</a> algorithm:</p>
    <div class="monkey-patch">
-    <p>7.2.1.3.4 CrossOriginGetOWnPropertyHelper(O,P,isCrossBrowsingContext)</p>
+    <p>7.2.1.3.4 CrossOriginGetOWnPropertyHelper(O,P,hasSameCOOPKey)</p>
    </div>
    <p>Replace step 1 and 2 of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)①">CrossOriginGetOwnPropertyHelper</a> algorithm:</p>
    <div class="monkey-patch">
@@ -1287,9 +1276,9 @@ contexts should be reported</a> algorithm:</p>
      <li data-md>
       <p>Let <em>propertyList</em> be null.</p>
      <li data-md>
-      <p>If isCrossBrowsingContext is true, set <em>propertyLisy</em> to <a data-link-type="dfn" href="#cross-bcg-properties" id="ref-for-cross-bcg-properties">CrossBrowsingContextGroupProperties</a>(O).</p>
+      <p>If <em>hasSameCOOPKey</em> is true, set <em>propertyLisy</em> to <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossoriginproperties-(-o-)" id="ref-for-crossoriginproperties-(-o-)">CrossOriginProperties</a>(O).</p>
      <li data-md>
-      <p>Else, set <em>propertyList</em> to <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossoriginproperties-(-o-)" id="ref-for-crossoriginproperties-(-o-)">CrossOriginProperties</a>(O).</p>
+      <p>Else, set <em>propertyList</em> to <a data-link-type="dfn" href="#unrestricted-cross-origin-properties" id="ref-for-unrestricted-cross-origin-properties">UnrestrictedCrossOriginProperties</a>(O).</p>
      <li data-md>
       <p>For each <em>e</em> of <em>propertyList</em>:</p>
     </ol>
@@ -1299,7 +1288,7 @@ contexts should be reported</a> algorithm:</p>
    <div class="monkey-patch">
     <ol start="3">
      <li data-md>
-      <p>If <a data-link-type="dfn" href="#is-windowproxy-same-bcg" id="ref-for-is-windowproxy-same-bcg">IsWindowProxyInSameBrowsingContextGroup(W)</a> is
+      <p>If <a data-link-type="dfn" href="#windowproxy-same-coop-key" id="ref-for-windowproxy-same-coop-key">WindowProxyHasSameCOOPKey(W)</a> is
  false, then return ? <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossoriginget-(-o,-p,-receiver-)" id="ref-for-crossoriginget-(-o,-p,-receiver-)">CrossOriginGet</a>(this, P, V, receiver).</p>
     </ol>
    </div>
@@ -1307,7 +1296,7 @@ contexts should be reported</a> algorithm:</p>
    <div class="monkey-patch">
     <ol start="3">
      <li data-md>
-      <p>If <a data-link-type="dfn" href="#is-windowproxy-same-bcg" id="ref-for-is-windowproxy-same-bcg①">IsWindowProxyInSameBrowsingContextGroup(W)</a> is
+      <p>If <a data-link-type="dfn" href="#windowproxy-same-coop-key" id="ref-for-windowproxy-same-coop-key①">WindowProxyHasSameCOOPKey(W)</a> is
  false, then return ? <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossoriginset-(-o,-p,-receiver-)" id="ref-for-crossoriginset-(-o,-p,-receiver-)">CrossOriginSet</a>(this, P, V, receiver).</p>
     </ol>
    </div>
@@ -1315,11 +1304,11 @@ contexts should be reported</a> algorithm:</p>
    <div class="monkey-patch">
     <ol start="2">
      <li data-md>
-      <p>If <a data-link-type="dfn" href="#is-windowproxy-same-bcg" id="ref-for-is-windowproxy-same-bcg②">IsWindowProxyInSameBrowsingContextGroup(W)</a> is
+      <p>If <a data-link-type="dfn" href="#windowproxy-same-coop-key" id="ref-for-windowproxy-same-coop-key②">WindowProxyHasSameCOOPKey(W)</a> is
  false, then:</p>
       <ol>
        <li data-md>
-        <p>Let <em>property</em> be <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)②">CrossOriginGetOwnPropertyHelper</a>(W,P, true).</p>
+        <p>Let <em>property</em> be <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)②">CrossOriginGetOwnPropertyHelper</a>(W,P, false).</p>
        <li data-md>
         <p>If <em>property</em> is not undefined, then return <em>property</em>.</p>
        <li data-md>
@@ -1331,23 +1320,27 @@ contexts should be reported</a> algorithm:</p>
    <div class="monkey-patch">
     <ol start="4">
      <li data-md>
-      <p>Let <em>property</em> be <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)③">CrossOriginGetOwnPropertyHelper</a>(W,P, false).</p>
+      <p>Let <em>property</em> be <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)③">CrossOriginGetOwnPropertyHelper</a>(W,P, true).</p>
     </ol>
    </div>
-   <p>Add the following to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#the-window-proxy-exotic-object" id="ref-for-the-window-proxy-exotic-object">WindowProxy</a> section:</p>
+   <p>Add the following to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#the-window-proxy-exotic-object" id="ref-for-the-window-proxy-exotic-object①">WindowProxy</a> section:</p>
    <div class="monkey-patch">
-    <p>7.2.3.11 <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="cross-bcg-properties" data-noexport id="cross-bcg-properties">CrossBrowsingContextGroupProperties(W)</dfn></p>
+    <p>7.2.3.11 <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="unrestricted-cross-origin-properties" data-noexport id="unrestricted-cross-origin-properties">UnrestrictedCrossOriginProperties(W)</dfn></p>
     <ol>
      <li data-md>
       <p>Return { [Property]: "<em>closed</em>", [NeedsGet]: true, [NeedsSet]:
   false }, { [Property]: "<em>postMessage</em>" } ».</p>
     </ol>
-    <p>7.2.3.12 <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="is-windowproxy-same-bcg" data-noexport id="is-windowproxy-same-bcg">IsWindowProxyInSameBrowsingContextGroup(W)</dfn></p>
+    <p>A Javascript property name P is a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="unrestricted-cross-origin-property-name" data-noexport id="unrestricted-cross-origin-property-name">unrestricted cross-origin
+accessible window property name</dfn> if it is "<em>closed</em>" or "<em>postMessage</em>".</p>
+    <p>7.2.3.12 <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="windowproxy-same-coop-key" data-noexport id="windowproxy-same-coop-key">WindowProxyHasSameCOOPKey(W)</dfn></p>
     <ol>
      <li data-md>
-      <p>Return true if the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object" id="ref-for-current-global-object">current global object</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc③">browsing
-  context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①①">browsing context group</a> is <em>W</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc④">browsing
-  context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①②">browsing context group</a>.</p>
+      <p>Return true if the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#current-global-object" id="ref-for-current-global-object">current global object</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc">browsing
+        context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context⑥">top-level browsing context</a>'s <a data-link-type="dfn" href="#bcg-coop-agent-cluster-key" id="ref-for-bcg-coop-agent-cluster-key①">COOP
+        agent cluster key</a> is <em>W</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc①">browsing
+        context</a>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#top-level-browsing-context" id="ref-for-top-level-browsing-context⑦">top-level browsing context</a>'s <a data-link-type="dfn" href="#bcg-coop-agent-cluster-key" id="ref-for-bcg-coop-agent-cluster-key②">COOP
+        agent cluster key</a>.</p>
     </ol>
    </div>
    <h4 class="heading settled" data-level="6.2.3" id="coop-location-interface"><span class="secno">6.2.3. </span><span class="content">The Location interface</span><a class="self-link" href="#coop-location-interface"></a></h4>
@@ -1355,166 +1348,35 @@ contexts should be reported</a> algorithm:</p>
    <div class="monkey-patch">
     <ol start="2">
      <li data-md>
-      <p>Let <em>property</em> be <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)④">CrossOriginGetOwnPropertyHelper</a>(this,P, false).</p>
+      <p>Let <em>property</em> be <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#crossorigingetownpropertyhelper-(-o,-p-)" id="ref-for-crossorigingetownpropertyhelper-(-o,-p-)④">CrossOriginGetOwnPropertyHelper</a>(this,P, true).</p>
     </ol>
    </div>
-   <h3 class="heading settled" data-level="6.3" id="coop-top-level-traversables"><span class="secno">6.3. </span><span class="content">Top-level traversables</span><a class="self-link" href="#coop-top-level-traversables"></a></h3>
-   <p>Modify step 2 of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-top-level-traversable" id="ref-for-creating-a-new-top-level-traversable">create a new top-level traversable</a> algorithm:</p>
-   <div class="monkey-patch">
-    <ol start="2">
-     <li data-md>
-      <p>If <em>opener</em> is null, then set <em>document</em> to the second return value of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context" id="ref-for-creating-a-new-top-level-browsing-context①">creating a new top-level browsing context and document</a>, given
- "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch⑨">coop-group-switch</a>", null,
- false, and null.</p>
-    </ol>
-   </div>
-   <h3 class="heading settled" data-level="6.4" id="coop-browsing-contexts"><span class="secno">6.4. </span><span class="content">Browsing contexts</span><a class="self-link" href="#coop-browsing-contexts"></a></h3>
-   <p>Add a new member to the definition of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc⑤">browsing context</a>:</p>
+   <h3 class="heading settled" data-level="6.3" id="coop-browsing-contexts"><span class="secno">6.3. </span><span class="content">Browsing contexts</span><a class="self-link" href="#coop-browsing-contexts"></a></h3>
+   <p>Add two new members to the definition of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc②">browsing context</a>:</p>
    <div class="monkey-patch">
     <ul>
      <li data-md>
-      <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="virtual-coop-group-id" data-noexport id="virtual-coop-group-id">virtual COOP group ID</dfn> integer,
-intially 0. This is used by <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value⑦">cross-origin opener policy
-reporting</a>, to keep track of the COOP group switches that would
-have happened if the report-only policy had been enforced.</p>
+      <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="bcg-coop-agent-cluster-key" data-noexport id="bcg-coop-agent-cluster-key">COOP agent cluster key</dfn>, which is
+null or a <a data-link-type="dfn" href="#coop-agent-cluster-key" id="ref-for-coop-agent-cluster-key①">COOP agent cluster key</a>, initially null.</p>
+     <li data-md>
+      <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="virtual-coop-agent-cluster-key" data-noexport id="virtual-coop-agent-cluster-key">virtual COOP agent cluster
+key</dfn>, which is null or null or a <a data-link-type="dfn" href="#coop-agent-cluster-key" id="ref-for-coop-agent-cluster-key②">COOP agent
+cluster key</a>, initially null. This is used by <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value④">cross-origin
+opener policy reporting</a>, to keep track of the changes to agent cluster keying
+that would have happened if the report-only policy had been enforced.</p>
     </ul>
    </div>
-   <h4 class="heading settled" data-level="6.4.1" id="coop-creating-browsing-contexts"><span class="secno">6.4.1. </span><span class="content">Creating browsing contexts</span><a class="self-link" href="#coop-creating-browsing-contexts"></a></h4>
-   <p>Modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context" id="ref-for-creating-a-new-top-level-browsing-context②">create a new top-level browsing context and document</a> algorithm:</p>
+   <h4 class="heading settled" data-level="6.3.1" id="coop-grouping-of-browsing-contexts"><span class="secno">6.3.1. </span><span class="content">Grouping of browsing contexts</span><a class="self-link" href="#coop-grouping-of-browsing-contexts"></a></h4>
+   <h3 class="heading settled" data-level="6.4" id="coop-agent-clusters"><span class="secno">6.4. </span><span class="content">Agents and agent clusters</span><a class="self-link" href="#coop-agent-clusters"></a></h3>
+   <p>Add the following to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#integration-with-the-javascript-agent-cluster-formalism" id="ref-for-integration-with-the-javascript-agent-cluster-formalism">Integration with the JavaScript agent cluster
+formalism</a>:</p>
    <div class="monkey-patch">
-    <p>To <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context" id="ref-for-creating-a-new-top-level-browsing-context③">create a new top-level browsing context and document</a> given a <a data-link-type="dfn" href="#coop-enforcement-value" id="ref-for-coop-enforcement-value②">COOP enforcement value</a> <em>coopEnforcementValue</em>, an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin⑦">origin</a> or null <em>originKey</em>, a boolean <em>needsCrossOriginIsolation</em>, a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc⑥">browsing context</a> or null <em>currentBrowsingContext</em>:</p>
-    <ol>
-     <li data-md>
-      <p>Assert that <em>coopEnforcementValue</em> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch①⓪">coop-group-switch</a>", or
- "<a data-link-type="dfn" href="#coop-enforcement-value-bcg-switch" id="ref-for-coop-enforcement-value-bcg-switch⑨">browsing-context-group-switch</a>".</p>
-     <li data-md>
-      <p>If <em>coopEnforcementValue</em> is
- "<a data-link-type="dfn" href="#coop-enforcement-value-coop-group-switch" id="ref-for-coop-enforcement-value-coop-group-switch①①">coop-group-switch</a>", then
- return the result of <a data-link-type="dfn" href="#create-new-coop-group" id="ref-for-create-new-coop-group">creating a new COOP group</a>,
- given <em>originKey</em>, and <em>needsCrossOriginIsolation</em>.</p>
-     <li data-md>
-      <p>Assert <em>currentBrowsingContext</em> is not null.</p>
-     <li data-md>
-      <p>Return the result of <a data-link-type="dfn" href="#create-new-bc-in-coop-group" id="ref-for-create-new-bc-in-coop-group">creating a new browsing
- context in the current COOP group</a>, given <em>currentBrowsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①③">browsing context group</a>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group⑨">COOP group</a>, <em>originKey</em>, <em>needsCrossOriginIsolation</em>, and <em>currentBrowsingContext</em>.</p>
-    </ol>
+    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-agent-cluster-key" data-noexport id="coop-agent-cluster-key">COOP agent cluster key</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple">tuple</a> of an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin⑦">origin</a> and a <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation" id="ref-for-bcg-cross-origin-isolation③">cross-origin isolation mode</a>.</p>
    </div>
-   <h4 class="heading settled" data-level="6.4.2" id="coop-grouping-of-browsing-contexts"><span class="secno">6.4.2. </span><span class="content">Grouping of browsing contexts</span><a class="self-link" href="#coop-grouping-of-browsing-contexts"></a></h4>
-   <p>Remove the following from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#grouping-of-browsing-contexts" id="ref-for-grouping-of-browsing-contexts">Groupings of browsing contexts</a> section:</p>
+   <p>Change the definition of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#agent-cluster-key" id="ref-for-agent-cluster-key">agent cluster key</a>:</p>
    <div class="monkey-patch">
-    <p>A user agent holds a <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group-set" id="ref-for-browsing-context-group-set">browsing context group set</a> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-set" id="ref-for-ordered-set">set</a> of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①④">browsing
-context groups</a>).</p>
-   </div>
-   <p>Remove the following from the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-browsing-context-group-and-document" id="ref-for-creating-a-new-browsing-context-group-and-document">creating a new browsing context group and
-document</a> algorithm:</p>
-   <div class="monkey-patch">
-    <ol start="2">
-     <li data-md>
-      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#set-append" id="ref-for-set-append">Append</a> <em>group</em> to the user agent’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group-set" id="ref-for-browsing-context-group-set①">browsing context group set</a>.</p>
-    </ol>
-   </div>
-   <p>Modify step 5 of the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-remove" id="ref-for-bcg-remove">removing a top-level browsing context</a> algorithm:</p>
-   <div class="monkey-patch">
-    <ol start="5">
-     <li data-md>
-      <p>If <em>group</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing context set" id="ref-for-browsing context set②">browsing context set</a> <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-is-empty" id="ref-for-list-is-empty">is empty</a>, then:</p>
-      <ol>
-       <li data-md>
-        <p>Assert <em>group</em>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①⓪">COOP group</a> is not null.</p>
-       <li data-md>
-        <p>Let <em>coopGroup</em> be <em>group</em>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①①">COOP group</a>.</p>
-       <li data-md>
-        <p>Set <em>group</em>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①②">COOP group</a> to null.</p>
-       <li data-md>
-        <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-remove" id="ref-for-map-remove">Remove entries</a> from <em>coopGroup</em>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map②">browsing context group
-  map</a> whose <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-size" id="ref-for-map-size②">value</a> is <em>group</em>.</p>
-       <li data-md>
-        <p>If <em>coopGroup</em>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map③">browsing context group
-  map</a> <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-empty" id="ref-for-map-empty">is empty</a>, <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#list-remove" id="ref-for-list-remove">remove</a> <em>coopGroup</em> from the user
-  agent’s <a data-link-type="dfn" href="#coop-group-set" id="ref-for-coop-group-set">COOP group set</a>.</p>
-      </ol>
-    </ol>
-   </div>
-   <h4 class="heading settled" data-level="6.4.3" id="coop-groups"><span class="secno">6.4.3. </span><span class="content">COOP groups</span><a class="self-link" href="#coop-groups"></a></h4>
-   <p>Add a new section "<em>COOP groups</em>" to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#windows" id="ref-for-windows">browsing contexts</a> section.</p>
-   <div class="monkey-patch">
-    <p>A <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①⑤">browsing context group</a> has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-group" data-noexport id="coop-group">COOP
-group</dfn> (null or a <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①③">COOP group</a>), initally null.</p>
-    <p>A user agent holds a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="coop-group-set" data-noexport id="coop-group-set">COOP
-group set</dfn> (a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-set" id="ref-for-ordered-set①">set</a> of <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①④">COOP groups</a>).</p>
-    <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="bcg-key" data-noexport id="bcg-key">browsing context group key</dfn> is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple">tuple</a> consisting
-of null or an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin⑧">origin</a> and a boolean.</p>
-    <p>A <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①⑤">COOP group</a> holds a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="bcg-map" data-noexport id="bcg-map">browsing context group
-map</dfn>, which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map" id="ref-for-ordered-map">map</a> of <a data-link-type="dfn" href="#bcg-key" id="ref-for-bcg-key①">browsing context group keys</a> to <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①⑥">browsing context groups</a>.</p>
-    <p>A <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①⑥">COOP group</a> holds a <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="bcg-virtual-id-map" data-noexport id="bcg-virtual-id-map">browsing
-context group virtual ID map</dfn>, which is a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#ordered-map" id="ref-for-ordered-map①">map</a> of <a data-link-type="dfn" href="#bcg-key" id="ref-for-bcg-key②">browsing
-context group keys</a> to integers.</p>
-    <p class="note" role="note"><span class="marker">Note:</span> The <a data-link-type="dfn" href="#bcg-virtual-id-map" id="ref-for-bcg-virtual-id-map③">browsing context group virtual ID map</a> is used
-by <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#coop-struct-report-only-value" id="ref-for-coop-struct-report-only-value⑧">cross-origin opener policy reporting</a> to keep track of
-browsing context group switches that would have happened if the report-only
-policy had been enforced.</p>
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="create-new-coop-group" data-noexport id="create-new-coop-group">create a new COOP group</dfn>, given an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin⑨">origin</a> or null <em>originKey</em>, and a boolean <em>needsCrossOriginIsolation</em>:</p>
-    <ol>
-     <li data-md>
-      <p>Let <em>coopGroup</em> be a new <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①⑦">COOP group</a>.</p>
-     <li data-md>
-      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#set-append" id="ref-for-set-append①">Append</a> <em>coopGroup</em> to the user agent’s <a data-link-type="dfn" href="#coop-group-set" id="ref-for-coop-group-set①">COOP group set</a>.</p>
-     <li data-md>
-      <p>Return the result of <a data-link-type="dfn" href="#create-new-bcg-in-coop-group" id="ref-for-create-new-bcg-in-coop-group">creating a new browsing
- context group in a COOP group</a>, given <em>coopGroup</em>, <em>originKey</em>, and <em>needsCrossOriginIsolation</em>.</p>
-    </ol>
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="create-new-bcg-in-coop-group" data-noexport id="create-new-bcg-in-coop-group">create a new browsing context group in a
-COOP group </dfn>, given a <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①⑧">COOP group</a> <em>coopGroup</em>, an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin①⓪">origin</a> or null <em>originKey</em>, and a boolean <em>needsCrossOriginIsolation</em>:</p>
-    <ol>
-     <li data-md>
-      <p>Assert <em>needsCrossOriginIsolation</em> is false or <em>originKey</em> is not null.</p>
-     <li data-md>
-      <p>Let <em>browsingContextGroupKey</em> be a new <a data-link-type="dfn" href="#bcg-key" id="ref-for-bcg-key③">browsing context group
- key</a> with value (<em>originKey</em>, <em>needsCrossSiteIsolation</em>).</p>
-     <li data-md>
-      <p>Assert <em>coopGroup</em>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map④">browsing context group map</a> does not <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exist" id="ref-for-map-exist">contain an entry</a> given <em>browsingContextGroupKey</em>.</p>
-     <li data-md>
-      <p>Let <em>browsingContextGroup</em> and <em>document</em> be the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-browsing-context-group-and-document" id="ref-for-creating-a-new-browsing-context-group-and-document①">creating a new
- browsing context group and document</a>.</p>
-     <li data-md>
-      <p>Set <em>browsingContextGroup</em>'s <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group①⑨">COOP group</a> to <em>coopGroup</em>.</p>
-     <li data-md>
-      <p>If <em>needsCrossOriginIsolation</em> is true, set <em>browsingContextGroup</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation" id="ref-for-bcg-cross-origin-isolation①">cross-origin isolation mode</a> to either "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-isolation-logical" id="ref-for-cross-origin-isolation-logical">logical</a>" or "<a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#cross-origin-isolation-concrete" id="ref-for-cross-origin-isolation-concrete">concrete</a>".
- The choice of which is implementation defined.</p>
-     <li data-md>
-      <p><a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-set" id="ref-for-map-set">Set the value</a> of <em>coopGroup</em>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map⑤"> browsing context group map</a> given <em>browsingContextGroupKey</em> to <em>browsingContextGroup</em>.</p>
-     <li data-md>
-      <p>Return <em>browsingContextGroup</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing context set" id="ref-for-browsing context set③">browsing context set</a>[0] and <em>document</em>.</p>
-    </ol>
-    <p>To <dfn class="dfn-paneled" data-dfn-type="dfn" data-lt="create-new-bc-in-coop-group" data-noexport id="create-new-bc-in-coop-group">create a new browsing context in a
-COOP group </dfn> given a <a data-link-type="dfn" href="#coop-group" id="ref-for-coop-group②⓪">COOP group</a> <em>coopGroup</em>, an <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#concept-origin" id="ref-for-concept-origin①①">origin</a> or null <em>originKey</em>, a boolean <em>needsCrossOriginIsolation</em>, a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc" id="ref-for-window-bc⑦">browsing
-context</a> <em>currentBrowsingContext</em>:</p>
-    <ol>
-     <li data-md>
-      <p>Assert <em>needsCrossOriginIsolation</em> is false or <em>originKey</em> is not null.</p>
-     <li data-md>
-      <p>Let <em>browsingContext</em> and <em>document</em> be null.</p>
-     <li data-md>
-      <p>Let <em>browsingContextGroupKey</em> be a new <a data-link-type="dfn" href="#bcg-key" id="ref-for-bcg-key④">browsing context group
- key</a> with value (<em>originKey</em>, <em>needsCrossSiteIsolation</em>).</p>
-     <li data-md>
-      <p>If <em>coopGroup</em>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map⑥">browsing context group map</a> <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#map-exist" id="ref-for-map-exist①">contains an entry</a> given <em>browsingContextGroupKey</em>, set <em>browsingContext</em> and <em>document</em> to the result of <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context" id="ref-for-creating-a-new-top-level-browsing-context④">creating a new top-level browsing context
- and document</a>, given null, null, and <em>coopGroup</em>'s <a data-link-type="dfn" href="#bcg-map" id="ref-for-bcg-map⑦">browsing
- context group map</a>[<em>browsingContextGroupKey</em>].</p>
-     <li data-md>
-      <p>Else, set <em>browsingContext</em> and <em>document</em> to
- the result of <a data-link-type="dfn" href="#create-new-bcg-in-coop-group" id="ref-for-create-new-bcg-in-coop-group①">creating a new browsing
- context group in a COOP group</a>, given <em>coopGroup</em>, <em>originKey</em>, and <em>needsCrossOriginIsolation</em>.</p>
-     <li data-md>
-      <p>Assert that <em>currentBrowsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①⑦">browsing context group</a> is
- different from <em>browsingContext</em>'s <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#browsing-context-group" id="ref-for-browsing-context-group①⑧">browsing context group</a>.</p>
-     <li data-md>
-      <p><a data-link-type="dfn">Perform browsing context switch
- relationship</a> given <em>currentBrowsingContext</em> and <em>browsingContext</em>.</p>
-     <li data-md>
-      <p>Return <em>browsingContext</em> and <em>document</em>.</p>
-    </ol>
+    <p>An <a data-link-type="dfn" href="https://html.spec.whatwg.org/C/#agent-cluster-key" id="ref-for-agent-cluster-key①">agent cluster key</a> is either a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#site" id="ref-for-site">site</a>, or a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-tuple" id="ref-for-concept-origin-tuple">tuple origin</a>, or a <a data-link-type="dfn" href="https://infra.spec.whatwg.org/#tuple" id="ref-for-tuple①">tuple</a> of a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-tuple" id="ref-for-concept-origin-tuple①">tuple origin</a> and a <a data-link-type="dfn" href="#coop-agent-cluster-key" id="ref-for-coop-agent-cluster-key③">COOP agent
+cluster key</a>.</p>
    </div>
    <h2 class="heading settled" data-level="7" id="security"><span class="secno">7. </span><span class="content">Security considerations</span><a class="self-link" href="#security"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="same-origin-policy"><span class="secno">7.1. </span><span class="content">Same-origin policy</span><a class="self-link" href="#same-origin-policy"></a></h3>
@@ -1695,24 +1557,18 @@ navigation for example.</p>
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#bcg-key">bcg-key</a><span>, in § 6.4.3</span>
-   <li><a href="#bcg-map">bcg-map</a><span>, in § 6.4.3</span>
-   <li><a href="#bcg-virtual-id-map">bcg-virtual-id-map</a><span>, in § 6.4.3</span>
+   <li><a href="#bcg-coop-agent-cluster-key">bcg-coop-agent-cluster-key</a><span>, in § 6.3</span>
+   <li><a href="#coop-agent-cluster-key">coop-agent-cluster-key</a><span>, in § 6.4</span>
    <li><a href="#coop-enforcement-value">coop-enforcement-value</a><span>, in § 6.1.3</span>
-   <li><a href="#coop-enforcement-value-bcg-switch">coop-enforcement-value-bcg-switch</a><span>, in § 6.1.3</span>
-   <li><a href="#coop-enforcement-value-coop-group-switch">coop-enforcement-value-coop-group-switch</a><span>, in § 6.1.3</span>
-   <li><a href="#coop-enforcement-value-no-switch">coop-enforcement-value-no-switch</a><span>, in § 6.1.3</span>
-   <li><a href="#coop-group">coop-group</a><span>, in § 6.4.3</span>
-   <li><a href="#coop-group-set">coop-group-set</a><span>, in § 6.4.3</span>
+   <li><a href="#coop-enforcement-value-key">coop-enforcement-value-key</a><span>, in § 6.1.3</span>
+   <li><a href="#coop-enforcement-value-switch">coop-enforcement-value-switch</a><span>, in § 6.1.3</span>
    <li><a href="#coop-origin">coop-origin</a><span>, in § 6.1.1</span>
    <li><a href="#coop-restrict-properties">coop-restrict-properties</a><span>, in § 6.1.1</span>
    <li><a href="#coop-restrict-properties-plus-coep">coop-restrict-properties-plus-coep</a><span>, in § 6.1.1</span>
-   <li><a href="#create-new-bcg-in-coop-group">create-new-bcg-in-coop-group</a><span>, in § 6.4.3</span>
-   <li><a href="#create-new-bc-in-coop-group">create-new-bc-in-coop-group</a><span>, in § 6.4.3</span>
-   <li><a href="#create-new-coop-group">create-new-coop-group</a><span>, in § 6.4.3</span>
-   <li><a href="#cross-bcg-properties">cross-bcg-properties</a><span>, in § 6.2.2</span>
-   <li><a href="#is-windowproxy-same-bcg">is-windowproxy-same-bcg</a><span>, in § 6.2.2</span>
-   <li><a href="#virtual-coop-group-id">virtual-coop-group-id</a><span>, in § 6.4</span>
+   <li><a href="#unrestricted-cross-origin-properties">unrestricted-cross-origin-properties</a><span>, in § 6.2.2</span>
+   <li><a href="#unrestricted-cross-origin-property-name">unrestricted-cross-origin-property-name</a><span>, in § 6.2.2</span>
+   <li><a href="#virtual-coop-agent-cluster-key">virtual-coop-agent-cluster-key</a><span>, in § 6.3</span>
+   <li><a href="#windowproxy-same-coop-key">windowproxy-same-coop-key</a><span>, in § 6.2.2</span>
   </ul>
   <h3 class="no-num no-ref heading settled" id="index-defined-elsewhere"><span class="content">Terms defined by reference</span><a class="self-link" href="#index-defined-elsewhere"></a></h3>
   <ul class="index">
@@ -1723,6 +1579,16 @@ navigation for example.</p>
      <li><span class="dfn-paneled" id="f219531c">securityerror</span>
     </ul>
    <li>
+    <a data-link-type="biblio">[DOM]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="a973e0fe">document</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[ECMASCRIPT]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="353564d6">agent clusters</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="ee7bba09">response</span>
@@ -1730,10 +1596,8 @@ navigation for example.</p>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="5c7155e4">auxilliary browsing context</span>
+     <li><span class="dfn-paneled" id="3fa2961f">agent cluster key</span>
      <li><span class="dfn-paneled" id="6d88ab2e">browsing context</span>
-     <li><span class="dfn-paneled" id="c8c92a09">browsing context group</span>
-     <li><span class="dfn-paneled" id="0fc1dae7">browsing context group set</span>
      <li><span class="dfn-paneled" id="b18a7aa2">browsing context group switches due to cross-origin opener policy</span>
      <li><span class="dfn-paneled" id="ac3582c3">browsing context set</span>
      <li><span class="dfn-paneled" id="64e8248c">browsing-context-group</span>
@@ -1744,14 +1608,9 @@ navigation for example.</p>
      <li><span class="dfn-paneled" id="6b151977">checking if enforcing report-only coop would require a browsing context group switch</span>
      <li><span class="dfn-paneled" id="d8813cef">coep</span>
      <li><span class="dfn-paneled" id="bee39f64">compatible with cross-origin isolation</span>
-     <li><span class="dfn-paneled" id="16258447">concrete</span>
      <li><span class="dfn-paneled" id="e3892898">coop</span>
      <li><span class="dfn-paneled" id="27d3070e">coop-enforcement-origin</span>
      <li><span class="dfn-paneled" id="006fd69c">coop-same-origin</span>
-     <li><span class="dfn-paneled" id="b4f743f7">coop-same-origin-allow-popups</span>
-     <li><span class="dfn-paneled" id="6639291d">create a new top-level browsing context and document</span>
-     <li><span class="dfn-paneled" id="f655567d">create a new top-level traversable</span>
-     <li><span class="dfn-paneled" id="1a9d4011">creating a new browsing context group and document</span>
      <li><span class="dfn-paneled" id="921ae6ae">creating a new top-level browsing context and document</span>
      <li><span class="dfn-paneled" id="2a9c82c5">cross-origin isolation mode</span>
      <li><span class="dfn-paneled" id="924e5259">cross-origin opener policy</span>
@@ -1769,9 +1628,8 @@ navigation for example.</p>
      <li><span class="dfn-paneled" id="b998573a">embedder-policy-value-2</span>
      <li><span class="dfn-paneled" id="6967630c">enforce a response's cross-origin opener policy</span>
      <li><span class="dfn-paneled" id="77a2dc1b">environment</span>
-     <li><span class="dfn-paneled" id="86cf8b74">grouping of browsing contexts</span>
+     <li><span class="dfn-paneled" id="f58ae318">integration with the javascript agent cluster formalism</span>
      <li><span class="dfn-paneled" id="fcb86cbe">location-getownproperty</span>
-     <li><span class="dfn-paneled" id="6dc08662">logical</span>
      <li><span class="dfn-paneled" id="9d6eb4de">matching-coop</span>
      <li><span class="dfn-paneled" id="823c1af0">needs a browsing context group switch</span>
      <li><span class="dfn-paneled" id="c56b026c">obtain a browsing context to use for a navigation response</span>
@@ -1782,36 +1640,24 @@ navigation for example.</p>
      <li><span class="dfn-paneled" id="50ff827d">queue a violation report for browsing context group switch when navigating away from a coop response</span>
      <li><span class="dfn-paneled" id="2bdd075e">queue a violation report for browsing context group switch when navigating to a coop response</span>
      <li><span class="dfn-paneled" id="9c4c1e66">relevant settings object</span>
-     <li><span class="dfn-paneled" id="3a36b9a3">removing a top-level browsing context</span>
      <li><span class="dfn-paneled" id="2a1d90e1">report-only value</span>
-     <li><span class="dfn-paneled" id="f26905b5">same origin</span>
      <li><span class="dfn-paneled" id="21fb816b">same-origin-allow-popups</span>
      <li><span class="dfn-paneled" id="8af97c1e">same-origin-plus-coep</span>
+     <li><span class="dfn-paneled" id="fb9bb722">site</span>
      <li><span class="dfn-paneled" id="c2fcb960">top-level browsing context</span>
+     <li><span class="dfn-paneled" id="1d2aa117">tuple origin</span>
      <li><span class="dfn-paneled" id="8c60e063">unsafe-none</span>
      <li><span class="dfn-paneled" id="bc2c9476">virtual browsing context group id</span>
      <li><span class="dfn-paneled" id="eb4c1ba2">windowproxy</span>
      <li><span class="dfn-paneled" id="d0ac0059">windowproxy-get</span>
      <li><span class="dfn-paneled" id="de20523e">windowproxy-getownproperty</span>
      <li><span class="dfn-paneled" id="65c708ed">windowproxy-set</span>
-     <li><span class="dfn-paneled" id="b216ae7b">windows</span>
      <li><span class="dfn-paneled" id="f105c78a">would need a browsing context group switch due to report-only</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="a3b18719">append</span>
-     <li><span class="dfn-paneled" id="ba4881ce">contain an entry</span>
-     <li><span class="dfn-paneled" id="a898424d">list-is-empty</span>
-     <li><span class="dfn-paneled" id="0a5b9b68">list-remove</span>
      <li><span class="dfn-paneled" id="e2eac3f1">list-size</span>
-     <li><span class="dfn-paneled" id="3fca5a9e">map</span>
-     <li><span class="dfn-paneled" id="79d5e498">map-empty</span>
-     <li><span class="dfn-paneled" id="1b1d683f">map-size</span>
-     <li><span class="dfn-paneled" id="1a66c1aa">map-value</span>
-     <li><span class="dfn-paneled" id="4a4a458f">remove entries</span>
-     <li><span class="dfn-paneled" id="15e48c39">set</span>
-     <li><span class="dfn-paneled" id="c6bfe500">set the value</span>
      <li><span class="dfn-paneled" id="0e8de730">tuple</span>
     </ul>
    <li>
@@ -1823,6 +1669,10 @@ navigation for example.</p>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
+   <dt id="biblio-dom">[DOM]
+   <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/"><cite>DOM Standard</cite></a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
+   <dt id="biblio-ecmascript">[ECMASCRIPT]
+   <dd><a href="https://tc39.es/ecma262/multipage/"><cite>ECMAScript Language Specification</cite></a>. URL: <a href="https://tc39.es/ecma262/multipage/">https://tc39.es/ecma262/multipage/</a>
    <dt id="biblio-fetch">[FETCH]
    <dd>Anne van Kesteren. <a href="https://fetch.spec.whatwg.org/"><cite>Fetch Standard</cite></a>. Living Standard. URL: <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
    <dt id="biblio-html">[HTML]
@@ -2149,14 +1999,14 @@ navigation for example.</p>
 window.dfnpanelData = {};
 window.dfnpanelData['b825946e'] = {"dfnID": "b825946e", "url": "https://webidl.spec.whatwg.org/#LegacyUnenumerableNamedPropertiesdfn-DOMException", "dfnText": "domexception", "refSections": [{"refs": [{"id": "ref-for-LegacyUnenumerableNamedPropertiesdfn-DOMException"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
 window.dfnpanelData['f219531c'] = {"dfnID": "f219531c", "url": "https://webidl.spec.whatwg.org/#LegacyUnenumerableNamedPropertiessecurityerror", "dfnText": "securityerror", "refSections": [{"refs": [{"id": "ref-for-LegacyUnenumerableNamedPropertiessecurityerror"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
+window.dfnpanelData['a973e0fe'] = {"dfnID": "a973e0fe", "url": "https://dom.spec.whatwg.org/#concept-document", "dfnText": "document", "refSections": [{"refs": [{"id": "ref-for-concept-document"}, {"id": "ref-for-concept-document\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
+window.dfnpanelData['353564d6'] = {"dfnID": "353564d6", "url": "https://tc39.es/ecma262/multipage/executable-code-and-execution-contexts.html#sec-agent-clusters", "dfnText": "agent clusters", "refSections": [{"refs": [{"id": "ref-for-sec-agent-clusters"}, {"id": "ref-for-sec-agent-clusters\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
 window.dfnpanelData['ee7bba09'] = {"dfnID": "ee7bba09", "url": "https://fetch.spec.whatwg.org/#concept-response", "dfnText": "response", "refSections": [{"refs": [{"id": "ref-for-concept-response"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
-window.dfnpanelData['5c7155e4'] = {"dfnID": "5c7155e4", "url": "https://html.spec.whatwg.org/C/#auxilliary-browsing-context", "dfnText": "auxilliary browsing context", "refSections": [{"refs": [{"id": "ref-for-auxilliary-browsing-context"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
-window.dfnpanelData['6d88ab2e'] = {"dfnID": "6d88ab2e", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc", "dfnText": "browsing context", "refSections": [{"refs": [{"id": "ref-for-window-bc"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-window-bc\u2460"}, {"id": "ref-for-window-bc\u2461"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-window-bc\u2462"}, {"id": "ref-for-window-bc\u2463"}], "title": "6.2.2. The WindowProxy exotic object"}, {"refs": [{"id": "ref-for-window-bc\u2464"}], "title": "6.4. Browsing contexts"}, {"refs": [{"id": "ref-for-window-bc\u2465"}], "title": "6.4.1. Creating browsing contexts"}, {"refs": [{"id": "ref-for-window-bc\u2466"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['c8c92a09'] = {"dfnID": "c8c92a09", "url": "https://html.spec.whatwg.org/C/#browsing-context-group", "dfnText": "browsing context group", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460"}, {"id": "ref-for-browsing-context-group\u2461"}, {"id": "ref-for-browsing-context-group\u2462"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-browsing-context-group\u2463"}, {"id": "ref-for-browsing-context-group\u2464"}, {"id": "ref-for-browsing-context-group\u2465"}, {"id": "ref-for-browsing-context-group\u2466"}, {"id": "ref-for-browsing-context-group\u2467"}, {"id": "ref-for-browsing-context-group\u2468"}, {"id": "ref-for-browsing-context-group\u2460\u24ea"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2460"}, {"id": "ref-for-browsing-context-group\u2460\u2461"}], "title": "6.2.2. The WindowProxy exotic object"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2462"}], "title": "6.4.1. Creating browsing contexts"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2463"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2464"}, {"id": "ref-for-browsing-context-group\u2460\u2465"}, {"id": "ref-for-browsing-context-group\u2460\u2466"}, {"id": "ref-for-browsing-context-group\u2460\u2467"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['0fc1dae7'] = {"dfnID": "0fc1dae7", "url": "https://html.spec.whatwg.org/C/#browsing-context-group-set", "dfnText": "browsing context group set", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group-set"}, {"id": "ref-for-browsing-context-group-set\u2460"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
+window.dfnpanelData['3fa2961f'] = {"dfnID": "3fa2961f", "url": "https://html.spec.whatwg.org/C/#agent-cluster-key", "dfnText": "agent cluster key", "refSections": [{"refs": [{"id": "ref-for-agent-cluster-key"}, {"id": "ref-for-agent-cluster-key\u2460"}], "title": "6.4. Agents and agent clusters"}], "external": true};
+window.dfnpanelData['6d88ab2e'] = {"dfnID": "6d88ab2e", "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#window-bc", "dfnText": "browsing context", "refSections": [{"refs": [{"id": "ref-for-window-bc"}, {"id": "ref-for-window-bc\u2460"}], "title": "6.2.2. The WindowProxy exotic object"}, {"refs": [{"id": "ref-for-window-bc\u2461"}], "title": "6.3. Browsing contexts"}], "external": true};
 window.dfnpanelData['b18a7aa2'] = {"dfnID": "b18a7aa2", "url": "https://html.spec.whatwg.org/C/#browsing-context-group-switches-due-to-cross-origin-opener-policy", "dfnText": "browsing context group switches due to cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group-switches-due-to-cross-origin-opener-policy"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['ac3582c3'] = {"dfnID": "ac3582c3", "url": "https://html.spec.whatwg.org/C/#browsing context set", "dfnText": "browsing context set", "refSections": [{"refs": [{"id": "ref-for-browsing context set"}, {"id": "ref-for-browsing context set\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-browsing context set\u2461"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-browsing context set\u2462"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['64e8248c'] = {"dfnID": "64e8248c", "url": "https://html.spec.whatwg.org/C/#browsing-context-group", "dfnText": "browsing-context-group", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460"}, {"id": "ref-for-browsing-context-group\u2461"}, {"id": "ref-for-browsing-context-group\u2462"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-browsing-context-group\u2463"}, {"id": "ref-for-browsing-context-group\u2464"}, {"id": "ref-for-browsing-context-group\u2465"}, {"id": "ref-for-browsing-context-group\u2466"}, {"id": "ref-for-browsing-context-group\u2467"}, {"id": "ref-for-browsing-context-group\u2468"}, {"id": "ref-for-browsing-context-group\u2460\u24ea"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2460"}, {"id": "ref-for-browsing-context-group\u2460\u2461"}], "title": "6.2.2. The WindowProxy exotic object"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2462"}], "title": "6.4.1. Creating browsing contexts"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2463"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460\u2464"}, {"id": "ref-for-browsing-context-group\u2460\u2465"}, {"id": "ref-for-browsing-context-group\u2460\u2466"}, {"id": "ref-for-browsing-context-group\u2460\u2467"}], "title": "6.4.3. COOP groups"}], "external": true};
+window.dfnpanelData['ac3582c3'] = {"dfnID": "ac3582c3", "url": "https://html.spec.whatwg.org/C/#browsing context set", "dfnText": "browsing context set", "refSections": [{"refs": [{"id": "ref-for-browsing context set"}, {"id": "ref-for-browsing context set\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['64e8248c'] = {"dfnID": "64e8248c", "url": "https://html.spec.whatwg.org/C/#browsing-context-group", "dfnText": "browsing-context-group", "refSections": [{"refs": [{"id": "ref-for-browsing-context-group"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-browsing-context-group\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-browsing-context-group\u2461"}, {"id": "ref-for-browsing-context-group\u2462"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['dbdc69ce'] = {"dfnID": "dbdc69ce", "url": "https://html.spec.whatwg.org/C/#coop-check-access-report", "dfnText": "check if an access between two browsing contexts should be reported", "refSections": [{"refs": [{"id": "ref-for-coop-check-access-report"}], "title": "6.1.4. Reporting"}], "external": true};
 window.dfnpanelData['38308d85'] = {"dfnID": "38308d85", "url": "https://html.spec.whatwg.org/C/#check-browsing-context-group-switch-coop-value", "dfnText": "check if coop values require a browsing context group switch", "refSections": [{"refs": [{"id": "ref-for-check-browsing-context-group-switch-coop-value"}, {"id": "ref-for-check-browsing-context-group-switch-coop-value\u2460"}, {"id": "ref-for-check-browsing-context-group-switch-coop-value\u2461"}, {"id": "ref-for-check-browsing-context-group-switch-coop-value\u2462"}, {"id": "ref-for-check-browsing-context-group-switch-coop-value\u2463"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['0e526336'] = {"dfnID": "0e526336", "url": "https://html.spec.whatwg.org/C/#check-bcg-switch-report-only", "dfnText": "check if enforcing report-only coop would require a browsing context group switch", "refSections": [{"refs": [{"id": "ref-for-check-bcg-switch-report-only"}, {"id": "ref-for-check-bcg-switch-report-only\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
@@ -2164,17 +2014,12 @@ window.dfnpanelData['b0f14108'] = {"dfnID": "b0f14108", "url": "https://html.spe
 window.dfnpanelData['6b151977'] = {"dfnID": "6b151977", "url": "https://html.spec.whatwg.org/C/#check-bcg-switch-report-only", "dfnText": "checking if enforcing report-only coop would require a browsing context group switch", "refSections": [{"refs": [{"id": "ref-for-check-bcg-switch-report-only"}, {"id": "ref-for-check-bcg-switch-report-only\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['d8813cef'] = {"dfnID": "d8813cef", "url": "https://html.spec.whatwg.org/C/#coep", "dfnText": "coep", "refSections": [{"refs": [{"id": "ref-for-coep"}, {"id": "ref-for-coep\u2460"}], "title": "1.1. Recommended readings"}], "external": true};
 window.dfnpanelData['bee39f64'] = {"dfnID": "bee39f64", "url": "https://html.spec.whatwg.org/C/#compatible-with-cross-origin-isolation", "dfnText": "compatible with cross-origin isolation", "refSections": [{"refs": [{"id": "ref-for-compatible-with-cross-origin-isolation"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
-window.dfnpanelData['16258447'] = {"dfnID": "16258447", "url": "https://html.spec.whatwg.org/C/#cross-origin-isolation-concrete", "dfnText": "concrete", "refSections": [{"refs": [{"id": "ref-for-cross-origin-isolation-concrete"}], "title": "6.4.3. COOP groups"}], "external": true};
 window.dfnpanelData['e3892898'] = {"dfnID": "e3892898", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "coop", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['27d3070e'] = {"dfnID": "27d3070e", "url": "https://html.spec.whatwg.org/C/#coop-enforcement-origin", "dfnText": "coop-enforcement-origin", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-origin"}, {"id": "ref-for-coop-enforcement-origin\u2460"}, {"id": "ref-for-coop-enforcement-origin\u2461"}, {"id": "ref-for-coop-enforcement-origin\u2462"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['006fd69c'] = {"dfnID": "006fd69c", "url": "https://html.spec.whatwg.org/C/#coop-same-origin", "dfnText": "coop-same-origin", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-coop-same-origin\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-coop-same-origin\u2461"}, {"id": "ref-for-coop-same-origin\u2462"}, {"id": "ref-for-coop-same-origin\u2463"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['b4f743f7'] = {"dfnID": "b4f743f7", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups", "dfnText": "coop-same-origin-allow-popups", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-allow-popups"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-coop-same-origin-allow-popups\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['6639291d'] = {"dfnID": "6639291d", "url": "https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context", "dfnText": "create a new top-level browsing context and document", "refSections": [{"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context\u2460"}], "title": "6.3. Top-level traversables"}, {"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context\u2461"}, {"id": "ref-for-creating-a-new-top-level-browsing-context\u2462"}], "title": "6.4.1. Creating browsing contexts"}, {"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context\u2463"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['f655567d'] = {"dfnID": "f655567d", "url": "https://html.spec.whatwg.org/C/#creating-a-new-top-level-traversable", "dfnText": "create a new top-level traversable", "refSections": [{"refs": [{"id": "ref-for-creating-a-new-top-level-traversable"}], "title": "6.3. Top-level traversables"}], "external": true};
-window.dfnpanelData['1a9d4011'] = {"dfnID": "1a9d4011", "url": "https://html.spec.whatwg.org/C/#creating-a-new-browsing-context-group-and-document", "dfnText": "creating a new browsing context group and document", "refSections": [{"refs": [{"id": "ref-for-creating-a-new-browsing-context-group-and-document"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-creating-a-new-browsing-context-group-and-document\u2460"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['921ae6ae'] = {"dfnID": "921ae6ae", "url": "https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context", "dfnText": "creating a new top-level browsing context and document", "refSections": [{"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context\u2460"}], "title": "6.3. Top-level traversables"}, {"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context\u2461"}, {"id": "ref-for-creating-a-new-top-level-browsing-context\u2462"}], "title": "6.4.1. Creating browsing contexts"}, {"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context\u2463"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['2a9c82c5'] = {"dfnID": "2a9c82c5", "url": "https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation", "dfnText": "cross-origin isolation mode", "refSections": [{"refs": [{"id": "ref-for-bcg-cross-origin-isolation"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-bcg-cross-origin-isolation\u2460"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['924e5259'] = {"dfnID": "924e5259", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policy", "dfnText": "cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policy"}, {"id": "ref-for-cross-origin-opener-policy\u2460"}, {"id": "ref-for-cross-origin-opener-policy\u2461"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-cross-origin-opener-policy\u2462"}, {"id": "ref-for-cross-origin-opener-policy\u2463"}, {"id": "ref-for-cross-origin-opener-policy\u2464"}, {"id": "ref-for-cross-origin-opener-policy\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['27d3070e'] = {"dfnID": "27d3070e", "url": "https://html.spec.whatwg.org/C/#coop-enforcement-origin", "dfnText": "coop-enforcement-origin", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-origin"}, {"id": "ref-for-coop-enforcement-origin\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['006fd69c'] = {"dfnID": "006fd69c", "url": "https://html.spec.whatwg.org/C/#coop-same-origin", "dfnText": "coop-same-origin", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-coop-same-origin\u2460"}, {"id": "ref-for-coop-same-origin\u2461"}, {"id": "ref-for-coop-same-origin\u2462"}, {"id": "ref-for-coop-same-origin\u2463"}, {"id": "ref-for-coop-same-origin\u2464"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['921ae6ae'] = {"dfnID": "921ae6ae", "url": "https://html.spec.whatwg.org/C/#creating-a-new-top-level-browsing-context", "dfnText": "creating a new top-level browsing context and document", "refSections": [{"refs": [{"id": "ref-for-creating-a-new-top-level-browsing-context"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['2a9c82c5'] = {"dfnID": "2a9c82c5", "url": "https://html.spec.whatwg.org/C/#bcg-cross-origin-isolation", "dfnText": "cross-origin isolation mode", "refSections": [{"refs": [{"id": "ref-for-bcg-cross-origin-isolation"}, {"id": "ref-for-bcg-cross-origin-isolation\u2460"}, {"id": "ref-for-bcg-cross-origin-isolation\u2461"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-bcg-cross-origin-isolation\u2462"}], "title": "6.4. Agents and agent clusters"}], "external": true};
+window.dfnpanelData['924e5259'] = {"dfnID": "924e5259", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policy", "dfnText": "cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policy"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-cross-origin-opener-policy\u2460"}, {"id": "ref-for-cross-origin-opener-policy\u2461"}, {"id": "ref-for-cross-origin-opener-policy\u2462"}, {"id": "ref-for-cross-origin-opener-policy\u2463"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['e0009358'] = {"dfnID": "e0009358", "url": "https://html.spec.whatwg.org/C/#coop-enforcement-result", "dfnText": "cross-origin opener policy enforcement result", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-result"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['047398fc'] = {"dfnID": "047398fc", "url": "https://html.spec.whatwg.org/C/#coep", "dfnText": "cross-origin-embedder-policy", "refSections": [{"refs": [{"id": "ref-for-coep"}, {"id": "ref-for-coep\u2460"}], "title": "1.1. Recommended readings"}], "external": true};
 window.dfnpanelData['20d23287'] = {"dfnID": "20d23287", "url": "https://html.spec.whatwg.org/C/#cross-origin-opener-policies", "dfnText": "cross-origin-opener-policy", "refSections": [{"refs": [{"id": "ref-for-cross-origin-opener-policies"}, {"id": "ref-for-cross-origin-opener-policies\u2460"}, {"id": "ref-for-cross-origin-opener-policies\u2461"}, {"id": "ref-for-cross-origin-opener-policies\u2462"}], "title": "1.1. Recommended readings"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2463"}, {"id": "ref-for-cross-origin-opener-policies\u2464"}], "title": "2. A problem"}, {"refs": [{"id": "ref-for-cross-origin-opener-policies\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
@@ -2189,65 +2034,46 @@ window.dfnpanelData['12b8dfc0'] = {"dfnID": "12b8dfc0", "url": "https://html.spe
 window.dfnpanelData['b998573a'] = {"dfnID": "b998573a", "url": "https://html.spec.whatwg.org/C/#embedder-policy-value-2", "dfnText": "embedder-policy-value-2", "refSections": [{"refs": [{"id": "ref-for-embedder-policy-value-2"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
 window.dfnpanelData['6967630c'] = {"dfnID": "6967630c", "url": "https://html.spec.whatwg.org/C/#coop-enforce", "dfnText": "enforce a response's cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-coop-enforce"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['77a2dc1b'] = {"dfnID": "77a2dc1b", "url": "https://html.spec.whatwg.org/C/#environment", "dfnText": "environment", "refSections": [{"refs": [{"id": "ref-for-environment"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
-window.dfnpanelData['86cf8b74'] = {"dfnID": "86cf8b74", "url": "https://html.spec.whatwg.org/C/#grouping-of-browsing-contexts", "dfnText": "grouping of browsing contexts", "refSections": [{"refs": [{"id": "ref-for-grouping-of-browsing-contexts"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
+window.dfnpanelData['f58ae318'] = {"dfnID": "f58ae318", "url": "https://html.spec.whatwg.org/C/#integration-with-the-javascript-agent-cluster-formalism", "dfnText": "integration with the javascript agent cluster formalism", "refSections": [{"refs": [{"id": "ref-for-integration-with-the-javascript-agent-cluster-formalism"}], "title": "6.4. Agents and agent clusters"}], "external": true};
 window.dfnpanelData['fcb86cbe'] = {"dfnID": "fcb86cbe", "url": "https://html.spec.whatwg.org/C/#location-getownproperty", "dfnText": "location-getownproperty", "refSections": [{"refs": [{"id": "ref-for-location-getownproperty"}], "title": "6.2.3. The Location interface"}], "external": true};
-window.dfnpanelData['6dc08662'] = {"dfnID": "6dc08662", "url": "https://html.spec.whatwg.org/C/#cross-origin-isolation-logical", "dfnText": "logical", "refSections": [{"refs": [{"id": "ref-for-cross-origin-isolation-logical"}], "title": "6.4.3. COOP groups"}], "external": true};
 window.dfnpanelData['9d6eb4de'] = {"dfnID": "9d6eb4de", "url": "https://html.spec.whatwg.org/C/#matching-coop", "dfnText": "matching-coop", "refSections": [{"refs": [{"id": "ref-for-matching-coop"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['823c1af0'] = {"dfnID": "823c1af0", "url": "https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch", "dfnText": "needs a browsing context group switch", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-bcg-switch"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2460"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2461"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2462"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2463"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2464"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['823c1af0'] = {"dfnID": "823c1af0", "url": "https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch", "dfnText": "needs a browsing context group switch", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-bcg-switch"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2460"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2461"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2462"}, {"id": "ref-for-coop-enforcement-bcg-switch\u2463"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['c56b026c'] = {"dfnID": "c56b026c", "url": "https://html.spec.whatwg.org/C/#obtain-browsing-context-navigation", "dfnText": "obtain a browsing context to use for a navigation response", "refSections": [{"refs": [{"id": "ref-for-obtain-browsing-context-navigation"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['e7c981a5'] = {"dfnID": "e7c981a5", "url": "https://html.spec.whatwg.org/C/#obtain-coop", "dfnText": "obtain a cross-origin opener policy", "refSections": [{"refs": [{"id": "ref-for-obtain-coop"}, {"id": "ref-for-obtain-coop\u2460"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
 window.dfnpanelData['50a80b1e'] = {"dfnID": "50a80b1e", "url": "https://html.spec.whatwg.org/C/#obtain-an-embedder-policy", "dfnText": "obtaining a cross-origin embedder policy", "refSections": [{"refs": [{"id": "ref-for-obtain-an-embedder-policy"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": true};
-window.dfnpanelData['3124aef9'] = {"dfnID": "3124aef9", "url": "https://html.spec.whatwg.org/C/#concept-origin", "dfnText": "origin", "refSections": [{"refs": [{"id": "ref-for-concept-origin"}, {"id": "ref-for-concept-origin\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-concept-origin\u2461"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}, {"refs": [{"id": "ref-for-concept-origin\u2462"}, {"id": "ref-for-concept-origin\u2463"}, {"id": "ref-for-concept-origin\u2464"}, {"id": "ref-for-concept-origin\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-concept-origin\u2466"}], "title": "6.4.1. Creating browsing contexts"}, {"refs": [{"id": "ref-for-concept-origin\u2467"}, {"id": "ref-for-concept-origin\u2468"}, {"id": "ref-for-concept-origin\u2460\u24ea"}, {"id": "ref-for-concept-origin\u2460\u2460"}], "title": "6.4.3. COOP groups"}], "external": true};
+window.dfnpanelData['3124aef9'] = {"dfnID": "3124aef9", "url": "https://html.spec.whatwg.org/C/#concept-origin", "dfnText": "origin", "refSections": [{"refs": [{"id": "ref-for-concept-origin"}, {"id": "ref-for-concept-origin\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-concept-origin\u2461"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}, {"refs": [{"id": "ref-for-concept-origin\u2462"}, {"id": "ref-for-concept-origin\u2463"}, {"id": "ref-for-concept-origin\u2464"}, {"id": "ref-for-concept-origin\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-concept-origin\u2466"}], "title": "6.4. Agents and agent clusters"}], "external": true};
 window.dfnpanelData['febdb5d0'] = {"dfnID": "febdb5d0", "url": "https://html.spec.whatwg.org/C/#popup-sandboxing-flag-set", "dfnText": "popup sandboxing flag set", "refSections": [{"refs": [{"id": "ref-for-popup-sandboxing-flag-set"}, {"id": "ref-for-popup-sandboxing-flag-set\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['50ff827d'] = {"dfnID": "50ff827d", "url": "https://html.spec.whatwg.org/C/#coop-violation-navigation-from", "dfnText": "queue a violation report for browsing context group switch when navigating away from a coop response", "refSections": [{"refs": [{"id": "ref-for-coop-violation-navigation-from"}, {"id": "ref-for-coop-violation-navigation-from\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['2bdd075e'] = {"dfnID": "2bdd075e", "url": "https://html.spec.whatwg.org/C/#coop-violation-navigation-to", "dfnText": "queue a violation report for browsing context group switch when navigating to a coop response", "refSections": [{"refs": [{"id": "ref-for-coop-violation-navigation-to"}, {"id": "ref-for-coop-violation-navigation-to\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['9c4c1e66'] = {"dfnID": "9c4c1e66", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#relevant-settings-object", "dfnText": "relevant settings object", "refSections": [{"refs": [{"id": "ref-for-relevant-settings-object"}], "title": "6.2.1. Security infrastructure for Window, WindowProxy, and Location objects"}], "external": true};
-window.dfnpanelData['3a36b9a3'] = {"dfnID": "3a36b9a3", "url": "https://html.spec.whatwg.org/C/#bcg-remove", "dfnText": "removing a top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-bcg-remove"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
-window.dfnpanelData['2a1d90e1'] = {"dfnID": "2a1d90e1", "url": "https://html.spec.whatwg.org/C/#coop-struct-report-only-value", "dfnText": "report-only value", "refSections": [{"refs": [{"id": "ref-for-coop-struct-report-only-value"}, {"id": "ref-for-coop-struct-report-only-value\u2460"}, {"id": "ref-for-coop-struct-report-only-value\u2461"}, {"id": "ref-for-coop-struct-report-only-value\u2462"}, {"id": "ref-for-coop-struct-report-only-value\u2463"}, {"id": "ref-for-coop-struct-report-only-value\u2464"}, {"id": "ref-for-coop-struct-report-only-value\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-struct-report-only-value\u2466"}], "title": "6.4. Browsing contexts"}, {"refs": [{"id": "ref-for-coop-struct-report-only-value\u2467"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['f26905b5'] = {"dfnID": "f26905b5", "url": "https://html.spec.whatwg.org/C/#same-origin", "dfnText": "same origin", "refSections": [{"refs": [{"id": "ref-for-same-origin"}, {"id": "ref-for-same-origin\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}], "external": true};
-window.dfnpanelData['21fb816b'] = {"dfnID": "21fb816b", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups", "dfnText": "same-origin-allow-popups", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-allow-popups"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-coop-same-origin-allow-popups\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['8af97c1e'] = {"dfnID": "8af97c1e", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep", "dfnText": "same-origin-plus-coep", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-plus-coep"}, {"id": "ref-for-coop-same-origin-plus-coep\u2460"}, {"id": "ref-for-coop-same-origin-plus-coep\u2461"}, {"id": "ref-for-coop-same-origin-plus-coep\u2462"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['c2fcb960'] = {"dfnID": "c2fcb960", "url": "https://html.spec.whatwg.org/C/#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}, {"id": "ref-for-top-level-browsing-context\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-top-level-browsing-context\u2461"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-top-level-browsing-context\u2462"}, {"id": "ref-for-top-level-browsing-context\u2463"}, {"id": "ref-for-top-level-browsing-context\u2464"}, {"id": "ref-for-top-level-browsing-context\u2465"}, {"id": "ref-for-top-level-browsing-context\u2466"}, {"id": "ref-for-top-level-browsing-context\u2467"}], "title": "6.1.4. Reporting"}], "external": true};
-window.dfnpanelData['8c60e063'] = {"dfnID": "8c60e063", "url": "https://html.spec.whatwg.org/C/#coop-unsafe-none", "dfnText": "unsafe-none", "refSections": [{"refs": [{"id": "ref-for-coop-unsafe-none"}, {"id": "ref-for-coop-unsafe-none\u2460"}, {"id": "ref-for-coop-unsafe-none\u2461"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['2a1d90e1'] = {"dfnID": "2a1d90e1", "url": "https://html.spec.whatwg.org/C/#coop-struct-report-only-value", "dfnText": "report-only value", "refSections": [{"refs": [{"id": "ref-for-coop-struct-report-only-value"}, {"id": "ref-for-coop-struct-report-only-value\u2460"}, {"id": "ref-for-coop-struct-report-only-value\u2461"}, {"id": "ref-for-coop-struct-report-only-value\u2462"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-struct-report-only-value\u2463"}], "title": "6.3. Browsing contexts"}], "external": true};
+window.dfnpanelData['21fb816b'] = {"dfnID": "21fb816b", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-allow-popups", "dfnText": "same-origin-allow-popups", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-allow-popups"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['8af97c1e'] = {"dfnID": "8af97c1e", "url": "https://html.spec.whatwg.org/C/#coop-same-origin-plus-coep", "dfnText": "same-origin-plus-coep", "refSections": [{"refs": [{"id": "ref-for-coop-same-origin-plus-coep"}, {"id": "ref-for-coop-same-origin-plus-coep\u2460"}, {"id": "ref-for-coop-same-origin-plus-coep\u2461"}, {"id": "ref-for-coop-same-origin-plus-coep\u2462"}, {"id": "ref-for-coop-same-origin-plus-coep\u2463"}, {"id": "ref-for-coop-same-origin-plus-coep\u2464"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
+window.dfnpanelData['fb9bb722'] = {"dfnID": "fb9bb722", "url": "https://html.spec.whatwg.org/multipage/browsers.html#site", "dfnText": "site", "refSections": [{"refs": [{"id": "ref-for-site"}], "title": "6.4. Agents and agent clusters"}], "external": true};
+window.dfnpanelData['c2fcb960'] = {"dfnID": "c2fcb960", "url": "https://html.spec.whatwg.org/C/#top-level-browsing-context", "dfnText": "top-level browsing context", "refSections": [{"refs": [{"id": "ref-for-top-level-browsing-context"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-top-level-browsing-context\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-top-level-browsing-context\u2461"}, {"id": "ref-for-top-level-browsing-context\u2462"}, {"id": "ref-for-top-level-browsing-context\u2463"}, {"id": "ref-for-top-level-browsing-context\u2464"}], "title": "6.1.4. Reporting"}, {"refs": [{"id": "ref-for-top-level-browsing-context\u2465"}, {"id": "ref-for-top-level-browsing-context\u2466"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
+window.dfnpanelData['1d2aa117'] = {"dfnID": "1d2aa117", "url": "https://html.spec.whatwg.org/multipage/browsers.html#concept-origin-tuple", "dfnText": "tuple origin", "refSections": [{"refs": [{"id": "ref-for-concept-origin-tuple"}, {"id": "ref-for-concept-origin-tuple\u2460"}], "title": "6.4. Agents and agent clusters"}], "external": true};
+window.dfnpanelData['8c60e063'] = {"dfnID": "8c60e063", "url": "https://html.spec.whatwg.org/C/#coop-unsafe-none", "dfnText": "unsafe-none", "refSections": [{"refs": [{"id": "ref-for-coop-unsafe-none"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['bc2c9476'] = {"dfnID": "bc2c9476", "url": "https://html.spec.whatwg.org/C/#virtual-browsing-context-group-id", "dfnText": "virtual browsing context group id", "refSections": [{"refs": [{"id": "ref-for-virtual-browsing-context-group-id"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-virtual-browsing-context-group-id\u2460"}, {"id": "ref-for-virtual-browsing-context-group-id\u2461"}], "title": "6.1.4. Reporting"}], "external": true};
-window.dfnpanelData['eb4c1ba2'] = {"dfnID": "eb4c1ba2", "url": "https://html.spec.whatwg.org/C/#the-window-proxy-exotic-object", "dfnText": "windowproxy", "refSections": [{"refs": [{"id": "ref-for-the-window-proxy-exotic-object"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
+window.dfnpanelData['eb4c1ba2'] = {"dfnID": "eb4c1ba2", "url": "https://html.spec.whatwg.org/C/#the-window-proxy-exotic-object", "dfnText": "windowproxy", "refSections": [{"refs": [{"id": "ref-for-the-window-proxy-exotic-object"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-the-window-proxy-exotic-object\u2460"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
 window.dfnpanelData['d0ac0059'] = {"dfnID": "d0ac0059", "url": "https://html.spec.whatwg.org/C/#windowproxy-get", "dfnText": "windowproxy-get", "refSections": [{"refs": [{"id": "ref-for-windowproxy-get"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
 window.dfnpanelData['de20523e'] = {"dfnID": "de20523e", "url": "https://html.spec.whatwg.org/C/#windowproxy-getownproperty", "dfnText": "windowproxy-getownproperty", "refSections": [{"refs": [{"id": "ref-for-windowproxy-getownproperty"}, {"id": "ref-for-windowproxy-getownproperty\u2460"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
 window.dfnpanelData['65c708ed'] = {"dfnID": "65c708ed", "url": "https://html.spec.whatwg.org/C/#windowproxy-set", "dfnText": "windowproxy-set", "refSections": [{"refs": [{"id": "ref-for-windowproxy-set"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": true};
-window.dfnpanelData['b216ae7b'] = {"dfnID": "b216ae7b", "url": "https://html.spec.whatwg.org/C/#windows", "dfnText": "windows", "refSections": [{"refs": [{"id": "ref-for-windows"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['f105c78a'] = {"dfnID": "f105c78a", "url": "https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only", "dfnText": "would need a browsing context group switch due to report-only", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-bcg-switch-report-only"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2460"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2461"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2462"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2463"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2464"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['a3b18719'] = {"dfnID": "a3b18719", "url": "https://infra.spec.whatwg.org/#set-append", "dfnText": "append", "refSections": [{"refs": [{"id": "ref-for-set-append"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-set-append\u2460"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['ba4881ce'] = {"dfnID": "ba4881ce", "url": "https://infra.spec.whatwg.org/#map-exist", "dfnText": "contain an entry", "refSections": [{"refs": [{"id": "ref-for-map-exist"}, {"id": "ref-for-map-exist\u2460"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['a898424d'] = {"dfnID": "a898424d", "url": "https://infra.spec.whatwg.org/#list-is-empty", "dfnText": "list-is-empty", "refSections": [{"refs": [{"id": "ref-for-list-is-empty"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
-window.dfnpanelData['0a5b9b68'] = {"dfnID": "0a5b9b68", "url": "https://infra.spec.whatwg.org/#list-remove", "dfnText": "list-remove", "refSections": [{"refs": [{"id": "ref-for-list-remove"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
+window.dfnpanelData['f105c78a'] = {"dfnID": "f105c78a", "url": "https://html.spec.whatwg.org/C/#coop-enforcement-bcg-switch-report-only", "dfnText": "would need a browsing context group switch due to report-only", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-bcg-switch-report-only"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2460"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2461"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2462"}, {"id": "ref-for-coop-enforcement-bcg-switch-report-only\u2463"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
 window.dfnpanelData['e2eac3f1'] = {"dfnID": "e2eac3f1", "url": "https://infra.spec.whatwg.org/#list-size", "dfnText": "list-size", "refSections": [{"refs": [{"id": "ref-for-list-size"}, {"id": "ref-for-list-size\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['3fca5a9e'] = {"dfnID": "3fca5a9e", "url": "https://infra.spec.whatwg.org/#ordered-map", "dfnText": "map", "refSections": [{"refs": [{"id": "ref-for-ordered-map"}, {"id": "ref-for-ordered-map\u2460"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['79d5e498'] = {"dfnID": "79d5e498", "url": "https://infra.spec.whatwg.org/#map-empty", "dfnText": "map-empty", "refSections": [{"refs": [{"id": "ref-for-map-empty"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
-window.dfnpanelData['1b1d683f'] = {"dfnID": "1b1d683f", "url": "https://infra.spec.whatwg.org/#map-size", "dfnText": "map-size", "refSections": [{"refs": [{"id": "ref-for-map-size"}, {"id": "ref-for-map-size\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-map-size\u2461"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
-window.dfnpanelData['1a66c1aa'] = {"dfnID": "1a66c1aa", "url": "https://infra.spec.whatwg.org/#map-size", "dfnText": "map-value", "refSections": [{"refs": [{"id": "ref-for-map-size"}, {"id": "ref-for-map-size\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-map-size\u2461"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
-window.dfnpanelData['4a4a458f'] = {"dfnID": "4a4a458f", "url": "https://infra.spec.whatwg.org/#map-remove", "dfnText": "remove entries", "refSections": [{"refs": [{"id": "ref-for-map-remove"}], "title": "6.4.2. Grouping of browsing contexts"}], "external": true};
-window.dfnpanelData['15e48c39'] = {"dfnID": "15e48c39", "url": "https://infra.spec.whatwg.org/#ordered-set", "dfnText": "set", "refSections": [{"refs": [{"id": "ref-for-ordered-set"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-ordered-set\u2460"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['c6bfe500'] = {"dfnID": "c6bfe500", "url": "https://infra.spec.whatwg.org/#map-set", "dfnText": "set the value", "refSections": [{"refs": [{"id": "ref-for-map-set"}], "title": "6.4.3. COOP groups"}], "external": true};
-window.dfnpanelData['0e8de730'] = {"dfnID": "0e8de730", "url": "https://infra.spec.whatwg.org/#tuple", "dfnText": "tuple", "refSections": [{"refs": [{"id": "ref-for-tuple"}], "title": "6.4.3. COOP groups"}], "external": true};
+window.dfnpanelData['0e8de730'] = {"dfnID": "0e8de730", "url": "https://infra.spec.whatwg.org/#tuple", "dfnText": "tuple", "refSections": [{"refs": [{"id": "ref-for-tuple"}, {"id": "ref-for-tuple\u2460"}], "title": "6.4. Agents and agent clusters"}], "external": true};
 window.dfnpanelData['dcffbccd'] = {"dfnID": "dcffbccd", "url": "https://url.spec.whatwg.org/#concept-url", "dfnText": "url", "refSections": [{"refs": [{"id": "ref-for-concept-url"}, {"id": "ref-for-concept-url\u2460"}, {"id": "ref-for-concept-url\u2461"}, {"id": "ref-for-concept-url\u2462"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": true};
-window.dfnpanelData['coop-restrict-properties'] = {"dfnID": "coop-restrict-properties", "url": "#coop-restrict-properties", "dfnText": "restrict-properties", "refSections": [{"refs": [{"id": "ref-for-coop-restrict-properties"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-coop-restrict-properties\u2460"}, {"id": "ref-for-coop-restrict-properties\u2461"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-restrict-properties\u2462"}, {"id": "ref-for-coop-restrict-properties\u2463"}, {"id": "ref-for-coop-restrict-properties\u2464"}, {"id": "ref-for-coop-restrict-properties\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
-window.dfnpanelData['coop-restrict-properties-plus-coep'] = {"dfnID": "coop-restrict-properties-plus-coep", "url": "#coop-restrict-properties-plus-coep", "dfnText": "restrict-properties-plus-coep", "refSections": [{"refs": [{"id": "ref-for-coop-restrict-properties-plus-coep"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-restrict-properties-plus-coep\u2460"}, {"id": "ref-for-coop-restrict-properties-plus-coep\u2461"}, {"id": "ref-for-coop-restrict-properties-plus-coep\u2462"}, {"id": "ref-for-coop-restrict-properties-plus-coep\u2463"}, {"id": "ref-for-coop-restrict-properties-plus-coep\u2464"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
+window.dfnpanelData['coop-restrict-properties'] = {"dfnID": "coop-restrict-properties", "url": "#coop-restrict-properties", "dfnText": "restrict-properties", "refSections": [{"refs": [{"id": "ref-for-coop-restrict-properties"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-coop-restrict-properties\u2460"}, {"id": "ref-for-coop-restrict-properties\u2461"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-restrict-properties\u2462"}, {"id": "ref-for-coop-restrict-properties\u2463"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
+window.dfnpanelData['coop-restrict-properties-plus-coep'] = {"dfnID": "coop-restrict-properties-plus-coep", "url": "#coop-restrict-properties-plus-coep", "dfnText": "restrict-properties-plus-coep", "refSections": [{"refs": [{"id": "ref-for-coop-restrict-properties-plus-coep"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-restrict-properties-plus-coep\u2460"}, {"id": "ref-for-coop-restrict-properties-plus-coep\u2461"}, {"id": "ref-for-coop-restrict-properties-plus-coep\u2462"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
 window.dfnpanelData['coop-origin'] = {"dfnID": "coop-origin", "url": "#coop-origin", "dfnText": "COOP origin", "refSections": [{"refs": [{"id": "ref-for-coop-origin"}], "title": "6.1.2. Obtaining a cross-origin opener policy"}], "external": false};
-window.dfnpanelData['coop-enforcement-value'] = {"dfnID": "coop-enforcement-value", "url": "#coop-enforcement-value", "dfnText": "cross-origin opener policy enforcement\nvalue", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-value"}, {"id": "ref-for-coop-enforcement-value\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-enforcement-value\u2461"}], "title": "6.4.1. Creating browsing contexts"}], "external": false};
-window.dfnpanelData['coop-enforcement-value-no-switch'] = {"dfnID": "coop-enforcement-value-no-switch", "url": "#coop-enforcement-value-no-switch", "dfnText": "no-switch", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-value-no-switch"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2460"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2461"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2462"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2463"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2464"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2465"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2466"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2467"}, {"id": "ref-for-coop-enforcement-value-no-switch\u2468"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
-window.dfnpanelData['coop-enforcement-value-bcg-switch'] = {"dfnID": "coop-enforcement-value-bcg-switch", "url": "#coop-enforcement-value-bcg-switch", "dfnText": "browsing-context-group-switch", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-value-bcg-switch"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2460"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2461"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2462"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2463"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2464"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2465"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2466"}, {"id": "ref-for-coop-enforcement-value-bcg-switch\u2467"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-enforcement-value-bcg-switch\u2468"}], "title": "6.4.1. Creating browsing contexts"}], "external": false};
-window.dfnpanelData['coop-enforcement-value-coop-group-switch'] = {"dfnID": "coop-enforcement-value-coop-group-switch", "url": "#coop-enforcement-value-coop-group-switch", "dfnText": "coop-group-switch", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-value-coop-group-switch"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2460"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2461"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2462"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2463"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2464"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2465"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2466"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2467"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-enforcement-value-coop-group-switch\u2468"}], "title": "6.3. Top-level traversables"}, {"refs": [{"id": "ref-for-coop-enforcement-value-coop-group-switch\u2460\u24ea"}, {"id": "ref-for-coop-enforcement-value-coop-group-switch\u2460\u2460"}], "title": "6.4.1. Creating browsing contexts"}], "external": false};
-window.dfnpanelData['cross-bcg-properties'] = {"dfnID": "cross-bcg-properties", "url": "#cross-bcg-properties", "dfnText": "CrossBrowsingContextGroupProperties(W)", "refSections": [{"refs": [{"id": "ref-for-cross-bcg-properties"}], "title": "6.2.1. Security infrastructure for Window, WindowProxy, and Location objects"}], "external": false};
-window.dfnpanelData['is-windowproxy-same-bcg'] = {"dfnID": "is-windowproxy-same-bcg", "url": "#is-windowproxy-same-bcg", "dfnText": "IsWindowProxyInSameBrowsingContextGroup(W)", "refSections": [{"refs": [{"id": "ref-for-is-windowproxy-same-bcg"}, {"id": "ref-for-is-windowproxy-same-bcg\u2460"}, {"id": "ref-for-is-windowproxy-same-bcg\u2461"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": false};
-window.dfnpanelData['virtual-coop-group-id'] = {"dfnID": "virtual-coop-group-id", "url": "#virtual-coop-group-id", "dfnText": "virtual COOP group ID", "refSections": [{"refs": [{"id": "ref-for-virtual-coop-group-id"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-virtual-coop-group-id\u2460"}, {"id": "ref-for-virtual-coop-group-id\u2461"}, {"id": "ref-for-virtual-coop-group-id\u2462"}, {"id": "ref-for-virtual-coop-group-id\u2463"}], "title": "6.1.4. Reporting"}], "external": false};
-window.dfnpanelData['coop-group'] = {"dfnID": "coop-group", "url": "#coop-group", "dfnText": "COOP\ngroup", "refSections": [{"refs": [{"id": "ref-for-coop-group"}, {"id": "ref-for-coop-group\u2460"}], "title": "6.1.1. Cross-origin opener policy values"}, {"refs": [{"id": "ref-for-coop-group\u2461"}, {"id": "ref-for-coop-group\u2462"}, {"id": "ref-for-coop-group\u2463"}, {"id": "ref-for-coop-group\u2464"}, {"id": "ref-for-coop-group\u2465"}, {"id": "ref-for-coop-group\u2466"}, {"id": "ref-for-coop-group\u2467"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-group\u2468"}], "title": "6.4.1. Creating browsing contexts"}, {"refs": [{"id": "ref-for-coop-group\u2460\u24ea"}, {"id": "ref-for-coop-group\u2460\u2460"}, {"id": "ref-for-coop-group\u2460\u2461"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-coop-group\u2460\u2462"}, {"id": "ref-for-coop-group\u2460\u2463"}, {"id": "ref-for-coop-group\u2460\u2464"}, {"id": "ref-for-coop-group\u2460\u2465"}, {"id": "ref-for-coop-group\u2460\u2466"}, {"id": "ref-for-coop-group\u2460\u2467"}, {"id": "ref-for-coop-group\u2460\u2468"}, {"id": "ref-for-coop-group\u2461\u24ea"}], "title": "6.4.3. COOP groups"}], "external": false};
-window.dfnpanelData['coop-group-set'] = {"dfnID": "coop-group-set", "url": "#coop-group-set", "dfnText": "COOP\ngroup set", "refSections": [{"refs": [{"id": "ref-for-coop-group-set"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-coop-group-set\u2460"}], "title": "6.4.3. COOP groups"}], "external": false};
-window.dfnpanelData['bcg-key'] = {"dfnID": "bcg-key", "url": "#bcg-key", "dfnText": "browsing context group key", "refSections": [{"refs": [{"id": "ref-for-bcg-key"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-bcg-key\u2460"}, {"id": "ref-for-bcg-key\u2461"}, {"id": "ref-for-bcg-key\u2462"}, {"id": "ref-for-bcg-key\u2463"}], "title": "6.4.3. COOP groups"}], "external": false};
-window.dfnpanelData['bcg-map'] = {"dfnID": "bcg-map", "url": "#bcg-map", "dfnText": "browsing context group\nmap", "refSections": [{"refs": [{"id": "ref-for-bcg-map"}, {"id": "ref-for-bcg-map\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-bcg-map\u2461"}, {"id": "ref-for-bcg-map\u2462"}], "title": "6.4.2. Grouping of browsing contexts"}, {"refs": [{"id": "ref-for-bcg-map\u2463"}, {"id": "ref-for-bcg-map\u2464"}, {"id": "ref-for-bcg-map\u2465"}, {"id": "ref-for-bcg-map\u2466"}], "title": "6.4.3. COOP groups"}], "external": false};
-window.dfnpanelData['bcg-virtual-id-map'] = {"dfnID": "bcg-virtual-id-map", "url": "#bcg-virtual-id-map", "dfnText": "browsing\ncontext group virtual ID map", "refSections": [{"refs": [{"id": "ref-for-bcg-virtual-id-map"}, {"id": "ref-for-bcg-virtual-id-map\u2460"}, {"id": "ref-for-bcg-virtual-id-map\u2461"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-bcg-virtual-id-map\u2462"}], "title": "6.4.3. COOP groups"}], "external": false};
-window.dfnpanelData['create-new-coop-group'] = {"dfnID": "create-new-coop-group", "url": "#create-new-coop-group", "dfnText": "create a new COOP group", "refSections": [{"refs": [{"id": "ref-for-create-new-coop-group"}], "title": "6.4.1. Creating browsing contexts"}], "external": false};
-window.dfnpanelData['create-new-bcg-in-coop-group'] = {"dfnID": "create-new-bcg-in-coop-group", "url": "#create-new-bcg-in-coop-group", "dfnText": "create a new browsing context group in a\nCOOP group ", "refSections": [{"refs": [{"id": "ref-for-create-new-bcg-in-coop-group"}, {"id": "ref-for-create-new-bcg-in-coop-group\u2460"}], "title": "6.4.3. COOP groups"}], "external": false};
-window.dfnpanelData['create-new-bc-in-coop-group'] = {"dfnID": "create-new-bc-in-coop-group", "url": "#create-new-bc-in-coop-group", "dfnText": "create a new browsing context in a\nCOOP group ", "refSections": [{"refs": [{"id": "ref-for-create-new-bc-in-coop-group"}], "title": "6.4.1. Creating browsing contexts"}], "external": false};
+window.dfnpanelData['coop-enforcement-value'] = {"dfnID": "coop-enforcement-value", "url": "#coop-enforcement-value", "dfnText": "cross-origin opener policy enforcement\nvalue", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-value"}, {"id": "ref-for-coop-enforcement-value\u2460"}, {"id": "ref-for-coop-enforcement-value\u2461"}, {"id": "ref-for-coop-enforcement-value\u2462"}, {"id": "ref-for-coop-enforcement-value\u2463"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
+window.dfnpanelData['coop-enforcement-value-switch'] = {"dfnID": "coop-enforcement-value-switch", "url": "#coop-enforcement-value-switch", "dfnText": "browsingContextGroupSwitchNeeded", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-value-switch"}, {"id": "ref-for-coop-enforcement-value-switch\u2460"}, {"id": "ref-for-coop-enforcement-value-switch\u2461"}, {"id": "ref-for-coop-enforcement-value-switch\u2462"}, {"id": "ref-for-coop-enforcement-value-switch\u2463"}, {"id": "ref-for-coop-enforcement-value-switch\u2464"}, {"id": "ref-for-coop-enforcement-value-switch\u2465"}, {"id": "ref-for-coop-enforcement-value-switch\u2466"}, {"id": "ref-for-coop-enforcement-value-switch\u2467"}, {"id": "ref-for-coop-enforcement-value-switch\u2468"}, {"id": "ref-for-coop-enforcement-value-switch\u2460\u24ea"}, {"id": "ref-for-coop-enforcement-value-switch\u2460\u2460"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
+window.dfnpanelData['coop-enforcement-value-key'] = {"dfnID": "coop-enforcement-value-key", "url": "#coop-enforcement-value-key", "dfnText": "agentClusterKey", "refSections": [{"refs": [{"id": "ref-for-coop-enforcement-value-key"}, {"id": "ref-for-coop-enforcement-value-key\u2460"}, {"id": "ref-for-coop-enforcement-value-key\u2461"}, {"id": "ref-for-coop-enforcement-value-key\u2462"}, {"id": "ref-for-coop-enforcement-value-key\u2463"}, {"id": "ref-for-coop-enforcement-value-key\u2464"}, {"id": "ref-for-coop-enforcement-value-key\u2465"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}], "external": false};
+window.dfnpanelData['unrestricted-cross-origin-properties'] = {"dfnID": "unrestricted-cross-origin-properties", "url": "#unrestricted-cross-origin-properties", "dfnText": "UnrestrictedCrossOriginProperties(W)", "refSections": [{"refs": [{"id": "ref-for-unrestricted-cross-origin-properties"}], "title": "6.2.1. Security infrastructure for Window, WindowProxy, and Location objects"}], "external": false};
+window.dfnpanelData['unrestricted-cross-origin-property-name'] = {"dfnID": "unrestricted-cross-origin-property-name", "url": "#unrestricted-cross-origin-property-name", "dfnText": "unrestricted cross-origin\naccessible window property name", "refSections": [{"refs": [{"id": "ref-for-unrestricted-cross-origin-property-name"}], "title": "6.1.4. Reporting"}], "external": false};
+window.dfnpanelData['windowproxy-same-coop-key'] = {"dfnID": "windowproxy-same-coop-key", "url": "#windowproxy-same-coop-key", "dfnText": "WindowProxyHasSameCOOPKey(W)", "refSections": [{"refs": [{"id": "ref-for-windowproxy-same-coop-key"}, {"id": "ref-for-windowproxy-same-coop-key\u2460"}, {"id": "ref-for-windowproxy-same-coop-key\u2461"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": false};
+window.dfnpanelData['bcg-coop-agent-cluster-key'] = {"dfnID": "bcg-coop-agent-cluster-key", "url": "#bcg-coop-agent-cluster-key", "dfnText": "COOP agent cluster key", "refSections": [{"refs": [{"id": "ref-for-bcg-coop-agent-cluster-key"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-bcg-coop-agent-cluster-key\u2460"}, {"id": "ref-for-bcg-coop-agent-cluster-key\u2461"}], "title": "6.2.2. The WindowProxy exotic object"}], "external": false};
+window.dfnpanelData['virtual-coop-agent-cluster-key'] = {"dfnID": "virtual-coop-agent-cluster-key", "url": "#virtual-coop-agent-cluster-key", "dfnText": "virtual COOP agent cluster\nkey", "refSections": [{"refs": [{"id": "ref-for-virtual-coop-agent-cluster-key"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-virtual-coop-agent-cluster-key\u2460"}, {"id": "ref-for-virtual-coop-agent-cluster-key\u2461"}], "title": "6.1.4. Reporting"}], "external": false};
+window.dfnpanelData['coop-agent-cluster-key'] = {"dfnID": "coop-agent-cluster-key", "url": "#coop-agent-cluster-key", "dfnText": "COOP agent cluster key", "refSections": [{"refs": [{"id": "ref-for-coop-agent-cluster-key"}], "title": "6.1.3. Browsing context group switches due to cross-origin opener policy"}, {"refs": [{"id": "ref-for-coop-agent-cluster-key\u2460"}, {"id": "ref-for-coop-agent-cluster-key\u2461"}], "title": "6.3. Browsing contexts"}, {"refs": [{"id": "ref-for-coop-agent-cluster-key\u2462"}], "title": "6.4. Agents and agent clusters"}], "external": false};
 </script>
 <script>/* Boilerplate: script-dom-helper */
 function query(sel) { return document.querySelector(sel); }

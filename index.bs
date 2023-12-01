@@ -90,6 +90,7 @@ urlPrefix: https://infra.spec.whatwg.org/; spec: Infra
   text: set; type:dfn; url:ordered-set
 
 urlPrefix: https://html.spec.whatwg.org/C/; spec: html
+  text: agent cluster key; type:dfn; url:agent-cluster-key
   text: auxilliary browsing context; type:dfn; url:auxilliary-browsing-context
   text: browsing context; type:dfn; url:browsing-context
   text: browsing-context-group; type:dfn; url:browsing-context-group
@@ -136,6 +137,7 @@ urlPrefix: https://html.spec.whatwg.org/C/; spec: html
   text: enforce a response's cross-origin opener policy; type:dfn; url:coop-enforce
   text: Grouping of browsing contexts; type:dfn; url:grouping-of-browsing-contexts
   text: Infrastructure for sequences of documents; type:dfn; url:infrastructure-for-sequences-of-documents
+  text: Integration with the JavaScript agent cluster formalism; type:dfn; url:integration-with-the-javascript-agent-cluster-formalism
   text: logical; type:dfn; url:cross-origin-isolation-logical
   text: location-getownproperty; type:dfn; url:location-getownproperty
   text: matching-coop; type:dfn; url:matching-coop
@@ -443,20 +445,15 @@ extend the possible [=cross-origin-opener-policy-value|cross-origin opener polic
 <div class="monkey-patch">
 <dfn lt="coop-restrict-properties">restrict-properties</dfn>
 
-This forces the creation of a new [=top-level browsing context=] for the document,
-unless its predecessor specified the same [=cross-origin opener policy=] and they
-are [=same origin=]. Unlike [=coop-same-origin|same-origin=] and
-[=coop-same-origin-allow-popups|same-origin-allow-popups=], the newly created 
-[=browsing context=] and its [=browsing-context-group|browsing context group=]
-will stay in the same [=coop-group|COOP group=]. Any [=auxilliary browsing context=]
-created needs to contain [=same origin=] documents with the same [=cross-origin
-opener policy=], or it will be placed in a different
-[=browsing-context-group|browsing context group=] in the [=coop-group|COOP group=].
+This forces the [=document=] and its child [=document=] to use [=agent
+clusters=] keyed on top-level origin and [=cross-origin isolation mode=]. It
+also restricts the [=WindowProxy=] methods available from [=agent clusters=]
+with a different top-level origin and [=cross-origin isolation mode=].
 
 <dfn lt="coop-restrict-properties-plus-coep">restrict-properties-plus-coep</dfn>
 
 This behaves the same as "[=coop-restrict-properties=]", with the addition that
-it sets the (new) [=top-level browsing context=]'s
+it sets the [=top-level browsing context=]'s
 [=browsing-context-group|group=] [=cross-origin isolation mode=] to one of
 "logical" or "concrete".
 
@@ -474,7 +471,8 @@ Extend the [=cross-origin opener policy=] definition:
 Modify the [=obtain a cross-origin opener policy=]. First, add an origin parameter:
 
 <div class="monkey-patch">
-To [=obtain a cross-origin opener policy=] given a [=response=] *response*, an [=environment=] *reservedEnvironment*, and an [=origin=] *origin*:
+To [=obtain a cross-origin opener policy=] given a [=response=] *response*, an
+[=environment=] *reservedEnvironment*, and an [=origin=] *origin*:
 </div>
 
 Then, add a step after step 4.1:
@@ -509,15 +507,16 @@ opener policy=] part of the spec:
 
 A <dfn lt="coop-enforcement-value">cross-origin opener policy enforcement
 value</dfn> indicates whether the enforcement of a [=COOP=] requires a browsing
-context group switch. The possible values are:
-- "<dfn lt="coop-enforcement-value-no-switch">no-switch</dfn>", which indicates
-  that no switch is required.
-- "<dfn lt="coop-enforcement-value-bcg-switch">browsing-context-group-switch</dfn>", which indicates
-  that a switch of [=browsing context=] is required, but not of
-  [=coop-group|COOP group=].
-- "<dfn lt="coop-enforcement-value-coop-group-switch">coop-group-switch</dfn>", which indicates
-  that a switch of [=coop-group|COOP group=] is required. This implies a switch
-  of [=browsing context=].
+context group switch and/or to restrict access to the browsing context inside
+the browsing context group.
+
+A [=coop-enforcement-value|cross-origin opener policy value=] has a boolean
+<dfn lt="coop-enforcement-value-switch">browsingContextGroupSwitchNeeded</dfn>,
+initially false.
+
+A [=coop-enforcement-value|cross-origin opener policy value=] has an <dfn
+lt="coop-enforcement-value-key">agentClusterKey</dfn>, which is null or a
+[=coop-agent-cluster-key|COOP agent cluster key=], initially null.
 
 </div>
 
@@ -525,24 +524,47 @@ The algorithm to [=check if COOP values require a browsing context group switch=
 
 <div class="monkey-patch">
 
-1. If the result of [=matching-coop|matching=] *activeDocumentCOOPValue*,
-   *activeDocumentNavigationOrigin*, *responseCOOPValue*, and *responseOrigin* is
-   true, return "[=coop-enforcement-value-no-switch|no-switch=]".
-2. If all of the following are true:
-   - *isInitialAboutBlank*;
-   - *activeDocumentCOOPValue*'s [=cross-origin-opener-policy-value|value=] is
-     "[=same-origin-allow-popups=]"; and
-   - *responseCOOPValue* is "[=unsafe-none=]",
-   - then return "[=coop-enforcement-value-no-switch|no-switch=]".
-3. If any of the following are true: 
+1. let *coopEnforcementValue* be a new [=coop-enforcement-value|cross-origin
+   opener policy enforcement value=].
+2. If any of the following is true:
+   - *responseCOOPValue* is "[=coop-restrict-properties|restrict-properties=]";
+   - *responseCOOPValue* is
+     "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]";
    - *activeDocumentCOOPValue*'s [=cross-origin-opener-policy-value|value=] is
      "[=coop-same-origin|same-origin=]";
    - *activeDocumentCOOPValue*'s [=cross-origin-opener-policy-value|value=] is
      "[=same-origin-plus-coep=]";
    - *responseCOOPValue* is "[=coop-same-origin|same-origin=]";
    - *responseCOOPValue* is "[=same-origin-plus-coep=]";
-   - then return "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]".
-4. Return "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]".
+   - then:
+     1. Let *needCrossOriginIsolation* be false.
+     2. If *responseCOOPValue* is
+        "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]"
+        or *responseCOOPValue* is "[=same-origin-plus-coep=]", set
+        *needCrossOriginIsolation* to true.
+     3. Set *coopEnforcementValue*'s
+        [=coop-enforcement-value-key|agentClusterKey=] to [*responseOrigin*,
+        *needCrossOriginIsolation*].
+3. If the result of [=matching-coop|matching=] *activeDocumentCOOPValue*,
+   *activeDocumentNavigationOrigin*, *responseCOOPValue*, and *responseOrigin* is
+   true, return *coopEnforcementValue*.
+4. If all of the following are true:
+   - *isInitialAboutBlank*;
+   - *activeDocumentCOOPValue*'s [=cross-origin-opener-policy-value|value=] is
+     "[=same-origin-allow-popups=]"; and
+   - *responseCOOPValue* is not "[=coop-same-origin|same-origin=]" or
+     "[=same-origin-plus-coep=]",
+   - then return *coopEnforcementValue*.
+5. If any of the following is true: 
+   - *activeDocumentCOOPValue*'s [=cross-origin-opener-policy-value|value=] is
+     "[=coop-same-origin|same-origin=]";
+   - *activeDocumentCOOPValue*'s [=cross-origin-opener-policy-value|value=] is
+     "[=same-origin-plus-coep=]";
+   - *responseCOOPValue* is "[=coop-same-origin|same-origin=]";
+   - *responseCOOPValue* is "[=same-origin-plus-coep=]";
+   - then set *coopEnforcementValue*'s
+     [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=] to true.
+6. Return *coopEnforcementValue*.
 
 </div>
 
@@ -551,33 +573,35 @@ context group switch=] becomes:
 
 <div class="monkey-patch">
 
-1. If the result of [=checking if COOP values require a browsing context group
-   switch=] given *isInitialAboutBlank*, *responseOrigin*,
-   *activeDocumentNavigationOrigin*, *responseCOOP*'s [=report-only value=] and
-   *activeDocumentCOOPReportOnly*'s [=report-only value=] is
-   [=coop-enforcement-value-no-switch|no-switch=], then return
-   [=coop-enforcement-value-no-switch|no-switch=].
-2. Let *activeDocumentReportOnlyCOOPEnforcementValue* be the result of
+1. Let *coopEnforcementValue* be the result of [=checking if COOP values
+   require a browsing context group switch=] given *isInitialAboutBlank*,
+   *responseOrigin*, *activeDocumentNavigationOrigin*, *responseCOOP*'s
+   [=report-only value=] and *activeDocumentCOOPReportOnly*'s [=report-only
+   value=]. 
+2. If *coopEnforcementValue*'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=]
+   is false, then return *coopEnforcementValue*.
+3. Let *activeDocumentReportOnlyCOOPEnforcementValue* be the result of
    [=checking if COOP values require a browsing context group switch=] given
    *isInitialAboutBlank*, *responseOrigin*, *activeDocumentNavigationOrigin*,
    *responseCOOP*'s [=cross-origin-opener-policy-value|value=] and
    *activeDocumentCOOPReportOnly*'s [=report-only value=].
-3. Let *responseReportOnlyCOOPEnforcementValue* be the result of
+4. If *activeDocumentReportOnlyCOOPEnforcementValue*'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=]
+   is true, then set *coopEnforcementValue*'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=]
+   to true.
+5. Let *responseReportOnlyCOOPEnforcementValue* be the result of
    [=checking if COOP values require a browsing context group switch=] given
    *isInitialAboutBlank*, *responseOrigin*, *activeDocumentNavigationOrigin*,
    *responseCOOP*'s [=report-only value=] and
    *activeDocumentCOOPReportOnly*'s [=cross-origin-opener-policy-value|value=].
-4. If *activeDocumentReportOnlyCOOPEnforcementValue* is
-   [=coop-enforcement-value-coop-group-switch|coop-group-switch=] or
-   *responseReportOnlyCOOPEnforcementValue* is
-   [=coop-enforcement-value-coop-group-switch|coop-group-switch=], return
-   [=coop-enforcement-value-coop-group-switch|coop-group-switch=].
-5. If *activeDocumentReportOnlyCOOPEnforcementValue* is
-   [=coop-enforcement-value-bcg-switch|browsing-contex-group-switch=] or
-   *responseReportOnlyCOOPEnforcementValue* is
-   [=coop-enforcement-value-bcg-switch|browsing-group-switch=], return
-   [=coop-enforcement-value-bcg-switch|browsing-group-switch=].
-6. Return [=coop-enforcement-value-no-switch|no-switch=]. 
+6. If *responseReportOnlyCOOPEnforcementValue*'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=]
+   is true, then set *coopEnforcementValue*'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=]
+   to true.
+7. Return *coopEnforcementValue*. 
 
 </div>
 
@@ -586,10 +610,9 @@ Change the two first members of the [=cross-origin opener policy enforcement res
 <div class="monkey-patch">
 
 - A [=coop-enforcement-value|COOP enforcement value=] [=needs a browsing context
-  group switch=], initially [=coop-enforcement-value-no-switch|no-switch=].
+  group switch=].
 - A [=coop-enforcement-value|COOP enforcement value=] [=would need a browsing
-  context group switch due to report-only=], initially
-  [=coop-enforcement-value-no-switch|no-switch=].
+  context group switch due to report-only=].
 
 </div>
 
@@ -603,15 +626,17 @@ Modify the [=enforce a response's cross-origin opener policy=] algorithm:
    [=cross-origin-opener-policy-value|value=], *currentCOOPEnforcementResult*'s
    [=origin=], *responseCOOP*'s [=cross-origin-opener-policy-value|value=], and
    *responseOrigin*.
-5. If *newCOOPEnforcementResultValue* is
-   "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", then:
+5. Set *newCOOPEnforcementResult*'s [=needs a browsing context group
+   switch=]'s [=coop-enforcement-value-key|agentClusterKey=] to
+   *newCOOPEnforcementResultValue*'s
+   [=coop-enforcement-value-key|agentClusterKey=].
+6. If *newCOOPEnforcementResultValue*'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=] is true, then:
    1. Set *newCOOPEnforcementResult*'s [=needs a browsing context group
-      switch=] to "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]".
+      switch=]'s [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=]
+      to true.
    2. If *browsingContext*'s [=browsing-context-group|group=]'s [=browsing context
-      set=]'s [=list-size|size=] is greater than 1, or if *browsingContext*'s
-      [=browsing-context-group|group=]'s [=coop-group|COOP group=]'s
-      [=bcg-map|browsing context group map=]'s [=map-size|size=] is
-      greater than 1, then:
+      set=]'s [=list-size|size=] is greater than 1, then:
       1. [=Queue a violation report for browsing context group switch when
          navigating to a COOP response=] with *responseCOOP*, "*enforce*", *responseURL*,
          *currentCOOPEnforcementResult*'s [=url=], *currentCOOPEnforcementResult*'s [=origin=],
@@ -622,27 +647,23 @@ Modify the [=enforce a response's cross-origin opener policy=] algorithm:
          *currentCOOPEnforcementResult*'s [=url=], *responseURL*, *currentCOOPEnforcementResult*'s
          [=coop-enforcement-origin|origin=], *responseOrigin*, and
          *currentCOOPEnforcementResult*'s [=current context is navigation source=].
-6. If *newCOOPEnforcementResultValue* is
-   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]", and 
-   *newCOOPEnforcementResult*'s [=needs a browsing context group switch=] is
-   "[=coop-enforcement-value-no-switch|no-switch=]", set *newCOOPEnforcementResult*'s
-   [=needs a browsing context group switch=] to
-   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]".
 7. Let *newCOOPEnforcementResultReportOnlyValue* be the result of [=checking if
    enforcing report-only COOP would require a browsing context group switch=]
    given *isInitialAboutBlank*, *responseOrigin*,
    *currentCOOPEnforcementResult*'s [=origin=], *responseCOOP*, and
    *currentCOOPEnforcementResult*'s [=cross-origin opener policy=].
-8. If *newCOOPEnforcementResultReportOnlyValue* is
-   "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", then:
+8. Set *newCOOPEnforcementResult*'s [=would need a browsing context group
+   switch due to report-only=]'s
+   [=coop-enforcement-value-key|agentClusterKey=] to
+   *newCOOPEnforcementResultReportOnlyValue*'s
+   [=coop-enforcement-value-key|agentClusterKey=].
+9. If *newCOOPEnforcementResultReportOnlyValue*'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=] is true, then:
    1. Set *newCOOPEnforcementResult*'s [=would need a browsing context group
-      switch due to report-only=] to
-      "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]".
+      switch due to report-only=]'s
+      [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=] to true.
    2. If *browsingContext*'s [=browsing-context-group|group=]'s [=browsing context
-      set=]'s [=list-size|size=] is greater than 1, or if *browsingContext*'s
-      [=browsing-context-group|group=]'s [=coop-group|COOP group=]'s
-      [=bcg-map|browsing context group map=]'s [=map-size|size=] is
-      greater than 1, then:
+      set=]'s [=list-size|size=] is greater than 1, then:
       1. [=Queue a violation report for browsing context group switch when
          navigating to a COOP response=] with *responseCOOP*, "*reporting*", *responseURL*,
          *currentCOOPEnforcementResult*'s [=url=], *currentCOOPEnforcementResult*'s [=origin=],
@@ -653,13 +674,6 @@ Modify the [=enforce a response's cross-origin opener policy=] algorithm:
          *currentCOOPEnforcementResult*'s [=url=], *responseURL*, *currentCOOPEnforcementResult*'s
          [=coop-enforcement-origin|origin=], *responseOrigin*, and
          *currentCOOPEnforcementResult*'s [=current context is navigation source=].
-9. If *newCOOPEnforcementResultReportOnlyValue* is
-   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]", and 
-   *newCOOPEnforcementResult*'s [=would need a browsing context group
-   switch due to report-only=] is
-   "[=coop-enforcement-value-no-switch|no-switch=]", set *newCOOPEnforcementResult*'s
-   [=would need a browsing context group switch due to report-only=] to
-   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]".
 10. Return *newCOOPEnforcementResult*.
 
 </div>
@@ -670,63 +684,32 @@ The [=obtain a browsing context to use for a navigation response=] becomes:
 
 1. If *browsingContext* is not a [=top-level browsing context=], then return
    *browsingContext*.
-2. If *coopEnforcementResult*'s [=needs a browsing context group switch=] is
-   "[=coop-enforcement-value-no-switch|no-switch=]", then:
+2. Let *navigationBrowsingContext* be null.
+3. If *coopEnforcementResult*'s [=needs a browsing context group switch=]'s
+   [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=] is false, then:
    1. If *coopEnforcementResult*'s [=would need a browsing context group switch due
-      to report-only=] is
-      "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", set
-      *browsingContext*'s [=virtual-coop-group-id|virtual COOP group ID=] to a new unique identifier.
-   2. Else if *coopEnforcementResult*'s [=would need a browsing context group switch due
-      to report-only=] is
-      "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]":
-      1. Assert *navigationCOOP*'s [=report-only value=] is one of
-         "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]",
-         "[=coop-restrict-properties|restrict-properties=]" or "[=unsafe-none=]".
-      2. Let *origin* be *coopEnforcementResult*'s [=coop-enforcement-origin|origin=].
-      3. Let *browsingContextGroupKey* be a new [=bcg-key|browsing context
-         group key=] with value (null, false).
-      4. If *navigationCOOP*'s [=report-only value=] is
-         "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]", then set
-         *browsingContextGroupKey* to (*origin*, true).
-      5. Else if *navigationCOOP*'s [=report-only value=] is
-         "[=coop-restrict-properties|restrict-properties=]", then set
-         *browsingContextGroupKey* to (*origin*, false).
-      6. If *browsingContext*'s [=browsing-context-group|browsing context
-         group=]'s [=coop-group|COOP group=]'s [=bcg-virtual-id-map|browsing context
-         group virtual ID map=] does not contain an entry given
-         *browsingContextGroupKey*, set the value of
-         *browsingContext*'s [=browsing-context-group|browsing context group=]'s
-         [=coop-group|COOP group=]'s [=bcg-virtual-id-map|browsing context
-         group virtual ID map=] given *browsingContextGroupKey* to a new unique
-         identifier.
-      7. Set *browsingContext*'s [=virtual browsing context group id=] to
-         the *browsingContext*'s [=browsing-context-group|browsing context
-         group=]'s [=coop-group|COOP group=]'s [=bcg-virtual-id-map|browsing
-         context group virtual ID map=][*browsingContextGroupKey*].
-   3. Return *browsingContext*.
-3. Let *needsCrossOriginIsolation* be false.
-4. If *navigationCOOP*'s [=cross-origin-opener-policy-value|value=] is
-   "[=same-origin-plus-coep=]" or
-   "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]",
-   set *needsCrossOriginIsolation* to true.
-5. Let *originKey* be null.
-6. If *navigationCOOP*'s [=cross-origin-opener-policy-value|value=] is
-   one of "[=same-origin-plus-coep=]", "[=coop-same-origin|same-origin=]",
-   "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]",
-   or "[=coop-restrict-properties|restrict-properties=]", set *originKey* to 
-   *coopEnforcementResult*'s [=coop-enforcement-origin|origin=].
-5. Let *newBrowsingContext* be the first return value of [=creating a new
-   top-level browsing context and document=] given *coopEnforcementResult*'s
-   [=needs a browsing context group switch=], *originKey*,
-   *needsCrossOriginIsolation*, and *browsingContext*.
-6. If *sandboxFlags* is not empty, then:
-   1. Assert *navigationCOOP*'s [=cross-origin-opener-policy-value|value=] is
-      one of "[=unsafe-none=]", "[=coop-restrict-properties|restrict-properties=]", or
-      "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]".
-   2. Assert *newBrowsingContext*'s [=popup sandboxing flag set=] is empty.
-   3. Set *newBrowsingContext*'s [=popup sandboxing flag set=] to a clone of
-      *sandboxFlags*.
-7. Return *newBrowsingContext*.
+      to report-only=]'s
+      [=coop-enforcement-value-switch|browsingContextGroupSwitchNeeded=] is true, set
+      *browsingContext*'s [=virtual browsing context group ID=] to a new unique identifier.
+   2. Set *navigationBrowsingContext* to *browsingContext*.
+4. Else:
+   1. Set *navigationBrowsingContext* to the first return value of [=creating a new
+      top-level browsing context and document=].
+   2. If *sandboxFlags* is not empty, then:
+      1. Assert *navigationCOOP*'s [=cross-origin-opener-policy-value|value=] is
+         one of "[=unsafe-none=]", "[=coop-restrict-properties|restrict-properties=]", or
+         "[=coop-restrict-properties-plus-coep|restrict-properties-plus-coep=]".
+      2. Assert *navigationBrowsingContext*'s [=popup sandboxing flag set=] is empty.
+      3. Set *navigationBrowsingContext*'s [=popup sandboxing flag set=] to a clone of
+         *sandboxFlags*.
+5. Set *navigationBrowsingContext*'s [=bcg-coop-agent-cluster-key|COOP agent
+   cluster key=] to *coopEnforcementResult*'s [=needs a browsing context group
+   switch=]'s [=coop-enforcement-value-key|agentClusterKey=]. 
+6. Set *navigationBrowsingContext*'s [=virtual-coop-agent-cluster-key|virtual
+   COOP agent cluster key=] to *coopEnforcementResult*'s [=would need a browsing
+   context group switch due to report-only=]'s
+   [=coop-enforcement-value-key|agentClusterKey=]. 
+7. Return *navigationBrowsingContext*.
 
 </div>
 
@@ -739,12 +722,14 @@ contexts should be reported=] algorithm:
 
 8. If *accessor*'s [=top-level browsing context=]'s [=virtual browsing context
    group ID=] is *accessed*'s [=top-level browsing context=]'s [=virtual browsing
-   context group ID=] and  *accessor*'s [=top-level browsing context=]'s
-   [=virtual-coop-group-id|virtual COOP group ID=] is *accessed*'s [=top-level browsing context=]'s
-   [=virtual-coop-group-id|virtual COOP group ID=], then return.
-9. If *accessor*'s [=top-level browsing context=]'s
-   [=virtual-coop-group-id|virtual COOP group ID=] is *accessed*'s [=top-level browsing context=]'s
-   [=virtual-coop-group-id|virtual COOP group ID=] and *P* is "*closed*" or "*postMessage*", then return.
+   context group ID=], then:
+   1. If *accessor*'s [=top-level browsing context=]'s
+      [=virtual-coop-agent-cluster-key|virtual COOP agent cluster key=] is
+      *accessed*'s [=top-level browsing context=]'s
+      [=virtual-coop-agent-cluster-key|virtual COOP agent cluster key=], then
+      return.
+   2. If P is an [=unrestricted-cross-origin-property-name|unrestricted
+      cross-origin accessible window property name=], then return.
 
 </div>
 
@@ -756,7 +741,7 @@ Add one argument to the [=CrossOriginGetOwnPropertyHelper=] algorithm:
 
 <div class="monkey-patch">
 
-7.2.1.3.4 CrossOriginGetOWnPropertyHelper(O,P,isCrossBrowsingContext)
+7.2.1.3.4 CrossOriginGetOWnPropertyHelper(O,P,hasSameCOOPKey)
 
 </div>
 
@@ -767,9 +752,10 @@ Replace step 1 and 2 of the [=CrossOriginGetOwnPropertyHelper=] algorithm:
 1. Let *crossOriginKey* be a tuple consisting of the [=current settings object=],
    O's [=relevant settings object=], P, and isCrossBrowsingContext.
 2. Let *propertyList* be null.
-3. If isCrossBrowsingContext is true, set *propertyLisy* to
-   [=cross-bcg-properties|CrossBrowsingContextGroupProperties=](O).
-4. Else, set *propertyList* to [=CrossOriginProperties=](O).
+3. If *hasSameCOOPKey* is true, set *propertyLisy* to
+   [=CrossOriginProperties=](O).
+4. Else, set *propertyList* to
+   [=unrestricted-cross-origin-properties|UnrestrictedCrossOriginProperties=](O).
 5. For each *e* of *propertyList*:
 
 </div>
@@ -780,7 +766,7 @@ Add a step to the [=windowproxy-get|Get=] algorithm:
 
 <div class="monkey-patch">
 
-3. If [=is-windowproxy-same-bcg|IsWindowProxyInSameBrowsingContextGroup(W)=] is
+3. If [=windowproxy-same-coop-key|WindowProxyHasSameCOOPKey(W)=] is
    false, then return ? [=CrossOriginGet=](this, P, V, receiver).
 
 </div>
@@ -789,7 +775,7 @@ Add a step to the [=windowproxy-set|Set=] algorithm:
 
 <div class="monkey-patch">
 
-3. If [=is-windowproxy-same-bcg|IsWindowProxyInSameBrowsingContextGroup(W)=] is
+3. If [=windowproxy-same-coop-key|WindowProxyHasSameCOOPKey(W)=] is
    false, then return ? [=CrossOriginSet=](this, P, V, receiver).
 
 </div>
@@ -799,10 +785,10 @@ algorithm:
 
 <div class="monkey-patch">
 
-2. If [=is-windowproxy-same-bcg|IsWindowProxyInSameBrowsingContextGroup(W)=] is
+2. If [=windowproxy-same-coop-key|WindowProxyHasSameCOOPKey(W)=] is
    false, then:
    1. Let *property* be
-      [=CrossOriginGetOwnPropertyHelper=](W,P, true).
+      [=CrossOriginGetOwnPropertyHelper=](W,P, false).
    2. If *property* is not undefined, then return *property*.
    3. Throw a "[=SecurityError=]" [=DOMException=].
 
@@ -813,7 +799,7 @@ algorithm:
 
 <div class="monkey-patch">
 
-4. Let *property* be [=CrossOriginGetOwnPropertyHelper=](W,P, false).
+4. Let *property* be [=CrossOriginGetOwnPropertyHelper=](W,P, true).
 
 </div>
 
@@ -822,14 +808,20 @@ Add the following to the [=WindowProxy=] section:
 <div class="monkey-patch">
 
 7.2.3.11 <dfn
-         lt="cross-bcg-properties">CrossBrowsingContextGroupProperties(W)</dfn>
+         lt="unrestricted-cross-origin-properties">UnrestrictedCrossOriginProperties(W)</dfn>
          1. Return { [Property]: "*closed*", [NeedsGet]: true, [NeedsSet]:
             false }, { [Property]: "*postMessage*" } ».
 
-7.2.3.12 <dfn lt="is-windowproxy-same-bcg">IsWindowProxyInSameBrowsingContextGroup(W)</dfn>
-         1. Return true if the [=current global object=]'s [=browsing
-            context=]'s [=browsing context group=] is *W*'s [=browsing
-            context=]'s [=browsing context group=].
+A Javascript property name P is a <dfn
+lt="unrestricted-cross-origin-property-name">unrestricted cross-origin
+accessible window property name</dfn> if it is "*closed*" or "*postMessage*".
+
+7.2.3.12 <dfn lt="windowproxy-same-coop-key">WindowProxyHasSameCOOPKey(W)</dfn>
+	 1. Return true if the [=current global object=]'s [=browsing
+            context=]'s [=top-level browsing context=]'s [=bcg-coop-agent-cluster-key|COOP
+            agent cluster key=] is *W*'s [=browsing
+            context=]'s [=top-level browsing context=]'s [=bcg-coop-agent-cluster-key|COOP
+            agent cluster key=].
 
 </div>
 
@@ -839,173 +831,47 @@ Modify step 2 of the [=location-getownproperty|GetOwnProperty=] algorithm:
 
 <div class="monkey-patch">
 
-2. Let *property* be [=CrossOriginGetOwnPropertyHelper=](this,P, false).
-
-</div>
-
-## Top-level traversables ## {#coop-top-level-traversables}
-
-Modify step 2 of the [=create a new top-level traversable=] algorithm:
-
-<div class="monkey-patch">
-
-2. If *opener* is null, then set *document* to the second return value of
-   [=creating a new top-level browsing context and document=], given
-   "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", null,
-   false, and null.
+2. Let *property* be [=CrossOriginGetOwnPropertyHelper=](this,P, true).
 
 </div>
 
 ## Browsing contexts ## {#coop-browsing-contexts}
 
-Add a new member to the definition of [=browsing context=]:
+Add two new members to the definition of [=browsing context=]:
 
 <div class="monkey-patch">
 
-- A <dfn lt="virtual-coop-group-id">virtual COOP group ID</dfn> integer,
-  intially 0. This is used by [=report-only value|cross-origin opener policy
-  reporting=], to keep track of the COOP group switches that would
-  have happened if the report-only policy had been enforced.
-
-</div>
-
-### Creating browsing contexts ### {#coop-creating-browsing-contexts}
-
-Modify the [=create a new top-level browsing context and document=] algorithm:
-
-<div class="monkey-patch">
-
-To [=create a new top-level browsing context and document=] given a
-[=coop-enforcement-value|COOP enforcement value=] *coopEnforcementValue*, an
-[=origin=] or null *originKey*, a boolean *needsCrossOriginIsolation*, a
-[=browsing context=] or null *currentBrowsingContext*:
-1. Assert that *coopEnforcementValue* is
-   "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", or
-   "[=coop-enforcement-value-bcg-switch|browsing-context-group-switch=]".
-2. If *coopEnforcementValue* is
-   "[=coop-enforcement-value-coop-group-switch|coop-group-switch=]", then
-   return the result of [=create-new-coop-group|creating a new COOP group=],
-   given *originKey*, and *needsCrossOriginIsolation*.
-3. Assert *currentBrowsingContext* is not null.
-4. Return the result of [=create-new-bc-in-coop-group|creating a new browsing
-   context in the current COOP group=], given *currentBrowsingContext*'s
-   [=browsing context group=]'s [=coop-group|COOP group=],  *originKey*,
-   *needsCrossOriginIsolation*, and *currentBrowsingContext*.
+- A <dfn lt="bcg-coop-agent-cluster-key">COOP agent cluster key</dfn>, which is
+  null or a [=coop-agent-cluster-key|COOP agent cluster key=], initially null. 
+- A <dfn lt="virtual-coop-agent-cluster-key">virtual COOP agent cluster
+  key</dfn>, which is null or null or a [=coop-agent-cluster-key|COOP agent
+  cluster key=], initially null. This is used by [=report-only value|cross-origin
+  opener policy reporting=], to keep track of the changes to agent cluster keying
+  that would have happened if the report-only policy had been enforced.
 
 </div>
 
 ### Grouping of browsing contexts ### {#coop-grouping-of-browsing-contexts}
 
-Remove the following from the [=Groupings of browsing contexts=] section:
+## Agents and agent clusters ## {#coop-agent-clusters}
+
+Add the following to the [=Integration with the JavaScript agent cluster
+formalism=]:
 
 <div class="monkey-patch">
 
-A user agent holds a [=browsing context group set=] (a [=set=] of [=browsing
-context groups=]).
+A <dfn lt="coop-agent-cluster-key">COOP agent cluster key</dfn> is a [=tuple=]
+of an [=origin=] and a [=cross-origin isolation mode=].
 
 </div>
 
-Remove the following from the [=creating a new browsing context group and
-document=] algorithm:
+Change the definition of the [=agent cluster key=]:
 
 <div class="monkey-patch">
 
-2. [=Append=] *group* to the user agent's [=browsing context group set=].
-
-</div>
-
-Modify step 5 of the [=removing a top-level browsing context=] algorithm:
-
-<div class="monkey-patch">
-
-5. If *group*'s [=browsing context set=] [=list-is-empty|is empty=], then:
-   1. Assert *group*'s [=coop-group|COOP group=] is not null.
-   2. Let *coopGroup* be *group*'s [=coop-group|COOP group=].
-   3. Set *group*'s [=coop-group|COOP group=] to null. 
-   4. [=Remove entries=] from *coopGroup*'s [=bcg-map|browsing context group
-      map=] whose [=map-value|value=] is *group*.
-   5. If *coopGroup*'s [=bcg-map|browsing context group
-      map=] [=map-empty|is empty=], [=list-remove|remove=] *coopGroup* from the user
-      agent's [=coop-group-set|COOP group set=].
-
-</div>
-
-### COOP groups ### {#coop-groups}
-
-Add a new section "*COOP groups*" to the [=windows|browsing contexts=] section.
-
-<div class="monkey-patch">
-
-A [=browsing context group=] has an associated <dfn lt="coop-group">COOP
-group</dfn> (null or a [=coop-group|COOP group=]), initally null.
-
-A user agent holds a <dfn lt="coop-group-set">COOP
-group set</dfn> (a [=set=] of [=coop-group|COOP groups=]).
-
-A <dfn lt="bcg-key">browsing context group key</dfn> is a [=tuple=] consisting
-of null or an [=origin=] and a boolean.
-
-A [=coop-group|COOP group=] holds a <dfn lt="bcg-map">browsing context group
-map</dfn>, which is a [=map=] of [=bcg-key|browsing context group keys=] to
-[=browsing context group|browsing context groups=].
-
-A [=coop-group|COOP group=] holds a <dfn lt="bcg-virtual-id-map">browsing
-context group virtual ID map</dfn>, which is a [=map=] of [=bcg-key|browsing
-context group keys=] to integers.
-
-Note: The  [=bcg-virtual-id-map|browsing context group virtual ID map=] is used
-by [=report-only value|cross-origin opener policy reporting=] to keep track of
-browsing context group switches that would have happened if the report-only
-policy had been enforced.
-
-To <dfn lt="create-new-coop-group">create a new COOP group</dfn>, given an
-[=origin=] or null *originKey*, and a boolean *needsCrossOriginIsolation*:
-1. Let *coopGroup* be a new [=coop-group|COOP group=].
-2. [=Append=] *coopGroup* to the user agent's [=coop-group-set|COOP group set=].
-3. Return the result of [=create-new-bcg-in-coop-group|creating a new browsing
-   context group in a COOP group=], given *coopGroup*, *originKey*, and
-   *needsCrossOriginIsolation*.
-
-To <dfn lt="create-new-bcg-in-coop-group">create a new browsing context group in a
-COOP group </dfn>, given a [=coop-group|COOP group=] *coopGroup*, an [=origin=]
-or null *originKey*, and a boolean *needsCrossOriginIsolation*:
-1. Assert *needsCrossOriginIsolation* is false or *originKey* is not null.
-2. Let *browsingContextGroupKey* be a new [=bcg-key|browsing context group
-   key=] with value (*originKey*, *needsCrossSiteIsolation*).
-3. Assert *coopGroup*'s [=bcg-map|browsing context group map=] does not
-   [=contain an entry=] given *browsingContextGroupKey*.
-4. Let *browsingContextGroup* and *document* be the result of [=creating a new
-   browsing context group and document=].
-5. Set *browsingContextGroup*'s [=coop-group|COOP group=] to *coopGroup*.
-6. If *needsCrossOriginIsolation* is true, set *browsingContextGroup*'s
-   [=cross-origin isolation mode=] to either "[=logical=]" or "[=concrete=]".
-   The choice of which is implementation defined.
-6. [=Set the value=] of *coopGroup*'s [=bcg-map|
-   browsing context group map=] given *browsingContextGroupKey* to *browsingContextGroup*.
-7. Return *browsingContextGroup*'s [=browsing context set=][0] and *document*.
-
-To <dfn lt="create-new-bc-in-coop-group">create a new browsing context in a
-COOP group </dfn> given a [=coop-group|COOP group=] *coopGroup*, an [=origin=]
-or null *originKey*, a boolean *needsCrossOriginIsolation*, a [=browsing
-context=] *currentBrowsingContext*:
-1. Assert *needsCrossOriginIsolation* is false or *originKey* is not null.
-2. Let *browsingContext* and *document* be null.
-3. Let *browsingContextGroupKey* be a new [=bcg-key|browsing context group
-   key=] with value (*originKey*, *needsCrossSiteIsolation*).
-4. If *coopGroup*'s [=bcg-map|browsing context group map=]
-   [=contains an entry=] given *browsingContextGroupKey*, set *browsingContext*
-   and *document* to the result of [=creating a new top-level browsing context
-   and document=], given null, null, and *coopGroup*'s [=bcg-map|browsing
-   context group map=][*browsingContextGroupKey*].
-3. Else, set *browsingContext* and *document* to
-   the result of [=create-new-bcg-in-coop-group|creating a new browsing
-   context group in a COOP group=], given *coopGroup*, *originKey*, and
-   *needsCrossOriginIsolation*.
-5. Assert that *currentBrowsingContext*'s [=browsing context group=] is
-   different from *browsingContext*'s [=browsing context group=].
-6. [=perform-browsing-context-switch|Perform browsing context switch
-   relationship=] given *currentBrowsingContext* and *browsingContext*.
-7. Return *browsingContext* and *document*.
+An [=agent cluster key=] is either a [=site=], or a [=tuple origin=], or a
+[=tuple=] of a [=tuple origin=] and a [=coop-agent-cluster-key|COOP agent
+cluster key=].
 
 </div>
 
