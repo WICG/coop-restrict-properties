@@ -1,4 +1,8 @@
-# Cross-Origin isolation with popups
+**Cross-Origin isolation with popups (Archived)**
+
+---
+**This proposal has been withdrawn in favor of [Document Isolation Policy](https://github.com/WICG/document-isolation-policy)**
+---
 
 This repository is dedicated to solve the problem of interacting with third party popups in a crossOriginIsolated context.
 
