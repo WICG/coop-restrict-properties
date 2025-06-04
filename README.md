@@ -1,3 +1,5 @@
+This work is discontinued and archived!
+
 # Cross-Origin isolation with popups
 
 This repository is dedicated to solve the problem of interacting with third party popups in a crossOriginIsolated context.
